@@ -1,0 +1,1343 @@
+<meta charset="UTF-8">
+<title>Krimelh · Biografía</title>
+<style>
+  :root{
+    --ink:#050506;
+    --cream:#efe7da;
+    --cream-dim:#efe7da8f;
+    --violet:#c026ff;
+    --acid:#39ff8f;
+    --blood:#ff1744;
+    --rule:#efe7da22;
+    --grain-op:0.14;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--cream);
+    font-family:'Space Mono',ui-monospace,monospace;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  a{color:inherit;}
+
+  /* film grain layer — old reel texture, ties this page to the same film feel as the intro */
+  .grain{
+    position:fixed; inset:-10%;
+    width:120%; height:120%;
+    z-index:50;
+    pointer-events:none;
+    opacity:var(--grain-op);
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation:grainShift 0.5s steps(4) infinite;
+  }
+  @keyframes grainShift{
+    0%{transform:translate(0,0);}
+    25%{transform:translate(-2%,1%);}
+    50%{transform:translate(1%,-2%);}
+    75%{transform:translate(-1%,-1%);}
+    100%{transform:translate(2%,2%);}
+  }
+
+  /* vertical scratches, old-reel style */
+  .scratches{
+    position:fixed; inset:0;
+    z-index:51;
+    pointer-events:none;
+    opacity:0.5;
+  }
+  .scratches span{
+    position:absolute;
+    top:-5%; height:110%;
+    width:1px;
+    background:rgba(239,231,218,0.5);
+    animation:flicker-scratch linear infinite;
+  }
+  @keyframes flicker-scratch{
+    0%,94%{opacity:0;}
+    95%{opacity:.7; transform:translateX(0);}
+    96%{opacity:0;}
+    97%{opacity:.4; transform:translateX(2px);}
+    100%{opacity:0;}
+  }
+
+  /* subtle overall brightness flicker like an unstable projector bulb */
+  .flicker-veil{
+    position:fixed; inset:0;
+    z-index:52;
+    pointer-events:none;
+    background:#000;
+    opacity:0;
+    animation:bulbFlicker 6.5s steps(1,end) infinite;
+  }
+  @keyframes bulbFlicker{
+    0%,100%{opacity:0;}
+    41%{opacity:0;}
+    42%{opacity:.10;}
+    43%{opacity:0;}
+    77%{opacity:0;}
+    78%{opacity:.14;}
+    79%{opacity:0;}
+    88%{opacity:0;}
+    89%{opacity:.06;}
+    90%{opacity:0;}
+  }
+
+  /* reel-hole ticks running down both margins, like sprocket holes passing */
+  .sprockets{
+    position:fixed;
+    top:0; bottom:0;
+    width:18px;
+    z-index:49;
+    pointer-events:none;
+    opacity:.35;
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0, transparent 22px,
+      var(--rule) 22px, var(--rule) 24px,
+      transparent 24px, transparent 46px
+    );
+    animation:reelScroll 3.2s linear infinite;
+  }
+  .sprockets.left{ left:6px; }
+  .sprockets.right{ right:6px; }
+  @keyframes reelScroll{
+    0%{ background-position-y:0; }
+    100%{ background-position-y:46px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .grain, .flicker-veil, .scratches span, .sprockets{animation:none !important;}
+  }
+
+  /* ---- top bar ---- */
+  header.bar{
+    position:sticky; top:env(safe-area-inset-top,0px);
+    z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px;
+    padding:16px 22px;
+    background:rgba(5,5,6,0.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--rule);
+  }
+  .bar .home{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:.02em;
+    text-decoration:none;
+  }
+  .bar-links{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+  .bar .back{
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--cream-dim);
+    text-decoration:none;
+    border:1px solid var(--rule);
+    padding:8px 12px;
+    white-space:nowrap;
+  }
+  .bar .back:hover{color:var(--ink); background:var(--cream); border-color:var(--cream);}
+
+  /* ---- intro ---- */
+  .bio-intro{
+    max-width:720px;
+    margin:0 auto;
+    padding:56px 22px 20px;
+    text-align:center;
+  }
+  .bio-intro .kicker{
+    font-size:11px; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--violet); margin:0 0 14px;
+  }
+  .bio-intro h1{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:700;
+    font-size:clamp(34px,8vw,56px);
+    letter-spacing:.03em;
+    margin:0 0 10px;
+  }
+  .bio-intro .es{
+    font-size:13px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--violet);
+    margin:0;
+  }
+  .bio-polaroid{
+    width:min(74vw,290px);
+    margin:32px auto 6px;
+    background:var(--cream);
+    padding:14px 14px 34px;
+    box-shadow:0 22px 40px -14px #00000090, 0 2px 0 #00000030;
+    transform:rotate(-2.4deg);
+  }
+  .bio-polaroid img{
+    display:block;
+    width:100%;
+    height:auto;
+    filter:contrast(1.05) saturate(.92);
+  }
+  .bio-polaroid figcaption{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-size:15px;
+    color:#1a1a1a;
+    text-align:center;
+    padding-top:10px;
+  }
+  .bio-lead{
+    max-width:56ch;
+    margin:28px auto 0;
+    text-align:left;
+  }
+  .bio-lead p{
+    font-size:14.5px;
+    line-height:1.85;
+    color:var(--cream-dim);
+    margin:0 0 18px;
+  }
+  .bio-lead p:last-child{ margin-bottom:0; }
+
+  /* ---- body ---- */
+  main.bio-main{
+    max-width:760px;
+    margin:0 auto;
+    padding:26px 22px 40px;
+  }
+
+  .bio-flow{
+    display:flex;
+    flex-direction:column;
+    gap:38px;
+    margin:8px 0 30px;
+  }
+  .bio-block{
+    display:flex;
+    align-items:center;
+    gap:30px;
+  }
+  .bio-block.reverse{ flex-direction:row-reverse; }
+  .bio-block .old-photos{ margin:0; flex:0 0 auto; }
+  .bio-block .old-photos figure{ width:140px; }
+  .bio-block p.copy{
+    flex:1 1 260px;
+    margin:0;
+    font-size:14.5px;
+    line-height:1.8;
+    color:var(--cream-dim);
+  }
+  .bio-closing{
+    display:flex;
+    align-items:center;
+    gap:30px;
+    flex-wrap:wrap;
+    margin:6px 0 26px;
+  }
+  .bio-closing .old-photos{ margin:0; }
+  p.copy{
+    font-size:14.5px;
+    line-height:1.8;
+    color:var(--cream-dim);
+    max-width:56ch;
+    margin:0 0 18px;
+  }
+
+  .old-photos{
+    display:flex;
+    gap:26px;
+    flex-wrap:wrap;
+    margin:6px 0 26px;
+  }
+  .old-photos figure{
+    margin:0;
+    width:148px;
+    background:#efe7da;
+    padding:9px 9px 24px;
+    box-shadow:0 14px 30px rgba(0,0,0,.5);
+    transform:rotate(var(--r,-3deg));
+    transition:transform .35s ease, box-shadow .35s ease;
+    cursor:pointer;
+    position:relative;
+    z-index:1;
+  }
+  .old-photos figure:hover{ transform:rotate(0deg) scale(1.03); z-index:3; }
+  .old-photos figure.picked{
+    transform:rotate(0deg) scale(1.08);
+    box-shadow:0 20px 40px rgba(0,0,0,.65);
+    z-index:4;
+  }
+  .old-photos figure:nth-child(1){ --r:-4deg; }
+  .old-photos figure:nth-child(2){ --r:3deg; }
+  .old-photos img{
+    width:100%;
+    display:block;
+    filter:sepia(.22) contrast(1.06) brightness(.94) saturate(.9);
+  }
+  .old-photos figcaption{
+    margin-top:10px;
+    font-size:9px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    text-align:center;
+    color:#00000066;
+  }
+
+  @media (max-width:640px){
+    .bio-block, .bio-block.reverse{ flex-direction:column; align-items:flex-start; }
+    .bio-block .old-photos figure{ width:128px; }
+  }
+
+  /* ---- fotos bloqueadas / oráculo unlock ---- */
+  .gallery-note{
+    font-size:11px;
+    color:var(--cream-dim);
+    text-align:center;
+    letter-spacing:.04em;
+    line-height:1.6;
+    max-width:44ch;
+    margin:0 auto 22px;
+    opacity:.7;
+  }
+  .old-photos img{ transition:filter .9s ease; }
+  .old-photos figure.locked{ cursor:default; }
+  .old-photos figure.locked img{
+    filter:grayscale(1) blur(7px) brightness(.45) contrast(1.05) !important;
+  }
+  .old-photos figure .lock-icon{
+    position:absolute;
+    top:44%; left:50%;
+    transform:translate(-50%,-50%);
+    font-size:24px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .5s ease;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));
+  }
+  .old-photos figure.locked .lock-icon{ opacity:.88; }
+  .old-photos figure.locked:hover{ transform:rotate(var(--r,-3deg)); }
+  .old-photos figure.locked figcaption{ color:#00000088; }
+  .old-photos figure.just-unlocked{
+    animation:unlockFlash 1.3s ease;
+  }
+  @keyframes unlockFlash{
+    0%{ box-shadow:0 0 0 0 rgba(192,38,255,.85); }
+    35%{ box-shadow:0 0 24px 4px rgba(192,38,255,.55); }
+    100%{ box-shadow:0 14px 30px rgba(0,0,0,.5); }
+  }
+
+  footer.credit{
+    padding:40px 22px calc(40px + env(safe-area-inset-bottom,0px));
+    text-align:center;
+    font-size:9px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:#efe7da55;
+    border-top:1px solid var(--rule);
+  }
+  footer.credit a{text-decoration:none; color:var(--cream-dim);}
+
+  /* ---- oráculo: mini-chat simulado ---- */
+  .oracle{
+    max-width:620px;
+    margin:10px auto 50px;
+    padding:0 22px;
+  }
+  .oracle .kicker{
+    font-size:11px; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--violet); margin:0 0 12px; text-align:center;
+  }
+  .oracle h2{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:700;
+    font-size:clamp(24px,5vw,34px);
+    text-align:center;
+    margin:0 0 8px;
+  }
+  .oracle .oracle-sub{
+    font-size:12.5px;
+    color:var(--cream-dim);
+    text-align:center;
+    max-width:44ch;
+    margin:0 auto 26px;
+    line-height:1.7;
+  }
+  .oracle-box{
+    border:1px solid var(--rule);
+    background:rgba(239,231,218,0.02);
+    display:flex;
+    flex-direction:column;
+    max-height:420px;
+  }
+  .oracle-log{
+    flex:1 1 auto;
+    overflow-y:auto;
+    padding:18px 18px 6px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-height:180px;
+  }
+  .oracle-msg{
+    max-width:82%;
+    font-size:13.5px;
+    line-height:1.6;
+    padding:10px 13px;
+  }
+  .oracle-msg.bot{
+    align-self:flex-start;
+    color:var(--cream);
+    border:1px dashed var(--rule);
+  }
+  .oracle-msg.bot.unlocked{
+    border:1px solid var(--violet);
+    box-shadow:0 0 0 0 rgba(192,38,255,.5);
+    animation:oracleUnlockPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes oracleUnlockPulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(192,38,255,.45); }
+    50%{ box-shadow:0 0 0 6px rgba(192,38,255,0); }
+  }
+  .oracle-msg.user{
+    align-self:flex-end;
+    background:var(--cream);
+    color:var(--ink);
+  }
+  .oracle-msg.typing{
+    align-self:flex-start;
+    color:var(--cream-dim);
+    border:1px dashed var(--rule);
+    font-size:12px;
+    letter-spacing:.1em;
+  }
+  .oracle-suggestions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:0 18px 14px;
+  }
+  .oracle-suggestions button{
+    font-family:inherit;
+    font-size:10.5px;
+    letter-spacing:.05em;
+    color:var(--cream-dim);
+    background:none;
+    border:1px dashed var(--rule);
+    padding:6px 10px;
+    cursor:pointer;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .oracle-suggestions button:hover{ border-color:var(--violet); color:var(--cream); }
+  .oracle-form{
+    display:flex;
+    gap:0;
+    border-top:1px solid var(--rule);
+  }
+  .oracle-form input{
+    flex:1 1 auto;
+    background:none;
+    border:none;
+    outline:none;
+    padding:14px 16px;
+    font-family:inherit;
+    font-size:13px;
+    color:var(--cream);
+  }
+  .oracle-form input::placeholder{ color:#efe7da55; }
+  .oracle-form button{
+    font-family:inherit;
+    background:none;
+    border:none;
+    border-left:1px solid var(--rule);
+    color:var(--violet);
+    font-size:16px;
+    padding:0 20px;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+  }
+  .oracle-form button:hover{ background:var(--violet); color:var(--ink); }
+  .oracle-note{
+    font-size:9px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#efe7da4a;
+    text-align:center;
+    margin:12px 0 0;
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cinzel:wght@500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<div class="grain"></div>
+<div class="scratches" id="scratches"></div>
+<div class="sprockets left"></div>
+<div class="sprockets right"></div>
+<div class="flicker-veil"></div>
+
+<header class="bar">
+  <a class="home" href="index.html">Krimelh</a>
+  <div class="bar-links">
+    <a class="back" href="index.html">&larr; inicio</a>
+    <a class="back" href="reveal.html">&larr; las 7 puertas</a>
+  </div>
+</header>
+
+<section class="bio-intro">
+  <p class="kicker">Antes del nombre</p>
+  <h1>Biografía</h1>
+  <p class="es">Nacimiento · lo que soy antes de ser Krimelh</p>
+
+  <figure class="bio-polaroid">
+    <img src="assets/bio-portrait.jpg" alt="Foto casera, grabando en el estudio">
+    <figcaption>una tarde cualquiera, grabando</figcaption>
+  </figure>
+
+  <div class="bio-lead">
+    <p>Todos, en algún momento, la pasamos mal a nuestra manera. Ricos o pobres, hijos únicos o con media docena de hermanos, con carencias o con excesos — nadie se salva del todo. Yo tampoco. Hubo violencia en mi historia; no hace falta que la detalle para que sea real.</p>
+    <p>Prefiero contarte lo otro: lo que sí amo de estar viva. Tuve sueños de chica, algunos ridículos, otros que todavía persigo. Amo bailar — sola, en la cocina, sin que nadie mire. Aprendí que la felicidad no es perseguir éxito, plata o fama, sino esa paz simple que casi nunca notamos hasta que se nos escapa: comer algo rico pagado con el propio esfuerzo, dormir bien una noche entera.</p>
+    <p>Dormir bien parece poca cosa, hasta que falta. Hace falta energía hasta para soñar — con el estómago vacío, hasta el sueño cuesta encontrarlo, y ahí ya no se puede ni pensar. Eso también lo sé. Por eso no doy nada por sentado.</p>
+  </div>
+</section>
+
+<section class="oracle">
+  <p class="kicker">Lo que no está escrito</p>
+  <h2>Contame sobre vos, y yo te cuento algo de mí</h2>
+  <p class="oracle-sub">No recito mi vida. No le cuento lo mismo a cualquiera. Ya te dejé un recuerdo abierto, de regalo — los demás se van a ir liberando de a uno, con cada canción nueva.</p>
+
+  <div class="oracle-box">
+    <div class="oracle-log" id="oracleLog"></div>
+    <div class="oracle-suggestions" id="oracleSuggestions"></div>
+    <form class="oracle-form" id="oracleForm">
+      <input type="text" id="oracleInput" placeholder="Escribime algo..." autocomplete="off" maxlength="140">
+      <button type="submit" aria-label="Enviar">&#10148;</button>
+    </form>
+  </div>
+  <p class="oracle-note">algunas respuestas se guardan para quien sabe pedirlas</p>
+</section>
+
+<main class="bio-main">
+  <p class="gallery-note">Uno de estos recuerdos ya está abierto, de regalo. Los demás se van liberando de a uno, con cada canción nueva — y esos sí hay que ganárselos con la pregunta correcta.</p>
+  <div class="bio-flow">
+    <div class="bio-block">
+      <div class="old-photos"><figure class="locked" id="photo-1" tabindex="0"><img src="assets/bio-princesa.jpg" alt="Fotografía antigua, familiar difuminada alrededor" loading="lazy"><span class="lock-icon">&#128274;</span><figcaption>bloqueada</figcaption></figure></div>
+    </div>
+
+    <div class="bio-block reverse">
+      <div class="old-photos"><figure class="locked" id="photo-2" tabindex="0"><img src="assets/bio-fondo.jpg" alt="Fotografía antigua, familiar difuminada alrededor" loading="lazy"><span class="lock-icon">&#128274;</span><figcaption>bloqueada</figcaption></figure></div>
+    </div>
+
+    <div class="bio-block">
+      <div class="old-photos"><figure class="locked" id="photo-3" tabindex="0"><img src="assets/bio-pareja.jpg" alt="Fotografía antigua, familiar difuminado alrededor" loading="lazy"><span class="lock-icon">&#128274;</span><figcaption>bloqueada</figcaption></figure></div>
+    </div>
+
+    <div class="bio-block reverse">
+      <div class="old-photos"><figure class="locked" id="photo-4" tabindex="0"><img src="assets/bio-grupo.jpg" alt="Fotografía antigua, familiares difuminados alrededor" loading="lazy"><span class="lock-icon">&#128274;</span><figcaption>bloqueada</figcaption></figure></div>
+    </div>
+
+    <div class="bio-block">
+      <div class="old-photos"><figure class="locked" id="photo-5" tabindex="0"><img src="assets/bio-abuelo.jpg" alt="Fotografía antigua con mi abuelo" loading="lazy"><span class="lock-icon">&#128274;</span><figcaption>bloqueada</figcaption></figure></div>
+    </div>
+  </div>
+
+  <p class="gallery-note">Una última queda bloqueada hasta que abras las otras cinco.</p>
+  <div class="bio-closing">
+    <div class="old-photos"><figure class="locked" id="photo-6" tabindex="0"><img src="assets/bio-shorts.jpg" alt="Fotografía antigua, familiar difuminada alrededor" loading="lazy"><span class="lock-icon">&#128274;</span><figcaption>bloqueada</figcaption></figure></div>
+  </div>
+</main>
+
+<footer class="credit">Antes del nombre &middot; <a href="reveal.html">volver a las puertas</a></footer>
+
+<script>
+  (function(){
+    document.querySelectorAll('.old-photos figure').forEach(function(fig){
+      function toggle(){
+        if(fig.classList.contains('locked')) return;
+        var wasPicked = fig.classList.contains('picked');
+        fig.parentElement.querySelectorAll('figure.picked').forEach(function(f){ f.classList.remove('picked'); });
+        if(!wasPicked) fig.classList.add('picked');
+      }
+      fig.addEventListener('click', toggle);
+      fig.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+    });
+  })();
+
+  // scatter old-film scratches, like the intro page
+  (function(){
+    var host = document.getElementById('scratches');
+    var n = 6;
+    for(var i=0;i<n;i++){
+      var s = document.createElement('span');
+      var left = (6 + Math.random()*88).toFixed(2) + '%';
+      var dur = (5 + Math.random()*6).toFixed(2) + 's';
+      var delay = (Math.random()*6).toFixed(2) + 's';
+      s.style.left = left;
+      s.style.animationDuration = dur;
+      s.style.animationDelay = delay;
+      host.appendChild(s);
+    }
+  })();
+
+  /* ============================================================
+     ORÁCULO — mini-chat simulado (sin IA, sin servidor)
+     ============================================================
+     CÓMO EDITAR EL CONTENIDO (esto lo puede tocar quien no sabe
+     programar, solo hay que respetar las comas y las comillas):
+
+     1) TEMAS (chatBank): cada objeto es un tema. "triggers" son
+        las palabras que, si aparecen en lo que escribe la persona,
+        activan ese tema. "responses" son las respuestas posibles
+        — si hay varias, elige una al azar cada vez, así no suena
+        repetido. Podés agregar todos los temas y respuestas que
+        quieras, copiando el formato de los que ya están.
+
+     2) SECRETOS (secrets): funcionan igual que los temas, pero
+        son frases más específicas/exactas — pensadas para que
+        solo alguien que "sabe algo" las escriba. Cuando se activa
+        un secreto, el mensaje sale con un brillo especial (la
+        clase "unlocked"). Acá es donde va la info más íntima que
+        solo algunos "elegidos" van a poder destrabar.
+
+     3) FALLBACK: lo que responde cuando no reconoce nada de lo
+        que le escribieron.
+
+     4) SUGGESTIONS: las preguntas que aparecen como botones para
+        que la gente sepa por dónde arrancar.
+  ============================================================ */
+  (function(){
+    var chatBank = [
+      {
+        key:'saludo',
+        triggers:['hola','hey','buenas','hi'],
+        responses:[
+          'Hola. No prometo contarte todo, pero puedo escuchar.',
+          'Hola vos. ¿Qué querés saber?'
+        ]
+      },
+      {
+        key:'quien-sos',
+        triggers:['quien sos','quien eres','who are you','tu nombre'],
+        responses:[
+          'Soy la parte de mí que decidí mostrar. La otra vive en otro lugar de esta página.',
+          'Depende del día. Hoy soy Krimelh. Mañana, quién sabe.'
+        ]
+      },
+      {
+        key:'krimelh-hlemirk',
+        triggers:['hlemirk','espejo','otro lado','dos caras'],
+        responses:[
+          'Hlemirk no es un personaje. Es lo que queda cuando nadie está mirando.',
+          'Krimelh es lo que el mundo cree de mí. Lo otro no se explica, se intuye.'
+        ]
+      },
+      {
+        key:'musica',
+        triggers:['musica','rock','metal','por que cantas','por que cantás','influencias'],
+        responses:[
+          'Canto porque en la música encontré la máquina de sueños que todos necesitamos para seguir adelante. Cuando perdés el rumbo, nadie más puede encontrártelo — ni yo, ni nadie. La única persona con el poder real de cambiar todo sos vos mismo. Los demás, como mucho, podemos inspirarte o hacerte enojar. El enemigo más letal siempre vive adentro. Cantar es mi forma de libertad.'
+        ]
+      },
+      {
+        key:'que-es-krimelh',
+        triggers:['que es krimelh','quien es krimelh','significado de krimelh','de donde sale el nombre krimelh'],
+        responses:[
+          'No — la pregunta es quién es Krimelh. A veces la realidad no se deja percibir tal cual es; hace falta exagerarla un poco. A la gente no le gusta lo real — ni a mí misma, muchas veces. Nos acostumbramos tanto a lo perfecto que lo genuino termina pareciendo más falso que lo falso. Irónicamente, Krimelh es lo más real que tengo: lo que guardaba y escondía, hecho mujer empoderada que un día exigió salir. No tiene miedo, ni vergüenza, no le debe nada a nadie y no busca agradarle a nadie. Es solo Krimelh siendo Krimelh. El nombre es la unión de crimen y miel — una criminal dulce que se cuida de no empalagar.'
+        ]
+      },
+      {
+        key:'casa',
+        triggers:['casa','techo','hogar','vivienda'],
+        responses:[
+          'Me gusta mi rutina simple: cocinar con música de fondo, dormir bien, tener mi propio espacio. No pido mucho más que eso.',
+          'Mi casa ideal es chica y tranquila. Ahí es donde de verdad puedo respirar.'
+        ]
+      },
+      {
+        key:'signo',
+        triggers:['cancer','signo','horoscopo'],
+        responses:[
+          'Soy Cáncer. Dicen que es el signo más hogareño — puede ser, me gusta mi rutina, mi cama, mi mate.',
+          'No creo tanto en el horóscopo, pero lo de Cáncer y lo hogareño sí me representa.'
+        ]
+      },
+      {
+        key:'puertas',
+        triggers:['puertas','krimelh significa','que significa krimelh','7 puertas','siete puertas'],
+        responses:[
+          'Cada letra es una puerta. Cada puerta, una etapa. Andá abriéndolas de a una.',
+          'K-R-I-M-E-L-H. Siete puertas hacia adelante te arman el nombre. Siete puertas hacia atrás, Hlemirk.'
+        ]
+      },
+      {
+        key:'fotos-genericas',
+        triggers:['fotos','fotos bloqueadas','como abro las fotos','como desbloqueo','como se abren'],
+        responses:[
+          'Una ya te la dejé abierta, de regalo. Las demás todavía no salieron — llegan de a una, con cada canción nueva.',
+          'Por ahora no hay nada más escondido para encontrar. El próximo recuerdo se libera cuando salga la próxima canción, y ese sí vas a tener que adivinarlo.'
+        ]
+      },
+      {
+        key:'ayuda',
+        triggers:['no entiendo','como funciona esto','que tengo que hacer','ayuda','no se que preguntar','estoy perdido','esto es dificil','es muy dificil','esta dificil','no dices nada','cual es el camino','que hay que entender','no se abrio nada','no se abrio ninguna foto'],
+        responses:[
+          'Fijate abajo: ya hay un recuerdo abierto, de regalo por haber llegado hasta acá. El siguiente todavía no existe — se libera cuando sale la próxima canción.',
+          'No hace falta que sigas buscando por ahora. Con completar la charla ya destrabaste el primer recuerdo. Los demás van llegando de a uno, con cada canción nueva.'
+        ]
+      }
+    ];
+
+    // ---- SECRETOS: frases específicas para quien "sabe algo" ----
+    // Cada secreto puede tener "unlock": el id de la foto que libera
+    // (photo-1 a photo-6). Los triggers son frases más largas y
+    // menos obvias a propósito — no alcanza con una sola palabra suelta.
+    var secrets = [
+      {
+        key:'secreto-crick',
+        triggers:['crick','autosabotaje'],
+        responses:[
+          'Crick es lo que pasa cuando me acerco demasiado a algo bueno y necesito romperlo antes de que me rompa a mí. Eso no lo cuento en la biografía oficial.'
+        ]
+      },
+      {
+        key:'secreto-princesa',
+        unlock:'photo-1',
+        stage:1,
+        triggers:['te disfrazabas de princesa','que sonabas de chica','cual era tu sueño de nena','tenias sueños de chica','jugabas a ser princesa'],
+        responses:[
+          'Ese día me sentí de verdad una princesa. No hacía falta un castillo — con un vestido prestado y algo de imaginación alcanzaba. Todavía sueño así, a veces.'
+        ]
+      },
+      {
+        key:'secreto-fondo',
+        unlock:'photo-2',
+        stage:2,
+        triggers:['de que fiesta es esa foto','por que estas riendo en esa foto','que estabas festejando ahi','que recordas de esa foto'],
+        responses:[
+          'Esa foto es de una fiesta que ya ni me acuerdo bien por qué fue, pero me acuerdo perfecto de cómo me reí ese día. A veces lo importante no es la excusa, es la risa.'
+        ]
+      },
+      {
+        key:'secreto-pareja',
+        unlock:'photo-3',
+        stage:3,
+        triggers:['quienes son esas dos personas','se querian esas personas','de donde salio esa foto de pareja','esa pareja se amaba'],
+        responses:[
+          'Esa pareja se quería de verdad, se les notaba hasta en cómo se sacaban fotos. De ahí me quedó la idea de que el amor, cuando es real, no necesita anunciarse.'
+        ]
+      },
+      {
+        key:'secreto-grupo',
+        unlock:'photo-4',
+        stage:4,
+        triggers:['quienes son todos en esa foto','de que reunion es esa foto','porque estan todos juntos ahi','te gustaba estar en grupo'],
+        responses:[
+          'En ese grupo siempre fui la más ruidosa. Todavía no sé bien de quién es cada brazo en esa foto, pero me acuerdo del calor de estar ahí, todos apretados, juntos.'
+        ]
+      },
+      {
+        key:'secreto-abuelo',
+        unlock:'photo-5',
+        stage:5,
+        triggers:['que te enseño tu abuelo','como era tu abuelo','jugabas con tu abuelo','que recordas de tu abuelo'],
+        responses:[
+          'Mi abuelo me enseñó a no tenerle miedo a nada que no fuera importante. Esa tarde me dejó ganarle al dominó tres veces seguidas — todavía no sé si fue trampa suya o suerte mía.'
+        ]
+      }
+      // Agregá más secretos acá, copiando el formato de arriba.
+      // "unlock" es opcional — solo lo usan las 5 fotos de la infancia.
+      // "stage" es opcional — si lo ponés, ese secreto solo se puede
+      // encontrar cuando CURRENT_STAGE (más abajo) sea igual o mayor.
+      // Ejemplo:
+      // {
+      //   key:'secreto-nombre-real',
+      //   triggers:['cual es tu nombre real','como te llamas de verdad'],
+      //   responses:['...']
+      // }
+    ];
+
+    var fallback = [
+      'Eso me lo guardo.',
+      'No a cualquiera le cuento eso.',
+      'Probá con otra pregunta.',
+      'Hay cosas que todavía no le conté ni a la canción.',
+      'Ese no es el camino. Pero seguí probando.',
+      '...',
+    ];
+
+    var suggestions = [
+      '¿Quién sos?',
+      '¿Qué es Hlemirk?',
+      '¿Por qué cantás?',
+      '¿Cómo abro las fotos?',
+      'Dejame tu opinión',
+      '¿Buzo autografiado?'
+    ];
+
+    // ---- FILTRO DE MALAS PALABRAS / INSULTOS ----
+    // Lista de palabras/frases que activan la respuesta de "coraza".
+    // Se puede seguir agregando — se compara todo en minúscula y sin acentos.
+    var badWords = [
+      'idiota','estupid','pelotud','boluda de mierda','boludo de mierda',
+      'imbecil','inutil','sos una mierda','sos un mierda','anda a cagar',
+      'vete a la mierda','andate a la mierda','callate la boca','puta',
+      'puto de mierda','concha de tu madre','forro','sorete','tarad',
+      'asquerosa','asqueroso','fea de mierda','gorda de mierda',
+      'no servis','no sirves','sos un desastre','sos una basura',
+      'te odio','ojala te mueras','mueras','fracasada','fracasado'
+    ];
+    function isInsult(text){
+      for(var i=0;i<badWords.length;i++){
+        if(text.indexOf(normalize(badWords[i])) !== -1) return true;
+      }
+      return false;
+    }
+    var insultEntry = {
+      key:'insulto',
+      responses:[
+        'Lamento que te autopercibas así. La autoestima es parte esencial de nuestra vida, y justo lo que a la gente le encanta destruir de nosotros. Por eso me hice una coraza como esta.',
+        'Puedo entender que quieras lastimar. Yo también aprendí a hacerlo cuando algo me dolía. Pero acá no hace falta.',
+        'Las palabras pesan. Yo cargué muchas parecidas antes de aprender a no cargarlas más.',
+        'No sos el primero que prueba con insultos. Ninguno se quedó.',
+        'Puedo escuchar bronca. Lo que no puedo es devolverte lo mismo.',
+        'Eso que decís dice más de tu día que del mío.',
+        'Sigo acá, aunque insistas. No es debilidad, es costumbre.',
+        'Si necesitás descargar algo, este no es el lugar. Pero está bien que lo hayas intentado.',
+        'No voy a discutir con vos en esos términos. Preguntame otra cosa, si querés.',
+        'Hay maneras más interesantes de hablar conmigo que esa.'
+      ]
+    };
+    var farewellMsg = 'Claramente esta charla no te está gustando... y la verdad, a mí tampoco. Volvé en otro momento — acá voy a estar. Besos.';
+    var insultStreak = 0;
+    var chatEnded = false;
+    var INSULT_LIMIT = 3;
+
+    // ---- Envío a Google Sheet (opcional) ----
+    // Pegá acá la URL que te da Google al "Implementar" el Apps Script como
+    // aplicación web (termina en /exec). Mientras esté vacía, no se envía
+    // nada afuera — todo queda solo en localStorage, como hasta ahora.
+    var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxL4jiYOKeuIqA4J8zWAV1ytJPvlwpzZE-4P4BevG0I-oDYes2YDsTpnbEKVUCb35Y/exec';
+    function sendToSheet(type, payload){
+      if(!SHEET_URL) return;
+      try{
+        fetch(SHEET_URL, {
+          method:'POST',
+          mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify(Object.assign({type:type}, payload))
+        }).catch(function(){ /* sin conexión o bloqueado, no rompe la charla */ });
+      }catch(e){ /* si falla el envío, no rompe la charla */ }
+    }
+
+    // ---- Estado del visitante: nombre / edad (localStorage, por navegador) ----
+    var VISITOR_KEY = 'krimelh_oracle_visitor';
+    var FEEDBACK_KEY = 'krimelh_oracle_feedback';
+    var EMAILS_KEY = 'krimelh_oracle_emails';
+    function getVisitor(){
+      try{ return JSON.parse(localStorage.getItem(VISITOR_KEY) || 'null'); }
+      catch(e){ return null; }
+    }
+    function saveVisitor(v){
+      try{ localStorage.setItem(VISITOR_KEY, JSON.stringify(v)); }
+      catch(e){ /* no pasa nada */ }
+    }
+    function saveToList(key, item){
+      try{
+        var arr = JSON.parse(localStorage.getItem(key) || '[]');
+        arr.push(item);
+        localStorage.setItem(key, JSON.stringify(arr));
+      }catch(e){ /* no pasa nada */ }
+    }
+    // Si cambia el recorrido de bienvenida (se agregan preguntas nuevas,
+    // como pasó acá con género/opinión/sugerencia), subimos este número.
+    // Así, quien ya tenga datos guardados de una versión vieja repite el
+    // recorrido completo una vez más, en vez de saltarse las preguntas nuevas.
+    var ONBOARD_VERSION = 2;
+    var visitor = getVisitor() || {};
+    var chatStage = (visitor.name && visitor.flowVersion === ONBOARD_VERSION) ? 'chat' : 'name';
+
+    // ---- Persistencia de fotos desbloqueadas (localStorage) ----
+    var UNLOCK_KEY = 'krimelh_oracle_unlocked';
+    var CHILD_IDS = ['photo-1','photo-2','photo-3','photo-4','photo-5'];
+    var captionMap = {
+      'photo-1':'una princesa por un día',
+      'photo-2':'la risa que sí recuerdo',
+      'photo-3':'amor que no se anuncia',
+      'photo-4':'la más ruidosa del grupo',
+      'photo-5':'tres partidas de dominó',
+      'photo-6':'antes de tener nombre'
+    };
+
+    function getUnlocked(){
+      try{ return JSON.parse(localStorage.getItem(UNLOCK_KEY) || '[]'); }
+      catch(e){ return []; }
+    }
+    function saveUnlocked(arr){
+      try{ localStorage.setItem(UNLOCK_KEY, JSON.stringify(arr)); }
+      catch(e){ /* localStorage no disponible, no pasa nada */ }
+    }
+    function applyUnlockedVisual(id, skipAnim){
+      var fig = document.getElementById(id);
+      if(!fig) return;
+      fig.classList.remove('locked');
+      var cap = fig.querySelector('figcaption');
+      if(cap && captionMap[id]) cap.textContent = captionMap[id];
+      if(!skipAnim){
+        fig.classList.add('just-unlocked');
+        setTimeout(function(){ fig.classList.remove('just-unlocked'); }, 1300);
+      }
+    }
+    function checkBonusUnlock(unlocked){
+      var allDone = CHILD_IDS.every(function(id){ return unlocked.indexOf(id) !== -1; });
+      if(allDone && unlocked.indexOf('photo-6') === -1){
+        unlocked.push('photo-6');
+        saveUnlocked(unlocked);
+        applyUnlockedVisual('photo-6');
+        setTimeout(function(){
+          addMsg('Abriste las cinco. Esta última se abre sola, de premio: soy yo, antes de ser Krimelh, antes incluso de tener nombre para lo que sentía. Y ya se veía que iba a ser alguien que se ríe fuerte.', 'bot', true);
+        }, 850);
+      }
+    }
+    function unlockPhoto(id){
+      if(!id) return false;
+      var unlocked = getUnlocked();
+      if(unlocked.indexOf(id) !== -1) return false;
+      unlocked.push(id);
+      saveUnlocked(unlocked);
+      applyUnlockedVisual(id);
+      checkBonusUnlock(unlocked);
+      return true;
+    }
+
+    // ---- Liberación por etapas, atada a los lanzamientos de canciones ----
+    // Subí este número cuando salga cada canción nueva, para liberar el
+    // próximo recuerdo de la infancia. Con CURRENT_STAGE:1 solo el primero
+    // (photo-1) está disponible; los secretos de "stage" mayor todavía no
+    // se pueden encontrar por más que alguien adivine la frase.
+    var CURRENT_STAGE = 1;
+    var STAGE_PHOTO_MAP = {1:'photo-1', 2:'photo-2', 3:'photo-3', 4:'photo-4', 5:'photo-5'};
+    function ensureStageUnlocked(silent){
+      var curId = STAGE_PHOTO_MAP[CURRENT_STAGE];
+      if(!curId) return;
+      var unlocked = getUnlocked();
+      if(unlocked.indexOf(curId) === -1){
+        unlocked.push(curId);
+        saveUnlocked(unlocked);
+        applyUnlockedVisual(curId, silent);
+        if(!silent) checkBonusUnlock(unlocked);
+      }
+    }
+
+    // restaurar lo ya desbloqueado en visitas anteriores
+    (function restore(){
+      var unlocked = getUnlocked();
+      unlocked.forEach(function(id){ applyUnlockedVisual(id, true); });
+      // quien ya haya hecho el recorrido completo en otra visita también
+      // tiene que tener, como mínimo, el recuerdo de la etapa actual
+      if(chatStage === 'chat') ensureStageUnlocked(true);
+    })();
+
+    function normalize(s){
+      return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+    }
+
+    var lastIndex = {};
+    function pick(entry){
+      var arr = entry.responses;
+      if(arr.length === 1) return arr[0];
+      var idx;
+      do { idx = Math.floor(Math.random()*arr.length); }
+      while(idx === lastIndex[entry.key] && arr.length > 1);
+      lastIndex[entry.key] = idx;
+      return arr[idx];
+    }
+
+    // Coincidencia flexible: no hace falta escribir la frase exacta.
+    // Alcanza con mencionar la mayoría de las palabras importantes de
+    // alguna de las frases-gatillo, en cualquier orden.
+    var stopWords = ['de','la','el','que','tu','tus','te','se','un','una','unos','unas','lo','los','las','y','o','a','en','con','por','para','del','al','como','es','sos','eres','fue','fueron','mi','me','si','hay','esa','ese','esos','esas','esto','eso'];
+    function significantWords(phrase){
+      return normalize(phrase).split(/\s+/).filter(function(w){
+        return w.length > 2 && stopWords.indexOf(w) === -1;
+      });
+    }
+    function keywordMatch(text, triggerPhrase){
+      var normTrigger = normalize(triggerPhrase);
+      if(text.indexOf(normTrigger) !== -1) return true;
+      var words = significantWords(triggerPhrase);
+      // frases de 0 o 1 palabra significativa son muy cortas para
+      // "aflojar" sin generar falsos positivos — ahí exigimos la frase exacta.
+      if(words.length < 2) return false;
+      var hits = 0;
+      for(var i=0;i<words.length;i++){
+        if(text.indexOf(words[i]) !== -1) hits++;
+      }
+      var needed = words.length <= 2 ? words.length : Math.max(2, Math.ceil(words.length * 0.6));
+      return hits >= needed;
+    }
+
+    function findMatch(bank, text){
+      for(var i=0;i<bank.length;i++){
+        var entry = bank[i];
+        // un secreto con "stage" todavía no liberado no se puede
+        // encontrar, ni siquiera acertando la frase exacta
+        if(entry.stage && entry.stage > CURRENT_STAGE) continue;
+        for(var j=0;j<entry.triggers.length;j++){
+          if(keywordMatch(text, entry.triggers[j])) return entry;
+        }
+      }
+      return null;
+    }
+
+    // Extrae un nombre de frases como "hola, me llamo Drakvel", "soy Ana"
+    // o "tengo 29 años, soy Julián" (el nombre puede venir en cualquier parte).
+    function extractName(raw){
+      var cleaned = raw.trim();
+      var midPattern = /(?:mi nombre es|me llamo|yo soy|soy)\s+([a-záéíóúñü]+(?:\s+[a-záéíóúñü]+){0,2})/i;
+      var mid = cleaned.match(midPattern);
+      if(mid && mid[1]) return mid[1].trim();
+
+      var leadIns = [/^hola[,]?\s*/i, /^que tal[,]?\s*/i, /^buenas[,]?\s*/i];
+      var changed = true;
+      while(changed){
+        changed = false;
+        for(var i=0;i<leadIns.length;i++){
+          var before = cleaned;
+          cleaned = cleaned.replace(leadIns[i], '');
+          if(cleaned !== before) changed = true;
+        }
+      }
+      cleaned = cleaned.trim();
+      var words = cleaned.split(/\s+/).filter(Boolean).slice(0,3);
+      return words.join(' ');
+    }
+
+    var log = document.getElementById('oracleLog');
+    var form = document.getElementById('oracleForm');
+    var input = document.getElementById('oracleInput');
+    var sugWrap = document.getElementById('oracleSuggestions');
+
+    function addMsg(text, who, unlocked){
+      var div = document.createElement('div');
+      div.className = 'oracle-msg ' + who + (unlocked ? ' unlocked' : '');
+      div.textContent = text;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+      return div;
+    }
+
+    function renderSuggestions(){
+      sugWrap.innerHTML = '';
+      if(chatStage !== 'chat') return;
+      suggestions.forEach(function(s){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = s;
+        btn.addEventListener('click', function(){ respondTo(s); });
+        sugWrap.appendChild(btn);
+      });
+    }
+
+    function endChat(){
+      chatEnded = true;
+      renderSuggestions();
+      input.disabled = true;
+      input.placeholder = 'Volvé en otro momento...';
+      form.querySelector('button').disabled = true;
+    }
+
+    function botSay(text, unlocked, delayOverride, onDone){
+      var typing = document.createElement('div');
+      typing.className = 'oracle-msg bot typing';
+      typing.textContent = '...';
+      log.appendChild(typing);
+      log.scrollTop = log.scrollHeight;
+      var delay = delayOverride || (500 + Math.random()*500);
+      setTimeout(function(){
+        typing.remove();
+        addMsg(text, 'bot', unlocked);
+        if(onDone) onDone();
+      }, delay);
+    }
+
+    // Botones de opción fija (no texto libre) — para género y sí/no.
+    function renderChoices(options){
+      sugWrap.innerHTML = '';
+      options.forEach(function(label){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.addEventListener('click', function(){ respondTo(label); });
+        sugWrap.appendChild(btn);
+      });
+    }
+
+    function respondTo(raw){
+      if(chatEnded) return;
+      var text = normalize(raw);
+      addMsg(raw, 'user');
+      input.value = '';
+
+      // ---- filtro de insultos, tiene prioridad sobre cualquier etapa ----
+      if(isInsult(text)){
+        insultStreak++;
+        var reachedLimit = insultStreak >= INSULT_LIMIT;
+        setTimeout(function(){
+          botSay(pick(insultEntry), false);
+          if(reachedLimit){
+            setTimeout(function(){
+              botSay(farewellMsg, false, 700);
+              setTimeout(endChat, 1600);
+            }, 900);
+          }
+        }, 300);
+        return;
+      }
+      insultStreak = 0;
+
+      // ---- etapa: pedir nombre ----
+      if(chatStage === 'name'){
+        var name = extractName(raw).slice(0,30);
+        if(name.length < 2){
+          botSay('No te escuché bien. ¿Cómo te llamás?');
+          return;
+        }
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        visitor.name = name;
+        visitor.flowVersion = ONBOARD_VERSION;
+        saveVisitor(visitor);
+        chatStage = 'age';
+        botSay('Gracias por visitarme ☺️ Sentite bienvenido/a, ' + name + ' — me dijiste tu nombre, ahora te cuento algo mío: adoro escuchar música mientras cocino, y mi comida favorita es la ensalada... hay tanta variedad, ñam ñam, ¡delicioso! 😋', false, null, function(){
+          botSay('¿Y qué edad tenés?');
+        });
+        return;
+      }
+
+      // ---- etapa: pedir edad ----
+      if(chatStage === 'age'){
+        var m = text.match(/\d{1,3}/);
+        var age = m ? parseInt(m[0],10) : NaN;
+        if(!m || age < 5 || age > 99){
+          botSay('Decime un número, aunque sea aproximado.');
+          return;
+        }
+        visitor.age = age;
+        saveVisitor(visitor);
+        var FAKE_AGE = 30;
+        var diff = age - FAKE_AGE;
+        var ageReply;
+        if(diff === 1) ageReply = 'Somos contemporáneas... quizás nos cruzamos de chicos y ni lo sabemos.';
+        else if(diff === -1) ageReply = 'Quizás tengo un poco más que vos ☺️. Eso significa que llegué a ver los Simpson originales en la tele local 😄.';
+        else if(diff === 0) ageReply = 'La misma edad... como si fuéramos del mismo lote 😄.';
+        else if(diff > 1) ageReply = 'Sos un poco más grande que yo. Ojalá haya envejecido tan bien como vos.';
+        else ageReply = 'Sos más joven que yo. Disfrutalo, se pasa rápido.';
+        chatStage = 'gender';
+        botSay(ageReply, false, null, function(){
+          botSay('¿Cómo te percibís?');
+          renderChoices(['Hombre','Mujer','Prefiero no responder']);
+        });
+        return;
+      }
+
+      // ---- etapa: género (opción fija) ----
+      if(chatStage === 'gender'){
+        var gender;
+        if(text.indexOf('hombre') !== -1) gender = 'hombre';
+        else if(text.indexOf('mujer') !== -1) gender = 'mujer';
+        else if(text.indexOf('prefiero') !== -1 || text.indexOf('no responder') !== -1) gender = 'prefiero no responder';
+        if(!gender){
+          botSay('Elegí una de las opciones: Hombre, Mujer o Prefiero no responder.');
+          renderChoices(['Hombre','Mujer','Prefiero no responder']);
+          return;
+        }
+        visitor.gender = gender;
+        saveVisitor(visitor);
+        sendToSheet('visitantes', {name:visitor.name, age:visitor.age, gender:gender});
+        sugWrap.innerHTML = '';
+        chatStage = 'opinion_intro';
+        var genderMsgs = {
+          'hombre': 'Con vos voy directo. A la mayoría de los hombres les enseñaron a vivir el sexo como una carrera: llegar, ganar, salir campeón — y en el camino se pierden la mitad de la magia. El cuerpo no miente aunque el orgullo sí, y casi siempre pide lo mismo que el de cualquiera: sentir, no solo terminar. Para mí el sexo es el intercambio de energía, la forma elegante que encontró el universo para mantener el equilibrio. Dos vasos con distinta cantidad de agua que, al final, quedan igualados. O das, o recibís — y tarde o temprano, recibís exactamente lo que diste.',
+          'mujer': 'Con vos hablo distinto, porque hay cosas que se entienden mejor entre nosotras. Durante mucho tiempo nos vendieron como el símbolo del pecado, la tentación fácil, y mientras tanto nadie preguntaba qué sentíamos nosotras. Yo sí me lo pregunto, y encontré que sentimos más, no menos — de formas que a un hombre ni se le cruzan. Eso nunca nos hizo el sexo débil; la historia ya lo demostró al revés. Ser mujer es estar conectada directamente a la energía que sostiene todo esto: sin nosotras, nada de esto existiría. No dejes que esa fuerza se te vuelva una carga. Sobrevivir no alcanza — vivir es lo que tiene que moverte.',
+          'prefiero no responder': 'No hace falta que entres en una casilla para que esto tenga sentido. Vivís esto a tu manera, y elegir no etiquetarte también es una forma válida de estar en el mundo. Para mí, el sexo es el intercambio de energía, la forma en que el universo mantiene su equilibrio — algo que no depende de ningún nombre. Es un placer tenerte acá, tal cual elegiste presentarte.'
+        };
+        var underageMsg = 'Con vos prefiero hablar de otra cosa: de música, de arte, de lo que estamos armando acá. Todavía te van a sobrar años para las preguntas grandes — disfrutá esto por lo que es, un lugar para escuchar, imaginar y crear. Gracias por estar temprano en el camino.';
+        var replyMsg = (visitor.age && visitor.age < 18) ? underageMsg : genderMsgs[gender];
+        botSay(replyMsg, false, null, function(){
+          botSay('¿Qué te gustó de mí — mi música, mi estética, la letra? Contame, yo misma leo lo que escribís.');
+        });
+        return;
+      }
+
+      // ---- etapa: opinión general (fija, siempre la misma respuesta) ----
+      if(chatStage === 'opinion_intro'){
+        saveToList(FEEDBACK_KEY, {name:visitor.name||null, question:'¿Qué te gustó de mí?', answer:raw.trim(), ts:Date.now()});
+        sendToSheet('opiniones', {name:visitor.name||null, question:'¿Qué te gustó de mí?', answer:raw.trim()});
+        chatStage = 'suggestion_ask';
+        botSay('Agradezco tu opinión... me gustaría responderte en base a lo que decís, pero por ahora solo puedo disfrutar tu visita.', false, null, function(){
+          botSay('¿Querés darme una sugerencia?');
+          renderChoices(['Sí','No']);
+        });
+        return;
+      }
+
+      // ---- etapa: pregunta si quiere dejar una sugerencia (opción fija) ----
+      if(chatStage === 'suggestion_ask'){
+        if(text === 'si' || text.indexOf('si') === 0){
+          sugWrap.innerHTML = '';
+          chatStage = 'suggestion_text';
+          botSay('Sé que el hate a veces es divertido — yo también odio a un par de personas solo porque no me gusta cómo me miran 😅. Pero en esta te pido eso: que tu sugerencia no sea puro hate. Te prometo tenerla en cuenta. Dale, escribí tranquilo.');
+          return;
+        }
+        if(text === 'no'){
+          sugWrap.innerHTML = '';
+          chatStage = 'chat';
+          showMilestone();
+          return;
+        }
+        botSay('Elegí una opción: Sí o No.');
+        renderChoices(['Sí','No']);
+        return;
+      }
+
+      // ---- etapa: texto de la sugerencia ----
+      // (nota: si el texto tiene alguna mala palabra, el filtro de
+      // insultos de más arriba ya lo intercepta antes de llegar acá,
+      // así que lo que llega a esta altura ya pasó ese primer filtro)
+      if(chatStage === 'suggestion_text'){
+        saveToList(FEEDBACK_KEY, {name:visitor.name||null, question:'sugerencia', answer:raw.trim(), ts:Date.now()});
+        sendToSheet('opiniones', {name:visitor.name||null, question:'sugerencia', answer:raw.trim()});
+        chatStage = 'chat';
+        showMilestone();
+        return;
+      }
+
+      // ---- etapa: pidiendo una opinión/feedback ----
+      if(chatStage === 'feedback'){
+        var wordCount = raw.trim().split(/\s+/).filter(Boolean).length;
+        chatStage = 'chat';
+        renderSuggestions();
+        if(wordCount >= 6){
+          saveToList(FEEDBACK_KEY, {name:visitor.name||null, question:pendingFeedbackQ, answer:raw.trim(), ts:Date.now()});
+          sendToSheet('opiniones', {name:visitor.name||null, question:pendingFeedbackQ, answer:raw.trim()});
+          if(pendingFeedbackQ && normalize(pendingFeedbackQ).indexOf('crick') !== -1){
+            var crickSecret = secrets[0]; // secreto-crick
+            botSay('Gracias por contarme eso de verdad. ' + pick(crickSecret), true, 900);
+          } else {
+            var thanksArr = ['Gracias por ser sincera/o. Eso me sirve más de lo que pensás.','Anotado. Gracias por no responder cualquier cosa.','Eso vale. Gracias por pensarlo un poco.'];
+            botSay(thanksArr[Math.floor(Math.random()*thanksArr.length)]);
+          }
+        } else {
+          botSay('Está bien, no hace falta forzarlo. Cuando quieras contarme algo más, seguí escribiendo.');
+        }
+        return;
+      }
+
+      // ---- etapa: esperando correo para el sorteo ----
+      if(chatStage === 'giveaway'){
+        var lower = text;
+        if(lower === 'no' || lower === 'ahora no' || lower === 'despues' || lower === 'después'){
+          chatStage = 'chat';
+          renderSuggestions();
+          botSay('Como quieras. La invitación sigue en pie.');
+          return;
+        }
+        var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw.trim());
+        if(!emailOk){
+          botSay('Eso no parece un correo. Probá de nuevo, o escribí "ahora no".');
+          return;
+        }
+        saveToList(EMAILS_KEY, {name:visitor.name||null, email:raw.trim(), ts:Date.now()});
+        sendToSheet('correos', {name:visitor.name||null, email:raw.trim()});
+        chatStage = 'chat';
+        renderSuggestions();
+        botSay('Listo, ya estás participando. Cuando lleguemos a 500 correos, hacemos el sorteo — pase el tiempo que pase.');
+        return;
+      }
+
+      // ---- etapa normal de charla ----
+      if(text === 'dejame tu opinion' || text.indexOf('opinion') !== -1 && text.indexOf('dejame') !== -1){
+        var qs = ['Contame, ¿qué te pareció Crick?','¿Qué te gusta de mí?','¿Qué fue lo que más se te quedó grabado de mi música?','¿Qué te trajo hasta esta página?','¿Qué canción te gustaría que hiciera?'];
+        pendingFeedbackQ = qs[Math.floor(Math.random()*qs.length)];
+        chatStage = 'feedback';
+        renderSuggestions();
+        botSay(pendingFeedbackQ);
+        return;
+      }
+      if(text.indexOf('buzo autografiado') !== -1 || text.indexOf('autografiado') !== -1 || text.indexOf('sorteo') !== -1){
+        chatStage = 'giveaway';
+        renderSuggestions();
+        botSay('¿Te gustaría ganar un buzo autografiado por mí, con mi perfume? Dejame tu correo y participás — a los 500 correos hacemos el sorteo, pasen los años que pasen.');
+        return;
+      }
+
+      var secretHit = findMatch(secrets, text);
+      if(secretHit){
+        noMatchStreak = 0;
+        if(secretHit.unlock) unlockPhoto(secretHit.unlock);
+        botSay(pick(secretHit), true);
+        return;
+      }
+      var topicHit = findMatch(chatBank, text);
+      if(topicHit){
+        noMatchStreak = 0;
+        botSay(pick(topicHit), false);
+        return;
+      }
+      noMatchStreak++;
+      if(noMatchStreak >= 3){
+        noMatchStreak = 0;
+        botSay(pick(rescueEntry), false);
+      } else {
+        var idx = Math.floor(Math.random()*fallback.length);
+        botSay(fallback[idx], false);
+      }
+    }
+
+    var pendingFeedbackQ = null;
+    var noMatchStreak = 0;
+    function showMilestone(){
+      botSay('No me gusta salir mucho — prefiero una buena película, de comedia o de drama, mejor si es de las dos a la vez. Admiro a Marilyn Manson y a Marilyn Monroe, y en algún momento me metí de lleno en la historia de Charles Manson, más por curiosidad de entender ese lado oscuro de la cultura pop que otra cosa.', false, null, function(){
+        botSay('No puedo ser buena en todo. Pero aprendí a soltar rápido lo que no funciona: veo la luz, apago la llave, y sigo. No es que el dolor me guste — es que no le doy más lugar del que se merece.', false, null, function(){
+          botSay('Y esto se siente bien de verdad: llegaste hasta acá. Como premio, ya te dejé uno de mis recuerdos favoritos ahí abajo, abierto. El resto va a ir llegando de a uno, con cada canción nueva — y esos sí vas a tener que ganártelos con la respuesta correcta. Volvé pronto. 🤗', false, null, function(){
+            ensureStageUnlocked(false);
+            renderSuggestions();
+          });
+        });
+      });
+    }
+    var rescueEntry = {
+      key:'rescate',
+      responses:[
+        'Por ahora no hay nada más escondido para buscar — ya tenés un recuerdo abierto, de regalo. El siguiente llega cuando salga la próxima canción, y ahí sí vas a tener que adivinarlo.',
+        'No hace falta que sigas probando frases. Ese trabajo ya está hecho — el próximo recuerdo se libera con la próxima canción.'
+      ]
+    };
+
+    renderSuggestions();
+
+    if(chatStage === 'name'){
+      addMsg('Qué tal, ¿me decís tu nombre?', 'bot', false);
+    } else {
+      addMsg('Volviste, ' + visitor.name + '. Preguntame lo que quieras.', 'bot', false);
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var val = input.value.trim();
+      if(!val) return;
+      respondTo(val);
+    });
+  })();
+</script>

@@ -1,0 +1,1282 @@
+<meta charset="UTF-8">
+<title>Krimelh — The Seven</title>
+<style>
+  :root{
+    --ink:#050506;
+    --panel:#0b0a0d;
+    --cream:#efe7da;
+    --cream-dim:#efe7da8f;
+    --violet:#c026ff;
+    --acid:#39ff8f;
+    --blood:#ff1744;
+    --rule:#efe7da22;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--cream);
+    font-family:'Space Mono',ui-monospace,monospace;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  .grain{
+    position:fixed; inset:-10%;
+    width:120%; height:120%;
+    z-index:50;
+    pointer-events:none;
+    opacity:0.1;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ---- top bar ---- */
+  header.bar{
+    position:sticky; top:env(safe-area-inset-top,0px);
+    z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px;
+    padding:10px 22px;
+    background:rgba(5,5,6,0.82);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--rule);
+  }
+  .bar .home{
+    display:flex;
+    align-items:center;
+    text-decoration:none;
+    outline:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .bar .home-logo{
+    width:230px;
+    height:auto;
+    display:block;
+    overflow:visible;
+  }
+  @media (max-width:560px){
+    .bar .home-logo{ width:170px; }
+  }
+  .bar .home-logo .letter{
+    fill:rgba(5,5,6,0.55);
+    stroke:var(--violet);
+    stroke-width:16;
+    stroke-linejoin:round;
+    filter:
+      drop-shadow(0 0 1px rgba(192,38,255,0.95))
+      drop-shadow(0 0 4px rgba(5,5,6,0.95))
+      drop-shadow(0 0 10px rgba(192,38,255,0.75));
+    animation: navPulse 4.5s ease-in-out infinite;
+    transition:stroke .25s ease;
+  }
+  .bar .home:hover .home-logo .letter,
+  .bar .home:focus-visible .home-logo .letter{
+    stroke:var(--acid);
+    animation:none;
+    filter:
+      drop-shadow(0 0 1px rgba(57,255,143,0.95))
+      drop-shadow(0 0 3px rgba(5,5,6,0.9))
+      drop-shadow(0 0 9px rgba(57,255,143,0.75));
+  }
+  @keyframes navPulse{
+    0%,100%{opacity:.9;}
+    50%{opacity:1;}
+  }
+  .doors{
+    display:flex; gap:6px;
+    list-style:none; margin:0; padding:0;
+  }
+  .doors a{
+    display:flex; align-items:center; justify-content:center;
+    width:26px; height:26px;
+    border:1px solid var(--rule);
+    font-size:11px;
+    text-decoration:none;
+    color:var(--cream-dim);
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .doors a:hover, .doors a:focus-visible{color:var(--ink); background:var(--cream); border-color:var(--cream);}
+
+  /* ---- cover hero (Ruin single artwork) ---- */
+  .cover-hero{
+    position:relative;
+    width:100%;
+    height:min(88vh,900px);
+    overflow:hidden;
+  }
+  .cover-hero .cover-img{
+    position:absolute;
+    inset:-4%;
+    background-image:url('assets/cover-ruin.png');
+    background-size:cover;
+    background-position:50% 4%;
+    animation: coverZoom 22s ease-in-out infinite;
+    will-change:transform;
+  }
+  @media (min-width:900px){
+    .cover-hero{ height:min(80vh,780px); }
+    .cover-hero .cover-img{ background-position:50% 0%; }
+  }
+  @keyframes coverZoom{
+    0%{transform:scale(1) translate(0,0);}
+    50%{transform:scale(1.09) translate(-1.2%,-0.8%);}
+    100%{transform:scale(1) translate(0,0);}
+  }
+  .cover-hero .cover-scrim{
+    position:absolute; inset:0;
+    background:linear-gradient(180deg,
+      rgba(5,5,6,.05) 0%,
+      rgba(5,5,6,.08) 55%,
+      rgba(5,5,6,.55) 84%,
+      var(--ink) 100%);
+  }
+  .cover-hero .cover-caption{
+    position:absolute; left:0; right:0; bottom:22px;
+    text-align:center;
+    font-size:10px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--cream-dim);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cover-hero .cover-img{ animation:none; }
+  }
+  @media (max-width:560px){
+    .cover-hero{ height:min(72vh,620px); }
+  }
+
+  /* ---- intro ---- */
+  .intro{
+    max-width:760px;
+    margin:0 auto;
+    padding:64px 22px 40px;
+    text-align:center;
+  }
+  .intro .kicker{
+    font-size:11px; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--violet); margin:0 0 18px;
+  }
+  .intro h1{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:600;
+    font-size:clamp(28px,6vw,44px);
+    letter-spacing:.06em;
+    margin:0 0 18px;
+    text-wrap:balance;
+  }
+  .intro .poem{
+    margin:0 auto;
+    max-width:46ch;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  .intro .poem p{
+    line-height:1.9;
+    font-size:14.5px;
+    margin:0;
+  }
+  .intro .poem .poem-left{ text-align:left; }
+  .intro .poem .poem-right{ text-align:right; }
+  .intro .poem a{ color:var(--violet); text-decoration:underline; text-underline-offset:2px; }
+  .intro .poem a:hover{ color:var(--cream); }
+  .intro .poem b{ color:var(--violet); font-weight:700; }
+
+  .shimmer{
+    background-image:linear-gradient(100deg,
+      var(--cream-dim) 30%,
+      var(--cream) 45%,
+      #ffffff 50%,
+      var(--cream) 55%,
+      var(--cream-dim) 70%);
+    background-size:250% 100%;
+    background-position:200% 0;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:shimmerMove 5.5s linear infinite;
+  }
+  @keyframes shimmerMove{
+    0%{background-position:200% 0;}
+    100%{background-position:-150% 0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .shimmer{animation:none; background-position:0 0;}
+  }
+
+  /* ---- mirror block: KRIMELH / HLEMIRK ---- */
+  .mirror{
+    max-width:900px;
+    margin:56px auto;
+    padding:0 22px;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:18px;
+    text-align:center;
+  }
+  .mirror .side h2{
+    margin:0 0 8px;
+    display:flex;
+    justify-content:center;
+  }
+  .mirror .side a.wordmark-link{
+    display:block;
+    cursor:pointer;
+    outline:none;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .25s ease;
+  }
+  .mirror .side a.wordmark-link:hover,
+  .mirror .side a.wordmark-link:focus-visible{
+    transform:scale(1.05);
+  }
+  .mirror .side .tap-hint{
+    font-size:9px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--cream-dim);
+    opacity:0;
+    margin:6px 0 0;
+    transition:opacity .25s ease;
+  }
+  .mirror .side:hover .tap-hint,
+  .mirror .side a.wordmark-link:focus-visible ~ .tap-hint{
+    opacity:1;
+  }
+  .mirror .side .wordmark{
+    width:220px;
+    max-width:70vw;
+    height:auto;
+    display:block;
+    overflow:visible;
+  }
+  .mirror .side.left .wordmark .letter{
+    fill:transparent;
+    stroke:var(--violet);
+    stroke-width:5;
+    stroke-linejoin:round;
+    filter:
+      drop-shadow(0 0 1px rgba(192,38,255,0.85))
+      drop-shadow(0 0 7px rgba(192,38,255,0.5));
+    animation: mirrorPulseL 5s ease-in-out infinite;
+  }
+  .mirror .side.right .wordmark .letter{
+    fill:transparent;
+    stroke:var(--blood);
+    stroke-width:3.4;
+    stroke-linejoin:round;
+    filter:
+      drop-shadow(0 0 1px rgba(255,23,68,0.85))
+      drop-shadow(0 0 7px rgba(255,23,68,0.5));
+    animation: mirrorPulseR 4.3s ease-in-out infinite;
+  }
+  @keyframes mirrorPulseL{
+    0%,100%{opacity:.6; transform:scale(1);}
+    50%{opacity:1; transform:scale(1.035);}
+  }
+  @keyframes mirrorPulseR{
+    0%,100%{opacity:.7;}
+    50%{opacity:1;}
+  }
+  .mirror .side p{
+    font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--cream-dim); margin:0;
+  }
+  .mirror .glyph{font-size:20px; color:var(--rule); color:var(--cream-dim);}
+  @media (max-width:560px){
+    .mirror{grid-template-columns:1fr; gap:26px;}
+    .mirror .glyph{transform:rotate(90deg);}
+  }
+
+  /* ---- the seven order strip ---- */
+  .order{
+    max-width:980px;
+    margin:20px auto 70px;
+    padding:0 22px;
+  }
+  .order .kicker{
+    font-size:11px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--violet); margin:0 0 10px; text-align:center;
+  }
+  .order .hint-line{
+    font-size:11px;
+    color:var(--cream-dim);
+    text-align:center;
+    letter-spacing:.02em;
+    margin:0 0 18px;
+  }
+  .order-track{
+    display:flex;
+    overflow-x:auto;
+    gap:0;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .order-step{
+    flex:1 0 110px;
+    padding:16px 10px;
+    text-align:center;
+    border-right:1px solid var(--rule);
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--cream-dim);
+    text-decoration:none;
+    display:block;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+    position:relative;
+  }
+  .order-step:hover, .order-step:focus-visible{
+    background:#c026ff14;
+    color:var(--cream);
+  }
+  .order-step::after{
+    content:"abrir ↓";
+    display:block;
+    font-size:8px;
+    letter-spacing:.1em;
+    color:var(--violet);
+    opacity:0;
+    transform:translateY(-2px);
+    transition:opacity .2s ease, transform .2s ease;
+    margin-top:4px;
+  }
+  .order-step:hover::after, .order-step:focus-visible::after{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .order-step:last-child{border-right:none;}
+  .order-step b{
+    display:block;
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:700;
+    font-size:18px;
+    letter-spacing:0;
+    color:var(--cream);
+    margin-bottom:4px;
+  }
+  .order-note{
+    margin-top:14px;
+    font-size:11px;
+    color:var(--cream-dim);
+    text-align:center;
+    letter-spacing:.02em;
+    line-height:1.6;
+  }
+  .order-note b{color:var(--violet); font-weight:400;}
+
+  /* ---- doors / sections ---- */
+  .door{
+    scroll-margin-top:70px;
+    padding:70px 22px;
+    border-top:1px solid var(--rule);
+    position:relative;
+    overflow:hidden;
+  }
+  .door::before{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse at 50% 0%, var(--tint,transparent), transparent 62%);
+    opacity:.35;
+    pointer-events:none;
+  }
+  .door-inner{
+    position:relative;
+    max-width:760px;
+    margin:0 auto;
+  }
+  .door-num{
+    font-size:11px;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--accent,var(--violet));
+    margin:0 0 14px;
+  }
+  .door h2{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:700;
+    font-size:clamp(34px,8vw,58px);
+    letter-spacing:.03em;
+    margin:0 0 6px;
+    color:var(--cream);
+  }
+  .door .es{
+    font-size:13px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--accent,var(--violet));
+    margin:0 0 22px;
+  }
+  .door p.copy{
+    font-size:14.5px;
+    line-height:1.8;
+    color:var(--cream-dim);
+    max-width:56ch;
+    margin:0 0 18px;
+  }
+  .door .track-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--cream-dim);
+    border:1px dashed var(--rule);
+    padding:8px 12px;
+  }
+  .door .track-tag b{color:var(--accent,var(--violet)); font-weight:400;}
+
+  /* ---- release status: "Próximamente" / cuenta regresiva / links de video ---- */
+  .release-status{ margin:0 0 18px; }
+  .release-status .release-msg{
+    font-size:14.5px;
+    line-height:1.8;
+    color:var(--cream-dim);
+    letter-spacing:.02em;
+    margin:0;
+  }
+  .release-status .countdown{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin:4px 0 4px;
+  }
+  .release-status .countdown .unit{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-width:56px;
+    padding:10px 8px;
+    border:1px solid var(--rule);
+  }
+  .release-status .countdown .unit .n{
+    font-family:'Cinzel',serif;
+    font-size:22px;
+    color:var(--accent,var(--violet));
+    line-height:1;
+  }
+  .release-status .countdown .unit .u{
+    font-size:9px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--cream-dim);
+    margin-top:6px;
+  }
+  .release-status .countdown-note{
+    font-size:11px;
+    letter-spacing:.1em;
+    color:var(--cream-dim);
+    margin:8px 0 0;
+  }
+  .release-status .release-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:4px 0 4px;
+  }
+  .release-status .release-links a{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:11px 20px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    text-decoration:none;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--cream);
+    background:#efe7da08;
+    transition:border-color .3s ease, background .3s ease, color .3s ease;
+  }
+  .release-status .release-links a svg{width:16px; height:16px; flex:none;}
+  .release-status .release-links a.tiktok:hover{border-color:var(--violet); color:var(--violet); background:#c026ff14;}
+  .release-status .release-links a.youtube:hover{border-color:var(--blood); color:var(--blood); background:#ff174414;}
+
+  /* ---- clickable chip: pulsing glow so it reads as a link, not just a label ---- */
+  .door .track-tag.cta{
+    border:1px solid var(--accent,var(--violet));
+    color:var(--cream);
+    transition:transform .2s ease, background .2s ease, color .2s ease;
+    animation: ctaPulse 2.6s ease-in-out infinite;
+  }
+  .door .track-tag.cta:hover,
+  .door .track-tag.cta:focus-visible{
+    background:var(--accent,var(--violet));
+    color:var(--ink);
+    transform:translateY(-1px);
+    animation-play-state:paused;
+  }
+  @keyframes ctaPulse{
+    0%,100%{
+      box-shadow:0 0 0 0 rgba(192,38,255,0.45);
+    }
+    50%{
+      box-shadow:0 0 0 7px rgba(192,38,255,0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .door .track-tag.cta{ animation:none; }
+  }
+
+  /* ---- song chips: Krimelh (blanco/negro) & Hlemirk (negro/blanco) — Puerta 02 ---- */
+  /* forma de llama: borde superior irregular, como si ardiera */
+  .song-tags-wrap{
+    display:block;
+    text-decoration:none;
+    margin:6px 0 16px;
+  }
+  .song-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .song-chip{
+    flex:1 1 150px;
+    max-width:220px;
+    padding:26px 14px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    transition:transform .22s ease;
+    clip-path:polygon(
+      0% 32%, 6% 14%, 12% 30%, 19% 6%, 27% 26%,
+      35% 0%, 44% 22%, 53% 8%, 62% 28%, 71% 4%,
+      80% 24%, 89% 10%, 100% 26%,
+      100% 100%, 0% 100%
+    );
+  }
+  .song-tags-wrap:hover .song-chip{ transform:translateY(-2px) scale(1.02); }
+  .song-chip .title{
+    font-size:clamp(13px,2.6vw,15px);
+    font-weight:700;
+    letter-spacing:.01em;
+    line-height:1.15;
+  }
+  .song-chip .artist{
+    font-size:8.5px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    opacity:.8;
+  }
+  .song-chip.krimelh{
+    background:linear-gradient(180deg,#f4e9d8 0%,var(--cream) 40%,#e8d9c2 100%);
+    color:var(--ink);
+    animation: flameFlickerViolet 2.4s ease-in-out infinite;
+  }
+  .song-chip.hlemirk{
+    background:linear-gradient(180deg,#1a0a06 0%,var(--ink) 45%,#0a0505 100%);
+    color:var(--cream);
+    animation: flameFlickerRed 2.1s ease-in-out infinite;
+  }
+  @keyframes flameFlickerViolet{
+    0%,100%{ filter:drop-shadow(0 -4px 8px rgba(192,38,255,.75)) drop-shadow(0 0 14px rgba(192,38,255,.4)); }
+    35%{ filter:drop-shadow(0 -6px 13px rgba(192,38,255,.95)) drop-shadow(0 0 20px rgba(192,38,255,.55)); }
+    60%{ filter:drop-shadow(0 -3px 7px rgba(255,138,255,.6)) drop-shadow(0 0 12px rgba(192,38,255,.4)); }
+  }
+  @keyframes flameFlickerRed{
+    0%,100%{ filter:drop-shadow(0 -4px 8px rgba(255,23,68,.8)) drop-shadow(0 0 14px rgba(255,138,23,.45)); }
+    40%{ filter:drop-shadow(0 -6px 14px rgba(255,138,23,.95)) drop-shadow(0 0 22px rgba(255,23,68,.6)); }
+    70%{ filter:drop-shadow(0 -3px 7px rgba(255,23,68,.65)) drop-shadow(0 0 12px rgba(255,138,23,.45)); }
+  }
+  .song-tags-hint{
+    font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--cream-dim);
+    text-align:right;
+    margin:6px 2px 0;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .song-chip.krimelh, .song-chip.hlemirk{ animation:none; }
+  }
+
+  .door .old-photos{
+    display:flex;
+    gap:26px;
+    flex-wrap:wrap;
+    margin:6px 0 26px;
+  }
+  .door .old-photos figure{
+    margin:0;
+    width:148px;
+    background:#efe7da;
+    padding:9px 9px 24px;
+    box-shadow:0 14px 30px rgba(0,0,0,.5);
+    transform:rotate(var(--r,-3deg));
+    transition:transform .35s ease, box-shadow .35s ease;
+    cursor:pointer;
+    position:relative;
+    z-index:1;
+  }
+  .door .old-photos figure:hover{ transform:rotate(0deg) scale(1.03); z-index:3; }
+  .door .old-photos figure.picked{
+    transform:rotate(0deg) scale(1.08);
+    box-shadow:0 20px 40px rgba(0,0,0,.65);
+    z-index:4;
+  }
+  .door .old-photos figure:nth-child(1){ --r:-4deg; }
+  .door .old-photos figure:nth-child(2){ --r:3deg; }
+  .door .old-photos figure:nth-child(3){ --r:2deg; }
+  .door .old-photos figure:nth-child(4){ --r:-3deg; }
+  .door .old-photos figure:nth-child(5){ --r:4deg; }
+  .door .old-photos figure:nth-child(6){ --r:-2deg; }
+  .door .old-photos img{
+    width:100%;
+    display:block;
+    filter:sepia(.22) contrast(1.06) brightness(.94) saturate(.9);
+  }
+  .door .old-photos figcaption{
+    margin-top:10px;
+    font-size:9px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    text-align:center;
+    color:#00000066;
+  }
+
+
+  #k{--accent:var(--violet); --tint:#c026ff33;}
+  #r{--accent:var(--blood); --tint:#ff174433;}
+  #i{--accent:var(--acid); --tint:#39ff8f2e;}
+  #m{--accent:var(--violet); --tint:#c026ff33;}
+  #e{--accent:var(--blood); --tint:#ff174433;}
+  #l{--accent:var(--acid); --tint:#39ff8f2e;}
+  #h{--accent:var(--violet); --tint:#c026ff33;}
+
+  /* ---- bio ---- */
+  .bio{
+    max-width:760px;
+    margin:0 auto;
+    padding:80px 22px;
+    border-top:1px solid var(--rule);
+    text-align:left;
+  }
+  .bio .kicker{font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--acid); margin:0 0 16px;}
+  .bio h2{font-family:'Dancing Script','Cinzel',cursive; font-weight:700; font-size:clamp(24px,5vw,32px); margin:0 0 20px; letter-spacing:.05em;}
+  .bio p{font-size:14.5px; line-height:1.85; color:var(--cream-dim); margin:0 0 16px;}
+  .bio .todo{
+    margin-top:26px;
+    padding:16px 18px;
+    border:1px dashed var(--violet);
+    font-size:12px;
+    line-height:1.7;
+    color:var(--cream);
+    background:#c026ff10;
+  }
+  .bio .cta{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-top:4px;
+    padding:11px 20px;
+    border:1px solid var(--violet);
+    border-radius:999px;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    text-decoration:none;
+    color:var(--cream);
+    transition:background .2s ease, color .2s ease, transform .2s ease;
+  }
+  .bio .cta:hover{background:var(--violet); color:var(--ink); transform:translateY(-1px);}
+  .bio .hetairoi{
+    margin-top:34px;
+    padding:18px 20px;
+    border:1px dashed var(--acid);
+    background:#39ff8f0d;
+  }
+  .bio .hetairoi .h-kicker{
+    font-size:10px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--acid); margin:0 0 8px;
+  }
+  .bio .hetairoi p{font-size:13px; line-height:1.7; margin:0 0 10px; color:var(--cream);}
+  .bio .hetairoi b{color:var(--acid); font-weight:700;}
+  .bio .hetairoi .h-cap{
+    display:inline-block;
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--acid);
+    border:1px solid var(--acid);
+    border-radius:999px;
+    padding:4px 10px;
+    margin:2px 0 14px;
+  }
+  .hetairoi-form{margin-top:14px;}
+  .hetairoi-form input{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--rule);
+    color:var(--cream);
+    font-family:'Space Mono',ui-monospace,monospace;
+    font-size:13px;
+    padding:11px 12px;
+    margin-bottom:9px;
+  }
+  .hetairoi-form input::placeholder{color:var(--cream-dim);}
+  .hetairoi-form input:focus{outline:none; border-color:var(--acid);}
+  .hetairoi-form button{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--acid);
+    color:var(--cream);
+    font-family:'Space Mono',ui-monospace,monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    padding:12px;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+  }
+  .hetairoi-form button:hover{background:var(--acid); color:var(--ink);}
+  .hetairoi-note{font-size:10.5px; color:var(--cream-dim); margin-top:9px; line-height:1.6;}
+  .hetairoi-ok{display:none; font-size:13px; color:var(--acid); margin-top:12px; line-height:1.7;}
+  .hetairoi-full{display:none; font-size:13px; color:var(--cream-dim); margin-top:12px; line-height:1.7; border:1px dashed var(--rule); padding:12px;}
+  .hetairoi-error{display:none; font-size:12px; color:var(--blood); margin-top:9px; line-height:1.6;}
+  .bio .todo b{color:var(--violet); font-weight:400;}
+
+  /* ---- album / rollout ---- */
+  .album{
+    max-width:760px;
+    margin:0 auto;
+    padding:80px 22px;
+    border-top:1px solid var(--rule);
+  }
+  .album .kicker{font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--blood); margin:0 0 16px;}
+  .album h2{font-family:'Dancing Script','Cinzel',cursive; font-weight:700; font-size:clamp(24px,5vw,32px); margin:0 0 10px; letter-spacing:.05em;}
+  .album p.sub{font-size:12px; letter-spacing:.1em; color:var(--cream-dim); margin:0 0 28px;}
+  .rollout{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+  }
+  @media (max-width:640px){
+    .rollout{grid-template-columns:repeat(4,1fr);}
+  }
+  @media (max-width:400px){
+    .rollout{grid-template-columns:repeat(3,1fr);}
+  }
+  .rollout .cell{
+    background:var(--ink);
+    padding:16px 14px;
+    text-align:center;
+  }
+  .rollout .cell .l{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:700;
+    font-size:22px;
+    margin-bottom:6px;
+  }
+  .rollout .cell .t{
+    font-size:9px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--cream-dim);
+  }
+
+  footer.credit{
+    padding:40px 22px calc(40px + env(safe-area-inset-bottom,0px));
+    text-align:center;
+    font-size:9px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:#efe7da55;
+    border-top:1px solid var(--rule);
+  }
+  footer.credit a{text-decoration:none; color:var(--cream-dim);}
+
+  /* ---- connect ---- */
+  section.connect{
+    padding:60px 22px;
+    text-align:center;
+    border-top:1px solid var(--rule);
+  }
+  section.connect .kicker{
+    font-size:10px;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--cream-dim);
+    margin:0 0 8px;
+  }
+  section.connect h2{
+    font-family:'Dancing Script','Cinzel',cursive;
+    font-weight:700;
+    font-size:clamp(24px,5vw,34px);
+    margin:0 0 28px;
+    color:var(--cream);
+  }
+  .connect-links{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:14px;
+  }
+  .connect-links a{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:13px 22px;
+    border:1px solid var(--rule);
+    border-radius:999px;
+    text-decoration:none;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--cream);
+    background:#efe7da08;
+    transition:border-color .3s ease, background .3s ease, color .3s ease;
+  }
+  .connect-links a svg{width:16px; height:16px; flex:none;}
+  .connect-links a.tiktok:hover{border-color:var(--violet); color:var(--violet); background:#c026ff14;}
+  .connect-links a.mail:hover{border-color:var(--blood); color:var(--blood); background:#ff174414;}
+
+  @media (max-width:560px){
+    .doors{display:none;}
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cinzel:wght@500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<div class="grain"></div>
+
+<header class="bar">
+  <a class="home" href="index.html" aria-label="Krimelh — inicio">
+    <svg class="home-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2172 724" role="img" aria-label="KRIMELH">
+      <path class="letter" fill-rule="evenodd" d="M 1851.0,650.0 L 1853.0,657.0 L 1856.0,652.0 Z M 1184.0,598.0 L 1182.0,602.0 L 1186.0,603.0 Z M 573.0,589.0 L 572.0,600.0 L 566.0,605.0 L 572.0,608.0 L 573.0,649.0 L 577.0,606.0 Z M 1892.0,588.0 L 1890.0,593.0 L 1894.0,592.0 Z M 554.0,572.0 L 552.0,577.0 L 557.0,578.0 Z M 318.0,556.0 L 316.0,561.0 L 321.0,563.0 L 322.0,557.0 Z M 527.0,547.0 L 525.0,551.0 L 530.0,553.0 Z M 589.0,545.0 L 586.0,548.0 L 590.0,551.0 Z M 463.0,524.0 L 460.0,530.0 L 466.0,532.0 L 468.0,526.0 Z M 441.0,502.0 L 439.0,506.0 L 444.0,508.0 Z M 1837.0,499.0 L 1833.0,502.0 L 1835.0,508.0 L 1841.0,505.0 Z M 853.0,498.0 L 856.0,508.0 L 857.0,500.0 Z M 795.0,493.0 L 801.0,496.0 L 799.0,491.0 Z M 433.0,489.0 L 436.0,494.0 L 438.0,491.0 Z M 742.0,469.0 L 745.0,478.0 L 747.0,473.0 Z M 688.0,468.0 L 684.0,470.0 L 687.0,474.0 Z M 541.0,465.0 L 539.0,469.0 L 543.0,470.0 Z M 399.0,464.0 L 401.0,471.0 L 405.0,465.0 Z M 766.0,457.0 L 769.0,467.0 L 772.0,461.0 Z M 695.0,455.0 L 694.0,459.0 L 700.0,461.0 L 700.0,456.0 Z M 1655.0,446.0 L 1646.0,451.0 L 1651.0,457.0 L 1656.0,453.0 Z M 383.0,447.0 L 385.0,453.0 L 392.0,451.0 Z M 1650.0,425.0 L 1652.0,433.0 L 1656.0,428.0 Z M 1724.0,421.0 L 1726.0,426.0 L 1728.0,422.0 Z M 1654.0,361.0 L 1650.0,366.0 L 1653.0,371.0 Z M 383.0,354.0 L 396.0,358.0 L 396.0,364.0 L 401.0,358.0 L 521.0,357.0 Z M 847.0,350.0 L 841.0,354.0 L 846.0,362.0 Z M 836.0,334.0 L 833.0,340.0 L 840.0,342.0 L 843.0,339.0 Z M 168.0,329.0 L 166.0,333.0 L 170.0,334.0 Z M 1568.0,316.0 L 1564.0,320.0 L 1567.0,324.0 Z M 189.0,316.0 L 192.0,323.0 L 194.0,319.0 Z M 1778.0,314.0 L 1779.0,319.0 L 1784.0,318.0 L 1783.0,313.0 Z M 598.0,311.0 L 599.0,317.0 L 604.0,317.0 Z M 1973.0,294.0 L 1971.0,298.0 L 1976.0,300.0 L 1978.0,296.0 Z M 234.0,268.0 L 236.0,282.0 L 238.0,270.0 Z M 735.0,257.0 L 737.0,265.0 L 748.0,263.0 L 748.0,258.0 Z M 234.0,249.0 L 232.0,256.0 L 236.0,258.0 L 238.0,250.0 Z M 714.0,248.0 L 715.0,253.0 L 720.0,251.0 Z M 450.0,247.0 L 452.0,255.0 L 455.0,249.0 Z M 736.0,246.0 L 733.0,251.0 L 737.0,254.0 Z M 1510.0,239.0 L 1515.0,245.0 L 1519.0,241.0 Z M 799.0,234.0 L 792.0,238.0 L 799.0,241.0 Z M 725.0,233.0 L 723.0,239.0 L 729.0,240.0 L 730.0,235.0 Z M 900.0,230.0 L 893.0,235.0 L 898.0,250.0 L 903.0,237.0 Z M 359.0,227.0 L 351.0,228.0 L 349.0,233.0 Z M 1562.0,211.0 L 1566.0,216.0 L 1570.0,213.0 Z M 506.0,196.0 L 504.0,202.0 L 508.0,201.0 Z M 885.0,182.0 L 896.0,198.0 L 894.0,188.0 Z M 454.0,274.0 L 548.0,279.0 L 524.0,281.0 L 548.0,288.0 L 545.0,293.0 L 541.0,290.0 L 524.0,295.0 L 532.0,300.0 L 536.0,295.0 L 548.0,298.0 L 549.0,442.0 L 551.0,412.0 L 555.0,411.0 L 553.0,481.0 L 555.0,488.0 L 558.0,484.0 L 559.0,523.0 L 574.0,454.0 L 574.0,504.0 L 573.0,490.0 L 570.0,492.0 L 573.0,544.0 L 578.0,489.0 L 582.0,505.0 L 584.0,479.0 L 589.0,532.0 L 590.0,400.0 L 586.0,381.0 L 591.0,338.0 L 600.0,334.0 L 598.0,326.0 L 595.0,331.0 L 591.0,329.0 L 591.0,298.0 L 596.0,298.0 L 599.0,309.0 L 601.0,298.0 L 722.0,296.0 L 725.0,301.0 L 738.0,297.0 L 742.0,315.0 L 743.0,298.0 L 751.0,290.0 L 751.0,342.0 L 746.0,339.0 L 749.0,333.0 L 744.0,331.0 L 743.0,317.0 L 737.0,331.0 L 656.0,332.0 L 650.0,328.0 L 638.0,334.0 L 637.0,324.0 L 636.0,331.0 L 609.0,332.0 L 635.0,337.0 L 626.0,341.0 L 632.0,345.0 L 630.0,358.0 L 620.0,363.0 L 617.0,358.0 L 617.0,363.0 L 607.0,365.0 L 625.0,369.0 L 619.0,373.0 L 622.0,378.0 L 627.0,371.0 L 630.0,374.0 L 634.0,424.0 L 638.0,427.0 L 639.0,492.0 L 641.0,386.0 L 650.0,384.0 L 655.0,401.0 L 666.0,413.0 L 663.0,423.0 L 670.0,443.0 L 673.0,418.0 L 678.0,423.0 L 675.0,428.0 L 681.0,427.0 L 692.0,437.0 L 706.0,458.0 L 709.0,513.0 L 712.0,503.0 L 714.0,644.0 L 716.0,468.0 L 721.0,469.0 L 718.0,451.0 L 727.0,462.0 L 723.0,472.0 L 727.0,476.0 L 729.0,607.0 L 733.0,493.0 L 737.0,489.0 L 744.0,497.0 L 745.0,522.0 L 747.0,498.0 L 763.0,512.0 L 736.0,480.0 L 735.0,464.0 L 739.0,462.0 L 817.0,539.0 L 819.0,534.0 L 893.0,612.0 L 840.0,549.0 L 804.0,517.0 L 790.0,495.0 L 770.0,480.0 L 767.0,470.0 L 737.0,443.0 L 744.0,437.0 L 746.0,444.0 L 753.0,436.0 L 747.0,428.0 L 749.0,379.0 L 771.0,376.0 L 773.0,382.0 L 779.0,376.0 L 779.0,353.0 L 783.0,368.0 L 791.0,327.0 L 796.0,346.0 L 793.0,357.0 L 802.0,353.0 L 796.0,346.0 L 798.0,301.0 L 801.0,308.0 L 803.0,295.0 L 797.0,290.0 L 798.0,281.0 L 836.0,280.0 L 835.0,284.0 L 843.0,280.0 L 845.0,307.0 L 841.0,310.0 L 836.0,306.0 L 835.0,315.0 L 840.0,312.0 L 845.0,316.0 L 846.0,346.0 L 850.0,317.0 L 853.0,335.0 L 862.0,339.0 L 861.0,356.0 L 856.0,342.0 L 851.0,356.0 L 856.0,362.0 L 852.0,366.0 L 854.0,481.0 L 858.0,443.0 L 860.0,464.0 L 864.0,455.0 L 866.0,401.0 L 870.0,478.0 L 873.0,411.0 L 882.0,573.0 L 893.0,456.0 L 899.0,499.0 L 897.0,364.0 L 902.0,347.0 L 898.0,345.0 L 894.0,354.0 L 892.0,346.0 L 902.0,326.0 L 902.0,296.0 L 907.0,289.0 L 899.0,277.0 L 905.0,264.0 L 911.0,267.0 L 912.0,261.0 L 896.0,263.0 L 889.0,256.0 L 882.0,262.0 L 888.0,265.0 L 877.0,274.0 L 872.0,270.0 L 879.0,269.0 L 879.0,264.0 L 871.0,269.0 L 869.0,261.0 L 862.0,263.0 L 854.0,247.0 L 853.0,266.0 L 845.0,249.0 L 849.0,263.0 L 833.0,272.0 L 841.0,274.0 L 796.0,273.0 L 815.0,269.0 L 791.0,268.0 L 795.0,259.0 L 787.0,257.0 L 788.0,248.0 L 781.0,258.0 L 752.0,257.0 L 750.0,272.0 L 724.0,266.0 L 732.0,262.0 L 731.0,257.0 L 695.0,257.0 L 695.0,252.0 L 692.0,257.0 L 593.0,257.0 L 587.0,238.0 L 584.0,177.0 L 580.0,270.0 L 575.0,256.0 L 567.0,255.0 L 563.0,191.0 L 559.0,254.0 L 555.0,250.0 L 553.0,256.0 L 555.0,246.0 L 552.0,248.0 L 549.0,242.0 L 548.0,256.0 L 488.0,259.0 L 530.0,264.0 L 510.0,267.0 L 530.0,272.0 Z M 737.0,454.0 L 744.0,454.0 L 749.0,463.0 Z M 693.0,429.0 L 697.0,428.0 L 710.0,443.0 L 710.0,450.0 Z M 731.0,418.0 L 743.0,431.0 L 737.0,438.0 L 732.0,435.0 Z M 681.0,403.0 L 693.0,416.0 L 689.0,425.0 L 681.0,418.0 L 685.0,415.0 Z M 726.0,377.0 L 741.0,378.0 L 744.0,425.0 L 725.0,403.0 Z M 706.0,377.0 L 716.0,378.0 L 716.0,394.0 Z M 680.0,377.0 L 692.0,376.0 L 706.0,391.0 L 706.0,398.0 L 710.0,400.0 L 709.0,395.0 L 717.0,403.0 L 716.0,410.0 L 712.0,410.0 L 715.0,423.0 L 685.0,395.0 L 690.0,393.0 L 688.0,388.0 L 684.0,393.0 L 677.0,385.0 L 685.0,384.0 Z M 554.0,370.0 L 556.0,405.0 L 552.0,407.0 Z M 639.0,346.0 L 654.0,345.0 L 648.0,346.0 L 646.0,353.0 Z M 887.0,338.0 L 887.0,346.0 L 883.0,343.0 Z M 1563.0,159.0 L 1559.0,165.0 L 1566.0,168.0 L 1568.0,162.0 Z M 1853.0,146.0 L 1851.0,151.0 L 1855.0,153.0 L 1858.0,149.0 Z M 878.0,137.0 L 871.0,196.0 L 861.0,198.0 L 869.0,181.0 L 856.0,201.0 L 820.0,206.0 L 857.0,212.0 L 872.0,231.0 L 877.0,258.0 L 886.0,214.0 L 895.0,214.0 L 888.0,224.0 L 897.0,212.0 L 933.0,207.0 L 884.0,197.0 Z M 867.0,216.0 L 870.0,224.0 L 865.0,220.0 Z M 873.0,203.0 L 854.0,204.0 L 869.0,200.0 Z M 1527.0,73.0 L 1520.0,259.0 L 1515.0,252.0 L 1510.0,261.0 L 1458.0,263.0 L 1451.0,260.0 L 1456.0,256.0 L 1431.0,254.0 L 1262.0,260.0 L 1265.0,265.0 L 1286.0,262.0 L 1314.0,270.0 L 1267.0,275.0 L 1286.0,280.0 L 1250.0,279.0 L 1245.0,275.0 L 1249.0,267.0 L 1245.0,263.0 L 1246.0,207.0 L 1242.0,264.0 L 1232.0,273.0 L 1227.0,260.0 L 1236.0,244.0 L 1227.0,248.0 L 1222.0,191.0 L 1218.0,245.0 L 1213.0,228.0 L 1211.0,252.0 L 1205.0,258.0 L 1202.0,234.0 L 1194.0,258.0 L 1193.0,247.0 L 1188.0,250.0 L 1187.0,272.0 L 1126.0,332.0 L 1118.0,335.0 L 1129.0,317.0 L 1082.0,358.0 L 1012.0,296.0 L 1008.0,343.0 L 1006.0,321.0 L 1001.0,321.0 L 1006.0,311.0 L 1003.0,314.0 L 999.0,309.0 L 999.0,292.0 L 1005.0,294.0 L 1003.0,283.0 L 975.0,260.0 L 967.0,228.0 L 962.0,248.0 L 959.0,215.0 L 958.0,246.0 L 952.0,233.0 L 952.0,251.0 L 946.0,262.0 L 943.0,225.0 L 939.0,230.0 L 943.0,232.0 L 939.0,276.0 L 945.0,331.0 L 947.0,441.0 L 950.0,426.0 L 951.0,475.0 L 955.0,489.0 L 958.0,480.0 L 959.0,496.0 L 965.0,473.0 L 964.0,452.0 L 970.0,441.0 L 975.0,608.0 L 979.0,517.0 L 983.0,527.0 L 991.0,420.0 L 999.0,476.0 L 997.0,378.0 L 1003.0,345.0 L 1009.0,351.0 L 1012.0,391.0 L 1016.0,359.0 L 1060.0,400.0 L 1067.0,480.0 L 1062.0,482.0 L 1068.0,489.0 L 1073.0,415.0 L 1082.0,649.0 L 1087.0,528.0 L 1090.0,537.0 L 1090.0,413.0 L 1094.0,411.0 L 1096.0,454.0 L 1099.0,428.0 L 1102.0,511.0 L 1105.0,399.0 L 1158.0,353.0 L 1163.0,399.0 L 1166.0,345.0 L 1172.0,339.0 L 1176.0,476.0 L 1181.0,446.0 L 1184.0,470.0 L 1185.0,581.0 L 1190.0,504.0 L 1198.0,636.0 L 1202.0,395.0 L 1208.0,398.0 L 1211.0,428.0 L 1207.0,437.0 L 1213.0,442.0 L 1209.0,447.0 L 1216.0,534.0 L 1219.0,378.0 L 1225.0,446.0 L 1231.0,285.0 L 1238.0,284.0 L 1241.0,292.0 L 1242.0,398.0 L 1248.0,283.0 L 1315.0,283.0 L 1288.0,287.0 L 1320.0,290.0 L 1272.0,292.0 L 1274.0,295.0 L 1465.0,295.0 L 1478.0,298.0 L 1482.0,305.0 L 1483.0,296.0 L 1508.0,294.0 L 1487.0,291.0 L 1519.0,288.0 L 1524.0,296.0 L 1524.0,353.0 L 1434.0,349.0 L 1440.0,344.0 L 1415.0,340.0 L 1447.0,336.0 L 1454.0,340.0 L 1457.0,336.0 L 1295.0,332.0 L 1293.0,327.0 L 1283.0,332.0 L 1276.0,325.0 L 1274.0,336.0 L 1266.0,332.0 L 1266.0,398.0 L 1259.0,397.0 L 1266.0,401.0 L 1269.0,526.0 L 1276.0,474.0 L 1281.0,480.0 L 1288.0,456.0 L 1295.0,473.0 L 1299.0,455.0 L 1305.0,553.0 L 1309.0,456.0 L 1447.0,456.0 L 1450.0,461.0 L 1450.0,456.0 L 1489.0,455.0 L 1475.0,451.0 L 1515.0,449.0 L 1527.0,456.0 L 1535.0,448.0 L 1533.0,431.0 L 1575.0,430.0 L 1528.0,426.0 L 1528.0,355.0 L 1539.0,354.0 L 1528.0,352.0 L 1530.0,267.0 L 1565.0,263.0 L 1532.0,258.0 L 1530.0,204.0 L 1535.0,206.0 L 1537.0,199.0 L 1530.0,199.0 Z M 1522.0,446.0 L 1480.0,444.0 L 1482.0,441.0 L 1475.0,437.0 L 1432.0,436.0 L 1521.0,431.0 Z M 953.0,404.0 L 950.0,421.0 L 948.0,406.0 Z M 1525.0,355.0 L 1525.0,427.0 L 1464.0,424.0 L 1479.0,419.0 L 1466.0,418.0 L 1463.0,413.0 L 1457.0,419.0 L 1461.0,422.0 L 1455.0,425.0 L 1447.0,423.0 L 1454.0,421.0 L 1449.0,415.0 L 1366.0,418.0 L 1352.0,413.0 L 1333.0,417.0 L 1334.0,410.0 L 1329.0,416.0 L 1316.0,415.0 L 1320.0,410.0 L 1313.0,400.0 L 1313.0,387.0 L 1319.0,385.0 L 1313.0,384.0 L 1324.0,375.0 L 1434.0,375.0 L 1429.0,371.0 L 1489.0,368.0 L 1440.0,363.0 L 1447.0,358.0 Z M 950.0,329.0 L 957.0,379.0 L 952.0,400.0 L 948.0,398.0 Z M 1187.0,295.0 L 1188.0,358.0 L 1183.0,341.0 L 1183.0,309.0 L 1178.0,307.0 L 1182.0,300.0 L 1186.0,306.0 Z M 1473.0,267.0 L 1521.0,265.0 L 1523.0,277.0 L 1521.0,282.0 L 1486.0,281.0 L 1513.0,275.0 Z M 1829.0,21.0 L 1821.0,197.0 L 1813.0,85.0 L 1811.0,333.0 L 1716.0,331.0 L 1714.0,290.0 L 1712.0,330.0 L 1716.0,331.0 L 1711.0,334.0 L 1702.0,293.0 L 1702.0,266.0 L 1697.0,287.0 L 1692.0,275.0 L 1686.0,278.0 L 1690.0,270.0 L 1684.0,264.0 L 1683.0,219.0 L 1677.0,284.0 L 1669.0,195.0 L 1664.0,348.0 L 1669.0,367.0 L 1666.0,375.0 L 1670.0,376.0 L 1664.0,384.0 L 1662.0,409.0 L 1667.0,436.0 L 1664.0,473.0 L 1668.0,555.0 L 1672.0,511.0 L 1681.0,705.0 L 1691.0,565.0 L 1692.0,600.0 L 1695.0,586.0 L 1701.0,646.0 L 1702.0,474.0 L 1706.0,489.0 L 1708.0,476.0 L 1711.0,478.0 L 1713.0,501.0 L 1714.0,410.0 L 1719.0,404.0 L 1715.0,401.0 L 1719.0,376.0 L 1724.0,384.0 L 1725.0,408.0 L 1730.0,377.0 L 1792.0,375.0 L 1803.0,379.0 L 1805.0,391.0 L 1762.0,394.0 L 1811.0,397.0 L 1818.0,525.0 L 1819.0,479.0 L 1825.0,471.0 L 1820.0,468.0 L 1821.0,398.0 L 1834.0,399.0 L 1839.0,435.0 L 1840.0,370.0 L 1849.0,370.0 L 1850.0,437.0 L 1845.0,434.0 L 1851.0,506.0 L 1853.0,635.0 L 1859.0,548.0 L 1868.0,715.0 L 1867.0,638.0 L 1873.0,632.0 L 1869.0,622.0 L 1873.0,621.0 L 1874.0,546.0 L 1878.0,545.0 L 1874.0,539.0 L 1874.0,491.0 L 1878.0,489.0 L 1874.0,480.0 L 1878.0,457.0 L 1872.0,430.0 L 1875.0,417.0 L 1882.0,416.0 L 1882.0,436.0 L 1878.0,432.0 L 1878.0,438.0 L 1882.0,438.0 L 1880.0,458.0 L 1892.0,573.0 L 1893.0,455.0 L 1896.0,476.0 L 1899.0,399.0 L 1909.0,397.0 L 1915.0,559.0 L 1918.0,398.0 L 2015.0,394.0 L 1919.0,391.0 L 1919.0,376.0 L 1963.0,373.0 L 1951.0,370.0 L 2138.0,367.0 L 1956.0,364.0 L 1968.0,359.0 L 1955.0,355.0 L 2051.0,350.0 L 1953.0,346.0 L 1981.0,341.0 L 1937.0,341.0 L 1957.0,337.0 L 1913.0,337.0 L 1914.0,333.0 L 1896.0,332.0 L 1894.0,312.0 L 1901.0,309.0 L 1893.0,307.0 L 1894.0,301.0 L 1921.0,297.0 L 1886.0,294.0 L 1888.0,278.0 L 1893.0,291.0 L 1895.0,279.0 L 2023.0,274.0 L 1896.0,271.0 L 1892.0,218.0 L 1888.0,271.0 L 1883.0,199.0 L 1879.0,201.0 L 1876.0,269.0 L 1863.0,270.0 L 1858.0,266.0 L 1861.0,245.0 L 1858.0,249.0 L 1855.0,159.0 L 1849.0,258.0 L 1846.0,232.0 L 1842.0,296.0 L 1849.0,337.0 L 1840.0,337.0 L 1840.0,192.0 L 1832.0,118.0 Z M 1711.0,409.0 L 1710.0,442.0 L 1707.0,413.0 Z M 1705.0,382.0 L 1710.0,387.0 L 1710.0,409.0 Z M 1906.0,376.0 L 1910.0,377.0 L 1909.0,391.0 L 1902.0,389.0 Z M 1825.0,376.0 L 1830.0,377.0 L 1830.0,391.0 L 1822.0,389.0 Z M 1869.0,302.0 L 1874.0,301.0 L 1875.0,306.0 Z M 1887.0,300.0 L 1891.0,307.0 L 1888.0,309.0 Z M 1597.0,3.0 L 1589.0,151.0 L 1584.0,121.0 L 1583.0,154.0 L 1579.0,139.0 L 1578.0,169.0 L 1570.0,171.0 L 1575.0,177.0 L 1575.0,193.0 L 1567.0,195.0 L 1575.0,203.0 L 1576.0,232.0 L 1564.0,236.0 L 1572.0,238.0 L 1575.0,249.0 L 1575.0,410.0 L 1582.0,470.0 L 1584.0,423.0 L 1588.0,430.0 L 1591.0,416.0 L 1592.0,434.0 L 1588.0,437.0 L 1595.0,451.0 L 1599.0,446.0 L 1604.0,517.0 L 1610.0,443.0 L 1614.0,449.0 L 1621.0,561.0 L 1622.0,412.0 L 1626.0,388.0 L 1621.0,377.0 L 1622.0,327.0 L 1616.0,325.0 L 1622.0,321.0 L 1621.0,281.0 L 1616.0,279.0 L 1621.0,277.0 L 1621.0,258.0 L 1616.0,258.0 L 1622.0,253.0 L 1623.0,234.0 L 1631.0,338.0 L 1632.0,198.0 L 1628.0,187.0 L 1632.0,161.0 L 1628.0,124.0 L 1621.0,173.0 L 1618.0,121.0 L 1613.0,149.0 L 1613.0,40.0 L 1607.0,128.0 L 1604.0,92.0 L 1601.0,99.0 Z M 265.0,3.0 L 256.0,204.0 L 253.0,164.0 L 250.0,185.0 L 248.0,104.0 L 243.0,103.0 L 242.0,322.0 L 238.0,327.0 L 235.0,319.0 L 234.0,326.0 L 229.0,327.0 L 227.0,284.0 L 223.0,327.0 L 218.0,328.0 L 212.0,258.0 L 209.0,328.0 L 175.0,331.0 L 208.0,332.0 L 209.0,341.0 L 129.0,344.0 L 191.0,348.0 L 174.0,350.0 L 195.0,355.0 L 40.0,359.0 L 201.0,363.0 L 161.0,368.0 L 166.0,370.0 L 139.0,369.0 L 148.0,374.0 L 91.0,377.0 L 150.0,381.0 L 130.0,384.0 L 210.0,388.0 L 213.0,500.0 L 217.0,387.0 L 224.0,386.0 L 233.0,393.0 L 234.0,416.0 L 237.0,404.0 L 243.0,407.0 L 240.0,424.0 L 233.0,428.0 L 239.0,435.0 L 239.0,478.0 L 233.0,488.0 L 240.0,496.0 L 243.0,591.0 L 246.0,500.0 L 250.0,496.0 L 244.0,484.0 L 252.0,475.0 L 252.0,461.0 L 257.0,634.0 L 261.0,558.0 L 266.0,708.0 L 275.0,522.0 L 279.0,554.0 L 284.0,551.0 L 280.0,543.0 L 280.0,439.0 L 286.0,436.0 L 289.0,426.0 L 292.0,449.0 L 296.0,432.0 L 301.0,636.0 L 304.0,377.0 L 315.0,378.0 L 320.0,430.0 L 324.0,378.0 L 334.0,377.0 L 355.0,398.0 L 358.0,393.0 L 359.0,407.0 L 368.0,421.0 L 373.0,418.0 L 379.0,429.0 L 408.0,449.0 L 414.0,460.0 L 483.0,523.0 L 487.0,623.0 L 493.0,543.0 L 497.0,683.0 L 500.0,540.0 L 520.0,554.0 L 500.0,532.0 L 504.0,506.0 L 542.0,542.0 L 539.0,532.0 L 551.0,539.0 L 558.0,550.0 L 546.0,545.0 L 558.0,557.0 L 558.0,564.0 L 564.0,563.0 L 570.0,569.0 L 573.0,587.0 L 577.0,575.0 L 608.0,606.0 L 607.0,598.0 L 622.0,607.0 L 631.0,624.0 L 712.0,703.0 L 594.0,578.0 L 590.0,581.0 L 576.0,566.0 L 575.0,549.0 L 571.0,555.0 L 563.0,550.0 L 534.0,508.0 L 531.0,512.0 L 521.0,499.0 L 517.0,502.0 L 501.0,484.0 L 504.0,480.0 L 489.0,460.0 L 483.0,460.0 L 458.0,434.0 L 459.0,430.0 L 441.0,417.0 L 444.0,413.0 L 436.0,412.0 L 401.0,378.0 L 477.0,374.0 L 418.0,369.0 L 421.0,366.0 L 415.0,371.0 L 396.0,366.0 L 392.0,369.0 L 369.0,347.0 L 401.0,344.0 L 364.0,342.0 L 349.0,328.0 L 459.0,226.0 L 445.0,234.0 L 535.0,144.0 L 609.0,78.0 L 491.0,165.0 L 508.0,142.0 L 470.0,170.0 L 443.0,198.0 L 440.0,189.0 L 391.0,236.0 L 387.0,234.0 L 368.0,246.0 L 440.0,179.0 L 366.0,238.0 L 363.0,236.0 L 331.0,268.0 L 330.0,258.0 L 325.0,255.0 L 317.0,263.0 L 324.0,258.0 L 328.0,267.0 L 307.0,287.0 L 306.0,274.0 L 311.0,269.0 L 306.0,270.0 L 309.0,237.0 L 305.0,143.0 L 305.0,271.0 L 302.0,290.0 L 291.0,300.0 L 294.0,187.0 L 289.0,187.0 L 288.0,199.0 L 283.0,185.0 L 281.0,23.0 L 275.0,162.0 Z M 469.0,491.0 L 483.0,504.0 L 484.0,513.0 Z M 477.0,487.0 L 483.0,486.0 L 496.0,499.0 L 493.0,506.0 Z M 472.0,461.0 L 481.0,469.0 L 475.0,468.0 Z M 289.0,377.0 L 289.0,414.0 L 284.0,387.0 Z M 312.0,356.0 L 315.0,370.0 L 303.0,371.0 L 303.0,363.0 Z M 239.0,332.0 L 240.0,343.0 L 236.0,341.0 Z M 223.0,332.0 L 220.0,342.0 L 217.0,333.0 Z"/>
+    </svg>
+  </a>
+  <ul class="doors" aria-label="jump to a letter">
+    <li><a href="#k">K</a></li>
+    <li><a href="#r">R</a></li>
+    <li><a href="#i">I</a></li>
+    <li><a href="#m">M</a></li>
+    <li><a href="#e">E</a></li>
+    <li><a href="#l">L</a></li>
+    <li><a href="#h">H</a></li>
+  </ul>
+</header>
+
+<section class="cover-hero">
+  <div class="cover-img"></div>
+  <div class="cover-scrim"></div>
+  <p class="cover-caption">Otro lado &middot; misma esencia &mdash; sencillo 1</p>
+</section>
+
+<section class="intro">
+  <p class="kicker">The seventh state of being</p>
+  <h1>El séptimo estado de existencia</h1>
+  <div class="poem">
+    <p class="poem-left shimmer">Hay números que no se explican, solo insisten.<br>
+    El mío es el siete: apareció tantas veces que dejé de creer en la casualidad.<br>
+    La dirección de mi casa, el piso, la letra de mi departamento — siete.<br>
+    La dirección de mi trabajo — siete.<br>
+    Abrí los ojos por primera vez el séptimo mes del año, bajo Cáncer.</p>
+    <p class="poem-right shimmer">Podría seguir toda la tarde con esto, pero lo que de verdad importa es que cuando pensé el nombre me salieron siete letras —<br>
+    y son justo esas siete las canciones que voy a mostrarte, una por una, hasta completarlas y armar mi primer álbum: <b>Septum</b>.<br>
+    Si sentís que coincidimos en la energía, te invito a <a href="#hetairoi">inscribir tu correo</a> y ser parte de esto desde el principio.<br>
+    Contame qué pensás — me importa. 😊</p>
+  </div>
+</section>
+
+<section class="mirror">
+  <div class="side left">
+    <h2><a class="wordmark-link" href="biografia.html" aria-label="Leer la biografía de Krimelh"><svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2172 724" role="img" aria-label="KRIMELH">
+      <path class="letter" fill-rule="evenodd" d="M 1851.0,650.0 L 1853.0,657.0 L 1856.0,652.0 Z M 1184.0,598.0 L 1182.0,602.0 L 1186.0,603.0 Z M 573.0,589.0 L 572.0,600.0 L 566.0,605.0 L 572.0,608.0 L 573.0,649.0 L 577.0,606.0 Z M 1892.0,588.0 L 1890.0,593.0 L 1894.0,592.0 Z M 554.0,572.0 L 552.0,577.0 L 557.0,578.0 Z M 318.0,556.0 L 316.0,561.0 L 321.0,563.0 L 322.0,557.0 Z M 527.0,547.0 L 525.0,551.0 L 530.0,553.0 Z M 589.0,545.0 L 586.0,548.0 L 590.0,551.0 Z M 463.0,524.0 L 460.0,530.0 L 466.0,532.0 L 468.0,526.0 Z M 441.0,502.0 L 439.0,506.0 L 444.0,508.0 Z M 1837.0,499.0 L 1833.0,502.0 L 1835.0,508.0 L 1841.0,505.0 Z M 853.0,498.0 L 856.0,508.0 L 857.0,500.0 Z M 795.0,493.0 L 801.0,496.0 L 799.0,491.0 Z M 433.0,489.0 L 436.0,494.0 L 438.0,491.0 Z M 742.0,469.0 L 745.0,478.0 L 747.0,473.0 Z M 688.0,468.0 L 684.0,470.0 L 687.0,474.0 Z M 541.0,465.0 L 539.0,469.0 L 543.0,470.0 Z M 399.0,464.0 L 401.0,471.0 L 405.0,465.0 Z M 766.0,457.0 L 769.0,467.0 L 772.0,461.0 Z M 695.0,455.0 L 694.0,459.0 L 700.0,461.0 L 700.0,456.0 Z M 1655.0,446.0 L 1646.0,451.0 L 1651.0,457.0 L 1656.0,453.0 Z M 383.0,447.0 L 385.0,453.0 L 392.0,451.0 Z M 1650.0,425.0 L 1652.0,433.0 L 1656.0,428.0 Z M 1724.0,421.0 L 1726.0,426.0 L 1728.0,422.0 Z M 1654.0,361.0 L 1650.0,366.0 L 1653.0,371.0 Z M 383.0,354.0 L 396.0,358.0 L 396.0,364.0 L 401.0,358.0 L 521.0,357.0 Z M 847.0,350.0 L 841.0,354.0 L 846.0,362.0 Z M 836.0,334.0 L 833.0,340.0 L 840.0,342.0 L 843.0,339.0 Z M 168.0,329.0 L 166.0,333.0 L 170.0,334.0 Z M 1568.0,316.0 L 1564.0,320.0 L 1567.0,324.0 Z M 189.0,316.0 L 192.0,323.0 L 194.0,319.0 Z M 1778.0,314.0 L 1779.0,319.0 L 1784.0,318.0 L 1783.0,313.0 Z M 598.0,311.0 L 599.0,317.0 L 604.0,317.0 Z M 1973.0,294.0 L 1971.0,298.0 L 1976.0,300.0 L 1978.0,296.0 Z M 234.0,268.0 L 236.0,282.0 L 238.0,270.0 Z M 735.0,257.0 L 737.0,265.0 L 748.0,263.0 L 748.0,258.0 Z M 234.0,249.0 L 232.0,256.0 L 236.0,258.0 L 238.0,250.0 Z M 714.0,248.0 L 715.0,253.0 L 720.0,251.0 Z M 450.0,247.0 L 452.0,255.0 L 455.0,249.0 Z M 736.0,246.0 L 733.0,251.0 L 737.0,254.0 Z M 1510.0,239.0 L 1515.0,245.0 L 1519.0,241.0 Z M 799.0,234.0 L 792.0,238.0 L 799.0,241.0 Z M 725.0,233.0 L 723.0,239.0 L 729.0,240.0 L 730.0,235.0 Z M 900.0,230.0 L 893.0,235.0 L 898.0,250.0 L 903.0,237.0 Z M 359.0,227.0 L 351.0,228.0 L 349.0,233.0 Z M 1562.0,211.0 L 1566.0,216.0 L 1570.0,213.0 Z M 506.0,196.0 L 504.0,202.0 L 508.0,201.0 Z M 885.0,182.0 L 896.0,198.0 L 894.0,188.0 Z M 454.0,274.0 L 548.0,279.0 L 524.0,281.0 L 548.0,288.0 L 545.0,293.0 L 541.0,290.0 L 524.0,295.0 L 532.0,300.0 L 536.0,295.0 L 548.0,298.0 L 549.0,442.0 L 551.0,412.0 L 555.0,411.0 L 553.0,481.0 L 555.0,488.0 L 558.0,484.0 L 559.0,523.0 L 574.0,454.0 L 574.0,504.0 L 573.0,490.0 L 570.0,492.0 L 573.0,544.0 L 578.0,489.0 L 582.0,505.0 L 584.0,479.0 L 589.0,532.0 L 590.0,400.0 L 586.0,381.0 L 591.0,338.0 L 600.0,334.0 L 598.0,326.0 L 595.0,331.0 L 591.0,329.0 L 591.0,298.0 L 596.0,298.0 L 599.0,309.0 L 601.0,298.0 L 722.0,296.0 L 725.0,301.0 L 738.0,297.0 L 742.0,315.0 L 743.0,298.0 L 751.0,290.0 L 751.0,342.0 L 746.0,339.0 L 749.0,333.0 L 744.0,331.0 L 743.0,317.0 L 737.0,331.0 L 656.0,332.0 L 650.0,328.0 L 638.0,334.0 L 637.0,324.0 L 636.0,331.0 L 609.0,332.0 L 635.0,337.0 L 626.0,341.0 L 632.0,345.0 L 630.0,358.0 L 620.0,363.0 L 617.0,358.0 L 617.0,363.0 L 607.0,365.0 L 625.0,369.0 L 619.0,373.0 L 622.0,378.0 L 627.0,371.0 L 630.0,374.0 L 634.0,424.0 L 638.0,427.0 L 639.0,492.0 L 641.0,386.0 L 650.0,384.0 L 655.0,401.0 L 666.0,413.0 L 663.0,423.0 L 670.0,443.0 L 673.0,418.0 L 678.0,423.0 L 675.0,428.0 L 681.0,427.0 L 692.0,437.0 L 706.0,458.0 L 709.0,513.0 L 712.0,503.0 L 714.0,644.0 L 716.0,468.0 L 721.0,469.0 L 718.0,451.0 L 727.0,462.0 L 723.0,472.0 L 727.0,476.0 L 729.0,607.0 L 733.0,493.0 L 737.0,489.0 L 744.0,497.0 L 745.0,522.0 L 747.0,498.0 L 763.0,512.0 L 736.0,480.0 L 735.0,464.0 L 739.0,462.0 L 817.0,539.0 L 819.0,534.0 L 893.0,612.0 L 840.0,549.0 L 804.0,517.0 L 790.0,495.0 L 770.0,480.0 L 767.0,470.0 L 737.0,443.0 L 744.0,437.0 L 746.0,444.0 L 753.0,436.0 L 747.0,428.0 L 749.0,379.0 L 771.0,376.0 L 773.0,382.0 L 779.0,376.0 L 779.0,353.0 L 783.0,368.0 L 791.0,327.0 L 796.0,346.0 L 793.0,357.0 L 802.0,353.0 L 796.0,346.0 L 798.0,301.0 L 801.0,308.0 L 803.0,295.0 L 797.0,290.0 L 798.0,281.0 L 836.0,280.0 L 835.0,284.0 L 843.0,280.0 L 845.0,307.0 L 841.0,310.0 L 836.0,306.0 L 835.0,315.0 L 840.0,312.0 L 845.0,316.0 L 846.0,346.0 L 850.0,317.0 L 853.0,335.0 L 862.0,339.0 L 861.0,356.0 L 856.0,342.0 L 851.0,356.0 L 856.0,362.0 L 852.0,366.0 L 854.0,481.0 L 858.0,443.0 L 860.0,464.0 L 864.0,455.0 L 866.0,401.0 L 870.0,478.0 L 873.0,411.0 L 882.0,573.0 L 893.0,456.0 L 899.0,499.0 L 897.0,364.0 L 902.0,347.0 L 898.0,345.0 L 894.0,354.0 L 892.0,346.0 L 902.0,326.0 L 902.0,296.0 L 907.0,289.0 L 899.0,277.0 L 905.0,264.0 L 911.0,267.0 L 912.0,261.0 L 896.0,263.0 L 889.0,256.0 L 882.0,262.0 L 888.0,265.0 L 877.0,274.0 L 872.0,270.0 L 879.0,269.0 L 879.0,264.0 L 871.0,269.0 L 869.0,261.0 L 862.0,263.0 L 854.0,247.0 L 853.0,266.0 L 845.0,249.0 L 849.0,263.0 L 833.0,272.0 L 841.0,274.0 L 796.0,273.0 L 815.0,269.0 L 791.0,268.0 L 795.0,259.0 L 787.0,257.0 L 788.0,248.0 L 781.0,258.0 L 752.0,257.0 L 750.0,272.0 L 724.0,266.0 L 732.0,262.0 L 731.0,257.0 L 695.0,257.0 L 695.0,252.0 L 692.0,257.0 L 593.0,257.0 L 587.0,238.0 L 584.0,177.0 L 580.0,270.0 L 575.0,256.0 L 567.0,255.0 L 563.0,191.0 L 559.0,254.0 L 555.0,250.0 L 553.0,256.0 L 555.0,246.0 L 552.0,248.0 L 549.0,242.0 L 548.0,256.0 L 488.0,259.0 L 530.0,264.0 L 510.0,267.0 L 530.0,272.0 Z M 737.0,454.0 L 744.0,454.0 L 749.0,463.0 Z M 693.0,429.0 L 697.0,428.0 L 710.0,443.0 L 710.0,450.0 Z M 731.0,418.0 L 743.0,431.0 L 737.0,438.0 L 732.0,435.0 Z M 681.0,403.0 L 693.0,416.0 L 689.0,425.0 L 681.0,418.0 L 685.0,415.0 Z M 726.0,377.0 L 741.0,378.0 L 744.0,425.0 L 725.0,403.0 Z M 706.0,377.0 L 716.0,378.0 L 716.0,394.0 Z M 680.0,377.0 L 692.0,376.0 L 706.0,391.0 L 706.0,398.0 L 710.0,400.0 L 709.0,395.0 L 717.0,403.0 L 716.0,410.0 L 712.0,410.0 L 715.0,423.0 L 685.0,395.0 L 690.0,393.0 L 688.0,388.0 L 684.0,393.0 L 677.0,385.0 L 685.0,384.0 Z M 554.0,370.0 L 556.0,405.0 L 552.0,407.0 Z M 639.0,346.0 L 654.0,345.0 L 648.0,346.0 L 646.0,353.0 Z M 887.0,338.0 L 887.0,346.0 L 883.0,343.0 Z M 1563.0,159.0 L 1559.0,165.0 L 1566.0,168.0 L 1568.0,162.0 Z M 1853.0,146.0 L 1851.0,151.0 L 1855.0,153.0 L 1858.0,149.0 Z M 878.0,137.0 L 871.0,196.0 L 861.0,198.0 L 869.0,181.0 L 856.0,201.0 L 820.0,206.0 L 857.0,212.0 L 872.0,231.0 L 877.0,258.0 L 886.0,214.0 L 895.0,214.0 L 888.0,224.0 L 897.0,212.0 L 933.0,207.0 L 884.0,197.0 Z M 867.0,216.0 L 870.0,224.0 L 865.0,220.0 Z M 873.0,203.0 L 854.0,204.0 L 869.0,200.0 Z M 1527.0,73.0 L 1520.0,259.0 L 1515.0,252.0 L 1510.0,261.0 L 1458.0,263.0 L 1451.0,260.0 L 1456.0,256.0 L 1431.0,254.0 L 1262.0,260.0 L 1265.0,265.0 L 1286.0,262.0 L 1314.0,270.0 L 1267.0,275.0 L 1286.0,280.0 L 1250.0,279.0 L 1245.0,275.0 L 1249.0,267.0 L 1245.0,263.0 L 1246.0,207.0 L 1242.0,264.0 L 1232.0,273.0 L 1227.0,260.0 L 1236.0,244.0 L 1227.0,248.0 L 1222.0,191.0 L 1218.0,245.0 L 1213.0,228.0 L 1211.0,252.0 L 1205.0,258.0 L 1202.0,234.0 L 1194.0,258.0 L 1193.0,247.0 L 1188.0,250.0 L 1187.0,272.0 L 1126.0,332.0 L 1118.0,335.0 L 1129.0,317.0 L 1082.0,358.0 L 1012.0,296.0 L 1008.0,343.0 L 1006.0,321.0 L 1001.0,321.0 L 1006.0,311.0 L 1003.0,314.0 L 999.0,309.0 L 999.0,292.0 L 1005.0,294.0 L 1003.0,283.0 L 975.0,260.0 L 967.0,228.0 L 962.0,248.0 L 959.0,215.0 L 958.0,246.0 L 952.0,233.0 L 952.0,251.0 L 946.0,262.0 L 943.0,225.0 L 939.0,230.0 L 943.0,232.0 L 939.0,276.0 L 945.0,331.0 L 947.0,441.0 L 950.0,426.0 L 951.0,475.0 L 955.0,489.0 L 958.0,480.0 L 959.0,496.0 L 965.0,473.0 L 964.0,452.0 L 970.0,441.0 L 975.0,608.0 L 979.0,517.0 L 983.0,527.0 L 991.0,420.0 L 999.0,476.0 L 997.0,378.0 L 1003.0,345.0 L 1009.0,351.0 L 1012.0,391.0 L 1016.0,359.0 L 1060.0,400.0 L 1067.0,480.0 L 1062.0,482.0 L 1068.0,489.0 L 1073.0,415.0 L 1082.0,649.0 L 1087.0,528.0 L 1090.0,537.0 L 1090.0,413.0 L 1094.0,411.0 L 1096.0,454.0 L 1099.0,428.0 L 1102.0,511.0 L 1105.0,399.0 L 1158.0,353.0 L 1163.0,399.0 L 1166.0,345.0 L 1172.0,339.0 L 1176.0,476.0 L 1181.0,446.0 L 1184.0,470.0 L 1185.0,581.0 L 1190.0,504.0 L 1198.0,636.0 L 1202.0,395.0 L 1208.0,398.0 L 1211.0,428.0 L 1207.0,437.0 L 1213.0,442.0 L 1209.0,447.0 L 1216.0,534.0 L 1219.0,378.0 L 1225.0,446.0 L 1231.0,285.0 L 1238.0,284.0 L 1241.0,292.0 L 1242.0,398.0 L 1248.0,283.0 L 1315.0,283.0 L 1288.0,287.0 L 1320.0,290.0 L 1272.0,292.0 L 1274.0,295.0 L 1465.0,295.0 L 1478.0,298.0 L 1482.0,305.0 L 1483.0,296.0 L 1508.0,294.0 L 1487.0,291.0 L 1519.0,288.0 L 1524.0,296.0 L 1524.0,353.0 L 1434.0,349.0 L 1440.0,344.0 L 1415.0,340.0 L 1447.0,336.0 L 1454.0,340.0 L 1457.0,336.0 L 1295.0,332.0 L 1293.0,327.0 L 1283.0,332.0 L 1276.0,325.0 L 1274.0,336.0 L 1266.0,332.0 L 1266.0,398.0 L 1259.0,397.0 L 1266.0,401.0 L 1269.0,526.0 L 1276.0,474.0 L 1281.0,480.0 L 1288.0,456.0 L 1295.0,473.0 L 1299.0,455.0 L 1305.0,553.0 L 1309.0,456.0 L 1447.0,456.0 L 1450.0,461.0 L 1450.0,456.0 L 1489.0,455.0 L 1475.0,451.0 L 1515.0,449.0 L 1527.0,456.0 L 1535.0,448.0 L 1533.0,431.0 L 1575.0,430.0 L 1528.0,426.0 L 1528.0,355.0 L 1539.0,354.0 L 1528.0,352.0 L 1530.0,267.0 L 1565.0,263.0 L 1532.0,258.0 L 1530.0,204.0 L 1535.0,206.0 L 1537.0,199.0 L 1530.0,199.0 Z M 1522.0,446.0 L 1480.0,444.0 L 1482.0,441.0 L 1475.0,437.0 L 1432.0,436.0 L 1521.0,431.0 Z M 953.0,404.0 L 950.0,421.0 L 948.0,406.0 Z M 1525.0,355.0 L 1525.0,427.0 L 1464.0,424.0 L 1479.0,419.0 L 1466.0,418.0 L 1463.0,413.0 L 1457.0,419.0 L 1461.0,422.0 L 1455.0,425.0 L 1447.0,423.0 L 1454.0,421.0 L 1449.0,415.0 L 1366.0,418.0 L 1352.0,413.0 L 1333.0,417.0 L 1334.0,410.0 L 1329.0,416.0 L 1316.0,415.0 L 1320.0,410.0 L 1313.0,400.0 L 1313.0,387.0 L 1319.0,385.0 L 1313.0,384.0 L 1324.0,375.0 L 1434.0,375.0 L 1429.0,371.0 L 1489.0,368.0 L 1440.0,363.0 L 1447.0,358.0 Z M 950.0,329.0 L 957.0,379.0 L 952.0,400.0 L 948.0,398.0 Z M 1187.0,295.0 L 1188.0,358.0 L 1183.0,341.0 L 1183.0,309.0 L 1178.0,307.0 L 1182.0,300.0 L 1186.0,306.0 Z M 1473.0,267.0 L 1521.0,265.0 L 1523.0,277.0 L 1521.0,282.0 L 1486.0,281.0 L 1513.0,275.0 Z M 1829.0,21.0 L 1821.0,197.0 L 1813.0,85.0 L 1811.0,333.0 L 1716.0,331.0 L 1714.0,290.0 L 1712.0,330.0 L 1716.0,331.0 L 1711.0,334.0 L 1702.0,293.0 L 1702.0,266.0 L 1697.0,287.0 L 1692.0,275.0 L 1686.0,278.0 L 1690.0,270.0 L 1684.0,264.0 L 1683.0,219.0 L 1677.0,284.0 L 1669.0,195.0 L 1664.0,348.0 L 1669.0,367.0 L 1666.0,375.0 L 1670.0,376.0 L 1664.0,384.0 L 1662.0,409.0 L 1667.0,436.0 L 1664.0,473.0 L 1668.0,555.0 L 1672.0,511.0 L 1681.0,705.0 L 1691.0,565.0 L 1692.0,600.0 L 1695.0,586.0 L 1701.0,646.0 L 1702.0,474.0 L 1706.0,489.0 L 1708.0,476.0 L 1711.0,478.0 L 1713.0,501.0 L 1714.0,410.0 L 1719.0,404.0 L 1715.0,401.0 L 1719.0,376.0 L 1724.0,384.0 L 1725.0,408.0 L 1730.0,377.0 L 1792.0,375.0 L 1803.0,379.0 L 1805.0,391.0 L 1762.0,394.0 L 1811.0,397.0 L 1818.0,525.0 L 1819.0,479.0 L 1825.0,471.0 L 1820.0,468.0 L 1821.0,398.0 L 1834.0,399.0 L 1839.0,435.0 L 1840.0,370.0 L 1849.0,370.0 L 1850.0,437.0 L 1845.0,434.0 L 1851.0,506.0 L 1853.0,635.0 L 1859.0,548.0 L 1868.0,715.0 L 1867.0,638.0 L 1873.0,632.0 L 1869.0,622.0 L 1873.0,621.0 L 1874.0,546.0 L 1878.0,545.0 L 1874.0,539.0 L 1874.0,491.0 L 1878.0,489.0 L 1874.0,480.0 L 1878.0,457.0 L 1872.0,430.0 L 1875.0,417.0 L 1882.0,416.0 L 1882.0,436.0 L 1878.0,432.0 L 1878.0,438.0 L 1882.0,438.0 L 1880.0,458.0 L 1892.0,573.0 L 1893.0,455.0 L 1896.0,476.0 L 1899.0,399.0 L 1909.0,397.0 L 1915.0,559.0 L 1918.0,398.0 L 2015.0,394.0 L 1919.0,391.0 L 1919.0,376.0 L 1963.0,373.0 L 1951.0,370.0 L 2138.0,367.0 L 1956.0,364.0 L 1968.0,359.0 L 1955.0,355.0 L 2051.0,350.0 L 1953.0,346.0 L 1981.0,341.0 L 1937.0,341.0 L 1957.0,337.0 L 1913.0,337.0 L 1914.0,333.0 L 1896.0,332.0 L 1894.0,312.0 L 1901.0,309.0 L 1893.0,307.0 L 1894.0,301.0 L 1921.0,297.0 L 1886.0,294.0 L 1888.0,278.0 L 1893.0,291.0 L 1895.0,279.0 L 2023.0,274.0 L 1896.0,271.0 L 1892.0,218.0 L 1888.0,271.0 L 1883.0,199.0 L 1879.0,201.0 L 1876.0,269.0 L 1863.0,270.0 L 1858.0,266.0 L 1861.0,245.0 L 1858.0,249.0 L 1855.0,159.0 L 1849.0,258.0 L 1846.0,232.0 L 1842.0,296.0 L 1849.0,337.0 L 1840.0,337.0 L 1840.0,192.0 L 1832.0,118.0 Z M 1711.0,409.0 L 1710.0,442.0 L 1707.0,413.0 Z M 1705.0,382.0 L 1710.0,387.0 L 1710.0,409.0 Z M 1906.0,376.0 L 1910.0,377.0 L 1909.0,391.0 L 1902.0,389.0 Z M 1825.0,376.0 L 1830.0,377.0 L 1830.0,391.0 L 1822.0,389.0 Z M 1869.0,302.0 L 1874.0,301.0 L 1875.0,306.0 Z M 1887.0,300.0 L 1891.0,307.0 L 1888.0,309.0 Z M 1597.0,3.0 L 1589.0,151.0 L 1584.0,121.0 L 1583.0,154.0 L 1579.0,139.0 L 1578.0,169.0 L 1570.0,171.0 L 1575.0,177.0 L 1575.0,193.0 L 1567.0,195.0 L 1575.0,203.0 L 1576.0,232.0 L 1564.0,236.0 L 1572.0,238.0 L 1575.0,249.0 L 1575.0,410.0 L 1582.0,470.0 L 1584.0,423.0 L 1588.0,430.0 L 1591.0,416.0 L 1592.0,434.0 L 1588.0,437.0 L 1595.0,451.0 L 1599.0,446.0 L 1604.0,517.0 L 1610.0,443.0 L 1614.0,449.0 L 1621.0,561.0 L 1622.0,412.0 L 1626.0,388.0 L 1621.0,377.0 L 1622.0,327.0 L 1616.0,325.0 L 1622.0,321.0 L 1621.0,281.0 L 1616.0,279.0 L 1621.0,277.0 L 1621.0,258.0 L 1616.0,258.0 L 1622.0,253.0 L 1623.0,234.0 L 1631.0,338.0 L 1632.0,198.0 L 1628.0,187.0 L 1632.0,161.0 L 1628.0,124.0 L 1621.0,173.0 L 1618.0,121.0 L 1613.0,149.0 L 1613.0,40.0 L 1607.0,128.0 L 1604.0,92.0 L 1601.0,99.0 Z M 265.0,3.0 L 256.0,204.0 L 253.0,164.0 L 250.0,185.0 L 248.0,104.0 L 243.0,103.0 L 242.0,322.0 L 238.0,327.0 L 235.0,319.0 L 234.0,326.0 L 229.0,327.0 L 227.0,284.0 L 223.0,327.0 L 218.0,328.0 L 212.0,258.0 L 209.0,328.0 L 175.0,331.0 L 208.0,332.0 L 209.0,341.0 L 129.0,344.0 L 191.0,348.0 L 174.0,350.0 L 195.0,355.0 L 40.0,359.0 L 201.0,363.0 L 161.0,368.0 L 166.0,370.0 L 139.0,369.0 L 148.0,374.0 L 91.0,377.0 L 150.0,381.0 L 130.0,384.0 L 210.0,388.0 L 213.0,500.0 L 217.0,387.0 L 224.0,386.0 L 233.0,393.0 L 234.0,416.0 L 237.0,404.0 L 243.0,407.0 L 240.0,424.0 L 233.0,428.0 L 239.0,435.0 L 239.0,478.0 L 233.0,488.0 L 240.0,496.0 L 243.0,591.0 L 246.0,500.0 L 250.0,496.0 L 244.0,484.0 L 252.0,475.0 L 252.0,461.0 L 257.0,634.0 L 261.0,558.0 L 266.0,708.0 L 275.0,522.0 L 279.0,554.0 L 284.0,551.0 L 280.0,543.0 L 280.0,439.0 L 286.0,436.0 L 289.0,426.0 L 292.0,449.0 L 296.0,432.0 L 301.0,636.0 L 304.0,377.0 L 315.0,378.0 L 320.0,430.0 L 324.0,378.0 L 334.0,377.0 L 355.0,398.0 L 358.0,393.0 L 359.0,407.0 L 368.0,421.0 L 373.0,418.0 L 379.0,429.0 L 408.0,449.0 L 414.0,460.0 L 483.0,523.0 L 487.0,623.0 L 493.0,543.0 L 497.0,683.0 L 500.0,540.0 L 520.0,554.0 L 500.0,532.0 L 504.0,506.0 L 542.0,542.0 L 539.0,532.0 L 551.0,539.0 L 558.0,550.0 L 546.0,545.0 L 558.0,557.0 L 558.0,564.0 L 564.0,563.0 L 570.0,569.0 L 573.0,587.0 L 577.0,575.0 L 608.0,606.0 L 607.0,598.0 L 622.0,607.0 L 631.0,624.0 L 712.0,703.0 L 594.0,578.0 L 590.0,581.0 L 576.0,566.0 L 575.0,549.0 L 571.0,555.0 L 563.0,550.0 L 534.0,508.0 L 531.0,512.0 L 521.0,499.0 L 517.0,502.0 L 501.0,484.0 L 504.0,480.0 L 489.0,460.0 L 483.0,460.0 L 458.0,434.0 L 459.0,430.0 L 441.0,417.0 L 444.0,413.0 L 436.0,412.0 L 401.0,378.0 L 477.0,374.0 L 418.0,369.0 L 421.0,366.0 L 415.0,371.0 L 396.0,366.0 L 392.0,369.0 L 369.0,347.0 L 401.0,344.0 L 364.0,342.0 L 349.0,328.0 L 459.0,226.0 L 445.0,234.0 L 535.0,144.0 L 609.0,78.0 L 491.0,165.0 L 508.0,142.0 L 470.0,170.0 L 443.0,198.0 L 440.0,189.0 L 391.0,236.0 L 387.0,234.0 L 368.0,246.0 L 440.0,179.0 L 366.0,238.0 L 363.0,236.0 L 331.0,268.0 L 330.0,258.0 L 325.0,255.0 L 317.0,263.0 L 324.0,258.0 L 328.0,267.0 L 307.0,287.0 L 306.0,274.0 L 311.0,269.0 L 306.0,270.0 L 309.0,237.0 L 305.0,143.0 L 305.0,271.0 L 302.0,290.0 L 291.0,300.0 L 294.0,187.0 L 289.0,187.0 L 288.0,199.0 L 283.0,185.0 L 281.0,23.0 L 275.0,162.0 Z M 469.0,491.0 L 483.0,504.0 L 484.0,513.0 Z M 477.0,487.0 L 483.0,486.0 L 496.0,499.0 L 493.0,506.0 Z M 472.0,461.0 L 481.0,469.0 L 475.0,468.0 Z M 289.0,377.0 L 289.0,414.0 L 284.0,387.0 Z M 312.0,356.0 L 315.0,370.0 L 303.0,371.0 L 303.0,363.0 Z M 239.0,332.0 L 240.0,343.0 L 236.0,341.0 Z M 223.0,332.0 L 220.0,342.0 L 217.0,333.0 Z"/>
+    </svg></a></h2>
+    <p>lo que el mundo cree de m&iacute;</p>
+    <p class="tap-hint">tocá para leer su biografía &rarr;</p>
+  </div>
+  <div class="glyph">&#8644;</div>
+  <div class="side right">
+    <h2><svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 512" role="img" aria-label="HLEMIRK">
+      <path class="letter" fill-rule="evenodd" d="M 964.0,404.0 L 961.0,406.0 L 964.0,406.0 Z M 1244.0,391.0 L 1242.0,395.0 L 1245.0,394.0 Z M 1008.0,391.0 L 1007.0,395.0 L 1009.0,396.0 Z M 609.0,382.0 L 609.0,384.0 L 612.0,384.0 L 612.0,382.0 Z M 449.0,377.0 L 454.0,378.0 L 455.0,376.0 L 451.0,374.0 Z M 436.0,371.0 L 431.0,375.0 L 431.0,379.0 L 434.0,379.0 Z M 995.0,369.0 L 996.0,372.0 L 1000.0,372.0 L 1000.0,368.0 Z M 1191.0,352.0 L 1190.0,355.0 L 1193.0,356.0 L 1194.0,352.0 Z M 1279.0,349.0 L 1280.0,352.0 L 1283.0,352.0 L 1282.0,349.0 Z M 162.0,348.0 L 162.0,351.0 L 165.0,352.0 L 166.0,349.0 Z M 808.0,340.0 L 810.0,343.0 L 811.0,341.0 Z M 308.0,338.0 L 305.0,339.0 L 305.0,342.0 L 309.0,342.0 Z M 1169.0,334.0 L 1169.0,339.0 L 1173.0,339.0 L 1173.0,335.0 Z M 1284.0,332.0 L 1283.0,337.0 L 1286.0,337.0 L 1287.0,334.0 Z M 1252.0,325.0 L 1251.0,328.0 L 1254.0,329.0 L 1255.0,326.0 Z M 240.0,324.0 L 240.0,327.0 L 243.0,328.0 L 244.0,325.0 Z M 155.0,323.0 L 154.0,329.0 L 159.0,330.0 L 161.0,325.0 Z M 168.0,322.0 L 171.0,325.0 L 171.0,322.0 Z M 457.0,322.0 L 455.0,321.0 L 454.0,324.0 Z M 308.0,321.0 L 308.0,323.0 L 311.0,323.0 L 311.0,321.0 Z M 520.0,317.0 L 519.0,321.0 L 523.0,321.0 L 523.0,318.0 Z M 1405.0,271.0 L 1405.0,274.0 L 1409.0,273.0 L 1409.0,271.0 Z M 286.0,262.0 L 286.0,265.0 L 291.0,265.0 L 290.0,261.0 Z M 156.0,250.0 L 155.0,254.0 L 159.0,255.0 L 160.0,251.0 Z M 1377.0,248.0 L 1380.0,249.0 L 1380.0,246.0 Z M 1170.0,241.0 L 1170.0,244.0 L 1174.0,244.0 L 1174.0,241.0 Z M 679.0,239.0 L 675.0,239.0 L 675.0,243.0 Z M 808.0,228.0 L 810.0,231.0 L 811.0,229.0 Z M 1212.0,214.0 L 1211.0,218.0 L 1214.0,218.0 L 1214.0,214.0 Z M 1092.0,214.0 L 1091.0,221.0 L 1094.0,219.0 Z M 1039.0,212.0 L 1042.0,215.0 L 1042.0,212.0 Z M 905.0,210.0 L 904.0,213.0 L 908.0,213.0 Z M 316.0,210.0 L 315.0,219.0 L 317.0,220.0 Z M 427.0,206.0 L 424.0,207.0 L 425.0,210.0 L 428.0,209.0 Z M 918.0,235.0 L 938.0,237.0 L 940.0,239.0 L 935.0,242.0 L 927.0,240.0 L 925.0,243.0 L 921.0,243.0 L 941.0,244.0 L 948.0,247.0 L 947.0,249.0 L 916.0,250.0 L 929.0,250.0 L 931.0,252.0 L 929.0,255.0 L 934.0,256.0 L 931.0,259.0 L 920.0,259.0 L 1041.0,260.0 L 1045.0,270.0 L 1043.0,280.0 L 1002.0,280.0 L 1002.0,277.0 L 1020.0,277.0 L 964.0,276.0 L 962.0,273.0 L 957.0,280.0 L 953.0,277.0 L 946.0,280.0 L 944.0,276.0 L 942.0,280.0 L 939.0,278.0 L 936.0,280.0 L 933.0,269.0 L 933.0,278.0 L 930.0,281.0 L 922.0,281.0 L 933.0,283.0 L 928.0,294.0 L 930.0,304.0 L 927.0,306.0 L 930.0,308.0 L 932.0,408.0 L 932.0,397.0 L 935.0,397.0 L 934.0,435.0 L 936.0,387.0 L 939.0,384.0 L 940.0,370.0 L 942.0,369.0 L 942.0,398.0 L 944.0,400.0 L 945.0,476.0 L 947.0,406.0 L 949.0,405.0 L 952.0,410.0 L 952.0,433.0 L 953.0,383.0 L 955.0,382.0 L 957.0,386.0 L 957.0,374.0 L 960.0,370.0 L 962.0,372.0 L 960.0,374.0 L 960.0,393.0 L 962.0,396.0 L 963.0,326.0 L 965.0,325.0 L 969.0,330.0 L 969.0,353.0 L 971.0,329.0 L 976.0,337.0 L 976.0,347.0 L 979.0,340.0 L 1007.0,362.0 L 1008.0,382.0 L 1008.0,365.0 L 1010.0,364.0 L 1015.0,369.0 L 1015.0,376.0 L 1015.0,370.0 L 1018.0,369.0 L 1030.0,379.0 L 1029.0,384.0 L 1033.0,380.0 L 1020.0,367.0 L 1042.0,383.0 L 1036.0,377.0 L 1038.0,375.0 L 1054.0,388.0 L 1028.0,364.0 L 1033.0,360.0 L 1065.0,385.0 L 1079.0,399.0 L 1081.0,398.0 L 1072.0,390.0 L 1073.0,388.0 L 1104.0,414.0 L 1106.0,473.0 L 1108.0,419.0 L 1114.0,423.0 L 1115.0,453.0 L 1115.0,426.0 L 1118.0,425.0 L 1126.0,432.0 L 1130.0,508.0 L 1132.0,440.0 L 1136.0,440.0 L 1162.0,462.0 L 1140.0,441.0 L 1140.0,436.0 L 1138.0,440.0 L 1132.0,434.0 L 1132.0,426.0 L 1135.0,426.0 L 1135.0,383.0 L 1138.0,372.0 L 1140.0,373.0 L 1140.0,433.0 L 1141.0,422.0 L 1143.0,421.0 L 1144.0,366.0 L 1142.0,364.0 L 1142.0,332.0 L 1146.0,335.0 L 1148.0,362.0 L 1148.0,320.0 L 1154.0,316.0 L 1153.0,321.0 L 1157.0,323.0 L 1157.0,326.0 L 1153.0,328.0 L 1157.0,331.0 L 1158.0,391.0 L 1159.0,332.0 L 1162.0,330.0 L 1159.0,322.0 L 1171.0,320.0 L 1173.0,322.0 L 1171.0,326.0 L 1212.0,355.0 L 1258.0,392.0 L 1266.0,401.0 L 1282.0,411.0 L 1243.0,378.0 L 1239.0,370.0 L 1247.0,376.0 L 1252.0,376.0 L 1254.0,379.0 L 1251.0,380.0 L 1268.0,392.0 L 1260.0,384.0 L 1261.0,382.0 L 1342.0,446.0 L 1312.0,418.0 L 1316.0,417.0 L 1414.0,492.0 L 1326.0,415.0 L 1286.0,383.0 L 1290.0,378.0 L 1283.0,381.0 L 1268.0,369.0 L 1269.0,365.0 L 1259.0,357.0 L 1261.0,354.0 L 1276.0,365.0 L 1277.0,370.0 L 1280.0,372.0 L 1286.0,371.0 L 1332.0,407.0 L 1251.0,337.0 L 1241.0,324.0 L 1217.0,305.0 L 1217.0,282.0 L 1220.0,277.0 L 1265.0,276.0 L 1220.0,275.0 L 1218.0,271.0 L 1228.0,264.0 L 1241.0,264.0 L 1243.0,266.0 L 1247.0,264.0 L 1291.0,264.0 L 1293.0,266.0 L 1294.0,283.0 L 1294.0,269.0 L 1297.0,264.0 L 1427.0,263.0 L 1300.0,263.0 L 1295.0,260.0 L 1296.0,255.0 L 1347.0,254.0 L 1296.0,253.0 L 1294.0,251.0 L 1294.0,239.0 L 1291.0,253.0 L 1264.0,252.0 L 1260.0,254.0 L 1247.0,252.0 L 1271.0,233.0 L 1275.0,227.0 L 1306.0,205.0 L 1294.0,207.0 L 1292.0,205.0 L 1269.0,205.0 L 1254.0,216.0 L 1251.0,212.0 L 1256.0,207.0 L 1260.0,206.0 L 1261.0,209.0 L 1263.0,206.0 L 1247.0,205.0 L 1205.0,234.0 L 1199.0,234.0 L 1169.0,254.0 L 1159.0,251.0 L 1160.0,235.0 L 1158.0,233.0 L 1158.0,250.0 L 1153.0,253.0 L 1157.0,257.0 L 1150.0,259.0 L 1147.0,252.0 L 1147.0,205.0 L 1103.0,205.0 L 1101.0,232.0 L 1103.0,284.0 L 1101.0,286.0 L 1095.0,283.0 L 1094.0,240.0 L 1091.0,239.0 L 1093.0,283.0 L 1092.0,298.0 L 1088.0,300.0 L 1092.0,303.0 L 1091.0,316.0 L 1095.0,313.0 L 1098.0,314.0 L 1099.0,326.0 L 1095.0,326.0 L 1094.0,317.0 L 1093.0,344.0 L 1087.0,349.0 L 1087.0,352.0 L 1094.0,347.0 L 1095.0,349.0 L 1076.0,367.0 L 1094.0,356.0 L 1095.0,386.0 L 1095.0,358.0 L 1098.0,353.0 L 1101.0,354.0 L 1103.0,396.0 L 1105.0,399.0 L 1105.0,407.0 L 1103.0,408.0 L 1090.0,397.0 L 1092.0,394.0 L 1084.0,389.0 L 1079.0,381.0 L 1065.0,372.0 L 1067.0,370.0 L 1053.0,358.0 L 1046.0,347.0 L 1003.0,311.0 L 1009.0,306.0 L 1015.0,307.0 L 1010.0,309.0 L 1044.0,310.0 L 1046.0,313.0 L 1049.0,309.0 L 1063.0,308.0 L 1065.0,300.0 L 1062.0,293.0 L 1065.0,291.0 L 1068.0,296.0 L 1067.0,305.0 L 1071.0,310.0 L 1072.0,323.0 L 1072.0,298.0 L 1075.0,286.0 L 1075.0,240.0 L 1070.0,232.0 L 1071.0,229.0 L 1073.0,230.0 L 1070.0,225.0 L 1074.0,223.0 L 1073.0,220.0 L 1070.0,220.0 L 1070.0,205.0 L 1068.0,220.0 L 1064.0,222.0 L 1060.0,220.0 L 1059.0,215.0 L 1062.0,212.0 L 1060.0,210.0 L 1057.0,216.0 L 1056.0,205.0 L 1054.0,205.0 L 1053.0,221.0 L 981.0,223.0 L 1052.0,224.0 L 1054.0,227.0 L 1049.0,229.0 L 1054.0,231.0 L 1052.0,234.0 L 945.0,234.0 L 942.0,229.0 L 939.0,234.0 Z M 1108.0,408.0 L 1113.0,411.0 L 1112.0,416.0 L 1107.0,411.0 Z M 1118.0,397.0 L 1121.0,402.0 L 1120.0,405.0 L 1126.0,407.0 L 1125.0,426.0 L 1115.0,419.0 L 1115.0,405.0 Z M 1118.0,387.0 L 1120.0,390.0 L 1117.0,395.0 L 1116.0,388.0 Z M 1122.0,381.0 L 1124.0,382.0 L 1123.0,389.0 L 1121.0,388.0 Z M 1117.0,375.0 L 1119.0,376.0 L 1118.0,381.0 L 1115.0,379.0 Z M 1122.0,374.0 L 1124.0,375.0 L 1123.0,379.0 L 1121.0,378.0 Z M 933.0,373.0 L 936.0,374.0 L 936.0,391.0 L 934.0,394.0 L 932.0,393.0 Z M 1117.0,369.0 L 1119.0,370.0 L 1118.0,374.0 L 1116.0,373.0 Z M 934.0,363.0 L 936.0,364.0 L 935.0,369.0 L 933.0,368.0 Z M 960.0,360.0 L 962.0,361.0 L 961.0,366.0 L 959.0,365.0 Z M 948.0,359.0 L 951.0,362.0 L 949.0,380.0 L 947.0,379.0 Z M 959.0,354.0 L 961.0,353.0 L 962.0,356.0 L 960.0,357.0 Z M 1042.0,354.0 L 1044.0,352.0 L 1053.0,361.0 L 1050.0,361.0 Z M 1101.0,352.0 L 1103.0,351.0 L 1104.0,354.0 L 1102.0,355.0 Z M 948.0,351.0 L 950.0,352.0 L 949.0,356.0 L 947.0,355.0 Z M 1248.0,349.0 L 1251.0,348.0 L 1258.0,354.0 L 1252.0,355.0 L 1248.0,352.0 Z M 997.0,347.0 L 1000.0,353.0 L 995.0,349.0 Z M 1000.0,344.0 L 1002.0,343.0 L 1008.0,348.0 L 1005.0,349.0 Z M 1101.0,342.0 L 1102.0,344.0 L 1096.0,348.0 L 1096.0,345.0 Z M 1016.0,343.0 L 1018.0,342.0 L 1028.0,348.0 L 1036.0,356.0 L 1033.0,357.0 Z M 1004.0,341.0 L 1006.0,340.0 L 1009.0,344.0 L 1007.0,345.0 Z M 960.0,338.0 L 963.0,343.0 L 961.0,345.0 L 959.0,343.0 Z M 1233.0,338.0 L 1235.0,336.0 L 1238.0,338.0 L 1244.0,337.0 L 1248.0,343.0 L 1241.0,345.0 Z M 977.0,332.0 L 980.0,331.0 L 994.0,346.0 L 991.0,347.0 L 977.0,337.0 Z M 977.0,325.0 L 979.0,324.0 L 990.0,331.0 L 999.0,341.0 L 994.0,341.0 Z M 1217.0,323.0 L 1219.0,321.0 L 1223.0,325.0 L 1227.0,325.0 L 1233.0,332.0 L 1228.0,333.0 Z M 1190.0,316.0 L 1199.0,316.0 L 1205.0,325.0 L 1202.0,326.0 Z M 1219.0,313.0 L 1224.0,316.0 L 1222.0,317.0 Z M 1101.0,310.0 L 1103.0,311.0 L 1102.0,328.0 L 1099.0,326.0 L 1099.0,312.0 Z M 1181.0,310.0 L 1184.0,309.0 L 1185.0,311.0 Z M 1042.0,302.0 L 1050.0,301.0 L 1051.0,303.0 L 1043.0,304.0 Z M 1020.0,302.0 L 1039.0,301.0 L 1040.0,303.0 L 1021.0,304.0 Z M 1183.0,301.0 L 1185.0,300.0 L 1188.0,303.0 L 1186.0,304.0 Z M 1128.0,301.0 L 1130.0,298.0 L 1133.0,300.0 L 1131.0,303.0 Z M 1139.0,293.0 L 1143.0,293.0 L 1141.0,295.0 Z M 1097.0,288.0 L 1103.0,291.0 L 1103.0,302.0 L 1101.0,303.0 L 1099.0,299.0 L 1098.0,308.0 L 1096.0,307.0 L 1095.0,298.0 Z M 1059.0,289.0 L 1061.0,288.0 L 1063.0,291.0 L 1060.0,293.0 Z M 955.0,282.0 L 958.0,281.0 L 959.0,283.0 L 957.0,285.0 Z M 945.0,282.0 L 950.0,281.0 L 951.0,284.0 L 948.0,286.0 Z M 1060.0,280.0 L 1062.0,281.0 L 1061.0,285.0 L 1059.0,284.0 Z M 1213.0,277.0 L 1217.0,283.0 L 1217.0,303.0 L 1215.0,304.0 L 1204.0,296.0 L 1217.0,309.0 L 1216.0,311.0 L 1194.0,294.0 L 1198.0,288.0 L 1208.0,283.0 Z M 1060.0,269.0 L 1062.0,270.0 L 1061.0,276.0 L 1059.0,275.0 Z M 1155.0,261.0 L 1157.0,266.0 L 1149.0,270.0 L 1148.0,263.0 Z M 1175.0,256.0 L 1164.0,264.0 L 1159.0,264.0 L 1169.0,256.0 Z M 1235.0,260.0 L 1241.0,255.0 L 1249.0,256.0 L 1252.0,254.0 L 1264.0,255.0 L 1266.0,258.0 L 1273.0,258.0 L 1268.0,258.0 L 1268.0,255.0 L 1291.0,255.0 L 1293.0,257.0 L 1291.0,262.0 L 1284.0,263.0 Z M 1167.0,255.0 L 1163.0,259.0 L 1159.0,258.0 L 1160.0,255.0 Z M 957.0,253.0 L 959.0,251.0 L 972.0,251.0 L 974.0,254.0 L 958.0,255.0 Z M 947.0,252.0 L 952.0,251.0 L 954.0,254.0 L 949.0,255.0 Z M 1045.0,251.0 L 1048.0,250.0 L 1049.0,252.0 L 1046.0,253.0 Z M 1023.0,252.0 L 1027.0,249.0 L 1041.0,249.0 L 1043.0,251.0 L 1042.0,253.0 Z M 1019.0,250.0 L 1022.0,249.0 L 1023.0,251.0 L 1020.0,252.0 Z M 1029.0,245.0 L 1037.0,244.0 L 1038.0,246.0 L 1035.0,248.0 Z M 1131.0,225.0 L 1133.0,226.0 L 1132.0,233.0 L 1130.0,232.0 Z M 1067.0,224.0 L 1068.0,227.0 L 1062.0,232.0 L 1061.0,225.0 L 1063.0,223.0 Z M 1250.0,216.0 L 1247.0,220.0 L 1241.0,223.0 L 1238.0,222.0 L 1245.0,216.0 Z M 1137.0,215.0 L 1139.0,216.0 L 1138.0,220.0 L 1136.0,219.0 Z M 1131.0,210.0 L 1136.0,211.0 L 1135.0,218.0 L 1130.0,216.0 L 1129.0,212.0 Z M 1289.0,206.0 L 1291.0,208.0 L 1286.0,211.0 Z M 882.0,205.0 L 883.0,224.0 L 880.0,242.0 L 878.0,241.0 L 876.0,227.0 L 876.0,206.0 L 875.0,243.0 L 877.0,244.0 L 877.0,256.0 L 875.0,257.0 L 877.0,260.0 L 877.0,268.0 L 875.0,269.0 L 875.0,374.0 L 881.0,369.0 L 883.0,377.0 L 885.0,374.0 L 887.0,377.0 L 888.0,401.0 L 887.0,378.0 L 888.0,371.0 L 893.0,365.0 L 893.0,339.0 L 895.0,338.0 L 897.0,426.0 L 898.0,382.0 L 901.0,382.0 L 901.0,390.0 L 901.0,376.0 L 904.0,374.0 L 904.0,370.0 L 901.0,370.0 L 901.0,363.0 L 904.0,359.0 L 904.0,353.0 L 901.0,355.0 L 901.0,338.0 L 904.0,338.0 L 904.0,344.0 L 904.0,299.0 L 906.0,297.0 L 903.0,274.0 L 904.0,233.0 L 902.0,217.0 L 901.0,220.0 L 899.0,218.0 L 899.0,231.0 L 895.0,232.0 L 894.0,205.0 Z M 883.0,351.0 L 884.0,367.0 L 882.0,370.0 L 881.0,352.0 Z M 903.0,326.0 L 904.0,333.0 L 902.0,334.0 L 900.0,331.0 Z M 894.0,325.0 L 896.0,326.0 L 895.0,335.0 L 893.0,334.0 Z M 893.0,318.0 L 895.0,317.0 L 896.0,320.0 L 894.0,321.0 Z M 878.0,244.0 L 880.0,243.0 L 881.0,246.0 L 879.0,247.0 Z M 648.0,205.0 L 648.0,208.0 L 652.0,207.0 L 652.0,205.0 Z M 673.0,205.0 L 673.0,215.0 L 671.0,217.0 L 668.0,216.0 L 668.0,205.0 L 664.0,205.0 L 661.0,217.0 L 588.0,219.0 L 649.0,219.0 L 663.0,222.0 L 661.0,226.0 L 658.0,225.0 L 662.0,228.0 L 661.0,234.0 L 658.0,230.0 L 656.0,234.0 L 647.0,233.0 L 652.0,231.0 L 621.0,231.0 L 621.0,234.0 L 609.0,232.0 L 612.0,235.0 L 607.0,235.0 L 607.0,232.0 L 593.0,234.0 L 591.0,231.0 L 589.0,234.0 L 542.0,234.0 L 539.0,231.0 L 541.0,223.0 L 585.0,223.0 L 536.0,222.0 L 533.0,216.0 L 533.0,205.0 L 533.0,219.0 L 526.0,223.0 L 533.0,225.0 L 533.0,232.0 L 528.0,234.0 L 532.0,237.0 L 532.0,243.0 L 526.0,245.0 L 528.0,248.0 L 526.0,250.0 L 519.0,250.0 L 517.0,247.0 L 514.0,250.0 L 501.0,250.0 L 514.0,250.0 L 516.0,253.0 L 519.0,250.0 L 527.0,250.0 L 527.0,253.0 L 522.0,254.0 L 527.0,254.0 L 528.0,257.0 L 519.0,258.0 L 516.0,255.0 L 516.0,258.0 L 511.0,260.0 L 514.0,260.0 L 516.0,264.0 L 519.0,260.0 L 532.0,262.0 L 533.0,281.0 L 524.0,283.0 L 530.0,284.0 L 533.0,287.0 L 531.0,290.0 L 521.0,294.0 L 497.0,294.0 L 519.0,294.0 L 526.0,299.0 L 532.0,300.0 L 533.0,305.0 L 531.0,307.0 L 521.0,307.0 L 533.0,310.0 L 534.0,331.0 L 535.0,322.0 L 538.0,327.0 L 538.0,358.0 L 533.0,363.0 L 536.0,362.0 L 539.0,365.0 L 539.0,380.0 L 539.0,366.0 L 542.0,366.0 L 543.0,427.0 L 544.0,374.0 L 550.0,374.0 L 553.0,404.0 L 553.0,442.0 L 555.0,372.0 L 559.0,372.0 L 561.0,364.0 L 564.0,366.0 L 564.0,394.0 L 565.0,363.0 L 567.0,361.0 L 574.0,362.0 L 571.0,364.0 L 584.0,365.0 L 657.0,364.0 L 660.0,367.0 L 662.0,364.0 L 673.0,364.0 L 660.0,358.0 L 663.0,353.0 L 673.0,351.0 L 635.0,349.0 L 648.0,344.0 L 668.0,344.0 L 663.0,343.0 L 661.0,340.0 L 664.0,337.0 L 673.0,337.0 L 664.0,337.0 L 661.0,328.0 L 658.0,337.0 L 654.0,336.0 L 653.0,327.0 L 650.0,337.0 L 646.0,334.0 L 641.0,337.0 L 615.0,334.0 L 614.0,336.0 L 592.0,336.0 L 589.0,338.0 L 583.0,336.0 L 568.0,337.0 L 566.0,335.0 L 566.0,323.0 L 571.0,313.0 L 600.0,312.0 L 577.0,312.0 L 577.0,309.0 L 618.0,309.0 L 621.0,314.0 L 621.0,311.0 L 626.0,308.0 L 638.0,309.0 L 623.0,308.0 L 623.0,304.0 L 645.0,304.0 L 636.0,301.0 L 641.0,296.0 L 644.0,299.0 L 649.0,296.0 L 664.0,295.0 L 645.0,294.0 L 643.0,291.0 L 644.0,294.0 L 641.0,295.0 L 640.0,291.0 L 629.0,290.0 L 632.0,285.0 L 649.0,285.0 L 651.0,283.0 L 616.0,282.0 L 617.0,279.0 L 571.0,279.0 L 576.0,281.0 L 568.0,282.0 L 566.0,261.0 L 610.0,260.0 L 622.0,264.0 L 623.0,260.0 L 629.0,260.0 L 631.0,263.0 L 634.0,260.0 L 670.0,260.0 L 672.0,262.0 L 673.0,277.0 Z M 573.0,359.0 L 576.0,358.0 L 577.0,360.0 L 574.0,361.0 Z M 566.0,359.0 L 569.0,358.0 L 570.0,360.0 L 567.0,361.0 Z M 627.0,357.0 L 631.0,356.0 L 632.0,358.0 L 628.0,359.0 Z M 636.0,356.0 L 641.0,355.0 L 643.0,358.0 L 639.0,359.0 Z M 658.0,356.0 L 657.0,359.0 L 645.0,358.0 L 653.0,354.0 Z M 625.0,352.0 L 634.0,351.0 L 635.0,353.0 L 626.0,354.0 Z M 617.0,352.0 L 621.0,351.0 L 622.0,353.0 L 618.0,354.0 Z M 653.0,338.0 L 658.0,337.0 L 660.0,340.0 L 657.0,341.0 Z M 646.0,338.0 L 651.0,337.0 L 652.0,339.0 L 647.0,340.0 Z M 638.0,338.0 L 641.0,337.0 L 642.0,339.0 L 639.0,340.0 Z M 535.0,315.0 L 538.0,320.0 L 536.0,322.0 L 534.0,320.0 Z M 569.0,310.0 L 573.0,309.0 L 574.0,311.0 L 570.0,312.0 Z M 534.0,301.0 L 536.0,300.0 L 537.0,303.0 L 535.0,304.0 Z M 535.0,285.0 L 541.0,284.0 L 543.0,290.0 L 540.0,292.0 Z M 578.0,280.0 L 583.0,279.0 L 584.0,281.0 L 579.0,282.0 Z M 663.0,257.0 L 668.0,255.0 L 671.0,258.0 L 664.0,259.0 Z M 635.0,257.0 L 637.0,255.0 L 659.0,255.0 L 661.0,258.0 L 636.0,259.0 Z M 638.0,252.0 L 642.0,251.0 L 643.0,253.0 L 639.0,254.0 Z M 646.0,250.0 L 659.0,249.0 L 660.0,251.0 L 647.0,252.0 Z M 667.0,249.0 L 670.0,248.0 L 671.0,250.0 L 668.0,251.0 Z M 658.0,243.0 L 662.0,242.0 L 663.0,244.0 L 659.0,245.0 Z M 647.0,243.0 L 653.0,242.0 L 654.0,244.0 L 648.0,245.0 Z M 656.0,237.0 L 658.0,235.0 L 662.0,236.0 L 661.0,238.0 Z M 536.0,235.0 L 538.0,236.0 L 537.0,241.0 L 534.0,237.0 Z M 634.0,232.0 L 642.0,231.0 L 643.0,233.0 L 635.0,234.0 Z M 626.0,232.0 L 629.0,231.0 L 630.0,233.0 L 627.0,234.0 Z M 536.0,223.0 L 539.0,225.0 L 537.0,234.0 L 534.0,233.0 L 533.0,226.0 Z M 669.0,221.0 L 671.0,220.0 L 673.0,224.0 Z M 385.0,205.0 L 385.0,281.0 L 380.0,285.0 L 383.0,285.0 L 386.0,290.0 L 386.0,309.0 L 386.0,292.0 L 390.0,288.0 L 391.0,296.0 L 390.0,348.0 L 388.0,349.0 L 390.0,357.0 L 384.0,356.0 L 383.0,361.0 L 384.0,363.0 L 387.0,361.0 L 390.0,363.0 L 390.0,381.0 L 392.0,381.0 L 392.0,368.0 L 397.0,370.0 L 401.0,368.0 L 403.0,422.0 L 403.0,385.0 L 407.0,386.0 L 403.0,375.0 L 406.0,366.0 L 411.0,365.0 L 413.0,367.0 L 415.0,400.0 L 416.0,377.0 L 419.0,376.0 L 420.0,383.0 L 420.0,379.0 L 423.0,377.0 L 422.0,373.0 L 426.0,370.0 L 425.0,365.0 L 443.0,364.0 L 444.0,366.0 L 447.0,362.0 L 456.0,362.0 L 459.0,365.0 L 494.0,364.0 L 494.0,366.0 L 513.0,367.0 L 529.0,364.0 L 515.0,363.0 L 513.0,359.0 L 503.0,359.0 L 502.0,357.0 L 504.0,355.0 L 517.0,356.0 L 521.0,355.0 L 523.0,351.0 L 528.0,351.0 L 515.0,349.0 L 514.0,346.0 L 523.0,344.0 L 526.0,341.0 L 516.0,342.0 L 513.0,339.0 L 531.0,337.0 L 512.0,332.0 L 509.0,334.0 L 478.0,333.0 L 476.0,335.0 L 435.0,335.0 L 433.0,333.0 L 430.0,337.0 L 424.0,337.0 L 427.0,328.0 L 431.0,325.0 L 426.0,322.0 L 425.0,285.0 L 428.0,285.0 L 428.0,291.0 L 429.0,275.0 L 427.0,261.0 L 426.0,278.0 L 423.0,272.0 L 423.0,238.0 L 425.0,234.0 L 423.0,232.0 L 423.0,219.0 L 420.0,219.0 L 419.0,205.0 L 419.0,223.0 L 415.0,228.0 L 414.0,205.0 L 390.0,205.0 L 390.0,226.0 L 387.0,227.0 Z M 493.0,357.0 L 498.0,356.0 L 499.0,358.0 L 494.0,359.0 Z M 448.0,349.0 L 449.0,354.0 L 447.0,353.0 Z M 477.0,349.0 L 488.0,348.0 L 489.0,350.0 L 478.0,351.0 Z M 407.0,348.0 L 409.0,349.0 L 408.0,362.0 L 406.0,361.0 Z M 493.0,348.0 L 499.0,347.0 L 500.0,349.0 L 494.0,350.0 Z M 506.0,348.0 L 507.0,346.0 L 512.0,347.0 L 510.0,349.0 Z M 392.0,275.0 L 393.0,278.0 L 388.0,284.0 L 386.0,279.0 Z M 389.0,262.0 L 390.0,268.0 L 387.0,269.0 L 386.0,266.0 Z M 392.0,259.0 L 394.0,262.0 L 391.0,267.0 L 390.0,260.0 Z M 391.0,243.0 L 394.0,248.0 L 392.0,255.0 L 390.0,254.0 Z M 415.0,234.0 L 417.0,235.0 L 416.0,246.0 L 414.0,245.0 Z M 392.0,231.0 L 394.0,236.0 L 391.0,240.0 L 390.0,237.0 L 386.0,237.0 L 387.0,233.0 Z M 391.0,221.0 L 393.0,222.0 L 392.0,227.0 L 390.0,226.0 Z M 25.0,293.0 L 119.0,295.0 L 120.0,298.0 L 115.0,300.0 L 121.0,302.0 L 136.0,300.0 L 161.0,301.0 L 161.0,304.0 L 154.0,305.0 L 152.0,308.0 L 144.0,308.0 L 164.0,309.0 L 164.0,312.0 L 84.0,313.0 L 145.0,315.0 L 168.0,313.0 L 170.0,316.0 L 174.0,313.0 L 177.0,396.0 L 178.0,333.0 L 180.0,324.0 L 178.0,319.0 L 183.0,314.0 L 186.0,317.0 L 184.0,323.0 L 189.0,324.0 L 189.0,351.0 L 190.0,344.0 L 193.0,344.0 L 193.0,352.0 L 190.0,353.0 L 192.0,368.0 L 187.0,370.0 L 192.0,374.0 L 193.0,388.0 L 193.0,379.0 L 195.0,376.0 L 198.0,378.0 L 201.0,370.0 L 204.0,377.0 L 206.0,470.0 L 209.0,390.0 L 211.0,388.0 L 210.0,382.0 L 216.0,344.0 L 219.0,348.0 L 221.0,428.0 L 222.0,366.0 L 225.0,363.0 L 226.0,347.0 L 225.0,325.0 L 229.0,323.0 L 225.0,320.0 L 225.0,317.0 L 231.0,315.0 L 233.0,320.0 L 233.0,379.0 L 234.0,316.0 L 236.0,314.0 L 271.0,313.0 L 236.0,313.0 L 234.0,311.0 L 236.0,308.0 L 249.0,310.0 L 262.0,308.0 L 315.0,308.0 L 316.0,333.0 L 318.0,307.0 L 325.0,308.0 L 326.0,356.0 L 323.0,356.0 L 322.0,312.0 L 322.0,358.0 L 315.0,358.0 L 316.0,362.0 L 323.0,363.0 L 323.0,394.0 L 319.0,396.0 L 323.0,397.0 L 323.0,380.0 L 325.0,379.0 L 327.0,386.0 L 327.0,435.0 L 327.0,401.0 L 331.0,399.0 L 328.0,391.0 L 331.0,388.0 L 328.0,363.0 L 331.0,361.0 L 335.0,364.0 L 335.0,380.0 L 335.0,368.0 L 338.0,367.0 L 339.0,431.0 L 340.0,406.0 L 342.0,403.0 L 340.0,397.0 L 343.0,393.0 L 345.0,394.0 L 345.0,414.0 L 348.0,421.0 L 349.0,500.0 L 351.0,406.0 L 354.0,403.0 L 354.0,377.0 L 356.0,374.0 L 358.0,375.0 L 361.0,408.0 L 358.0,424.0 L 360.0,438.0 L 360.0,420.0 L 363.0,418.0 L 360.0,414.0 L 362.0,358.0 L 364.0,351.0 L 367.0,348.0 L 369.0,349.0 L 362.0,344.0 L 362.0,317.0 L 364.0,316.0 L 366.0,282.0 L 362.0,205.0 L 326.0,205.0 L 325.0,252.0 L 321.0,256.0 L 324.0,261.0 L 317.0,261.0 L 316.0,231.0 L 316.0,261.0 L 311.0,263.0 L 316.0,266.0 L 316.0,273.0 L 319.0,264.0 L 324.0,266.0 L 324.0,277.0 L 319.0,279.0 L 318.0,276.0 L 300.0,277.0 L 299.0,275.0 L 292.0,277.0 L 266.0,275.0 L 238.0,277.0 L 236.0,211.0 L 235.0,275.0 L 231.0,277.0 L 229.0,256.0 L 232.0,253.0 L 227.0,250.0 L 226.0,205.0 L 224.0,243.0 L 219.0,237.0 L 221.0,231.0 L 219.0,226.0 L 220.0,205.0 L 204.0,205.0 L 205.0,230.0 L 203.0,238.0 L 200.0,231.0 L 201.0,211.0 L 199.0,206.0 L 197.0,212.0 L 200.0,231.0 L 197.0,239.0 L 193.0,205.0 L 191.0,218.0 L 189.0,217.0 L 188.0,206.0 L 188.0,213.0 L 185.0,213.0 L 185.0,205.0 L 183.0,217.0 L 185.0,219.0 L 186.0,265.0 L 179.0,264.0 L 177.0,267.0 L 173.0,265.0 L 172.0,219.0 L 172.0,253.0 L 169.0,266.0 L 166.0,267.0 L 162.0,264.0 L 160.0,267.0 L 111.0,268.0 L 166.0,268.0 L 171.0,271.0 L 171.0,277.0 L 174.0,277.0 L 174.0,280.0 L 163.0,280.0 L 162.0,285.0 L 156.0,285.0 L 152.0,281.0 L 139.0,282.0 L 134.0,285.0 L 128.0,282.0 L 113.0,281.0 L 111.0,282.0 L 112.0,285.0 L 102.0,285.0 L 154.0,285.0 L 155.0,287.0 L 95.0,290.0 L 104.0,290.0 L 104.0,293.0 L 90.0,293.0 L 88.0,290.0 L 85.0,292.0 Z M 198.0,364.0 L 200.0,363.0 L 201.0,366.0 L 199.0,367.0 Z M 351.0,351.0 L 350.0,356.0 L 348.0,354.0 Z M 328.0,329.0 L 330.0,330.0 L 329.0,339.0 L 326.0,335.0 Z M 222.0,329.0 L 225.0,331.0 L 223.0,337.0 L 220.0,334.0 Z M 221.0,320.0 L 224.0,322.0 L 223.0,326.0 L 220.0,324.0 Z M 187.0,315.0 L 189.0,316.0 L 188.0,321.0 L 186.0,319.0 Z M 358.0,309.0 L 361.0,310.0 L 360.0,322.0 L 357.0,319.0 Z M 226.0,310.0 L 228.0,308.0 L 232.0,311.0 L 227.0,312.0 Z M 157.0,307.0 L 162.0,306.0 L 163.0,308.0 L 158.0,309.0 Z M 234.0,305.0 L 239.0,304.0 L 243.0,307.0 L 236.0,308.0 Z M 225.0,307.0 L 229.0,304.0 L 232.0,305.0 L 230.0,308.0 Z M 166.0,302.0 L 171.0,301.0 L 172.0,303.0 L 167.0,304.0 Z M 126.0,296.0 L 129.0,295.0 L 130.0,297.0 L 127.0,298.0 Z M 358.0,293.0 L 361.0,294.0 L 360.0,304.0 L 357.0,302.0 Z M 189.0,287.0 L 199.0,286.0 L 200.0,288.0 L 193.0,291.0 Z M 358.0,283.0 L 361.0,285.0 L 360.0,290.0 L 357.0,289.0 Z M 339.0,283.0 L 341.0,284.0 L 340.0,288.0 L 337.0,287.0 Z M 166.0,282.0 L 169.0,281.0 L 170.0,284.0 L 167.0,285.0 Z M 188.0,280.0 L 192.0,278.0 L 195.0,282.0 L 190.0,283.0 Z M 179.0,279.0 L 185.0,278.0 L 187.0,282.0 L 183.0,283.0 Z M 338.0,274.0 L 340.0,275.0 L 339.0,279.0 L 337.0,278.0 Z M 175.0,269.0 L 181.0,270.0 L 178.0,277.0 L 173.0,275.0 Z M 359.0,265.0 L 362.0,266.0 L 362.0,276.0 L 360.0,278.0 L 357.0,277.0 L 357.0,267.0 Z M 358.0,259.0 L 360.0,258.0 L 361.0,261.0 L 359.0,262.0 Z M 359.0,248.0 L 361.0,249.0 L 360.0,254.0 L 358.0,253.0 Z M 223.0,244.0 L 224.0,250.0 L 222.0,251.0 L 220.0,248.0 Z M 187.0,237.0 L 188.0,242.0 L 186.0,241.0 Z M 186.0,224.0 L 189.0,229.0 L 188.0,236.0 L 185.0,234.0 Z M 187.0,218.0 L 191.0,220.0 L 190.0,224.0 L 186.0,222.0 Z M 871.0,195.0 L 870.0,227.0 L 868.0,229.0 L 870.0,253.0 L 868.0,258.0 L 873.0,261.0 L 873.0,279.0 L 870.0,280.0 L 872.0,286.0 L 870.0,290.0 L 870.0,345.0 L 872.0,347.0 L 870.0,356.0 L 872.0,362.0 L 868.0,364.0 L 872.0,367.0 L 873.0,209.0 Z M 759.0,190.0 L 763.0,266.0 L 766.0,198.0 Z M 695.0,178.0 L 694.0,199.0 L 689.0,202.0 L 683.0,197.0 L 690.0,205.0 L 688.0,208.0 L 692.0,212.0 L 690.0,249.0 L 688.0,245.0 L 688.0,258.0 L 689.0,255.0 L 691.0,256.0 L 692.0,381.0 L 689.0,383.0 L 693.0,387.0 L 693.0,400.0 L 690.0,402.0 L 693.0,402.0 L 696.0,362.0 L 698.0,361.0 L 703.0,389.0 L 704.0,422.0 L 705.0,395.0 L 710.0,393.0 L 705.0,389.0 L 709.0,359.0 L 712.0,356.0 L 714.0,357.0 L 715.0,386.0 L 717.0,364.0 L 720.0,364.0 L 720.0,373.0 L 720.0,367.0 L 724.0,361.0 L 720.0,357.0 L 721.0,272.0 L 724.0,274.0 L 725.0,327.0 L 727.0,279.0 L 760.0,311.0 L 764.0,394.0 L 770.0,392.0 L 771.0,323.0 L 775.0,322.0 L 775.0,330.0 L 775.0,325.0 L 778.0,325.0 L 778.0,399.0 L 779.0,319.0 L 782.0,319.0 L 782.0,329.0 L 784.0,309.0 L 813.0,282.0 L 815.0,292.0 L 815.0,334.0 L 816.0,283.0 L 818.0,284.0 L 818.0,306.0 L 818.0,291.0 L 821.0,290.0 L 820.0,361.0 L 816.0,365.0 L 821.0,366.0 L 821.0,373.0 L 822.0,371.0 L 826.0,373.0 L 827.0,411.0 L 827.0,375.0 L 830.0,375.0 L 830.0,382.0 L 832.0,373.0 L 830.0,368.0 L 834.0,364.0 L 833.0,355.0 L 837.0,358.0 L 839.0,422.0 L 843.0,401.0 L 845.0,410.0 L 845.0,382.0 L 848.0,376.0 L 849.0,344.0 L 851.0,342.0 L 849.0,338.0 L 849.0,264.0 L 851.0,261.0 L 853.0,262.0 L 854.0,299.0 L 855.0,204.0 L 861.0,197.0 L 855.0,199.0 L 854.0,183.0 L 854.0,202.0 L 851.0,205.0 L 849.0,204.0 L 849.0,190.0 L 848.0,207.0 L 845.0,207.0 L 844.0,202.0 L 841.0,213.0 L 837.0,214.0 L 826.0,229.0 L 822.0,227.0 L 822.0,232.0 L 815.0,240.0 L 784.0,266.0 L 771.0,283.0 L 730.0,241.0 L 727.0,242.0 L 719.0,231.0 L 717.0,219.0 L 717.0,195.0 L 715.0,226.0 L 711.0,223.0 L 709.0,217.0 L 705.0,217.0 L 704.0,204.0 L 701.0,211.0 L 698.0,209.0 L 698.0,191.0 L 698.0,198.0 L 695.0,198.0 Z M 706.0,357.0 L 708.0,358.0 L 707.0,362.0 L 705.0,361.0 Z M 834.0,347.0 L 836.0,348.0 L 835.0,352.0 L 833.0,351.0 Z M 706.0,347.0 L 708.0,348.0 L 707.0,353.0 L 705.0,352.0 Z M 846.0,345.0 L 849.0,349.0 L 848.0,358.0 L 846.0,356.0 Z M 713.0,341.0 L 714.0,353.0 L 712.0,354.0 L 711.0,343.0 Z M 710.0,333.0 L 714.0,335.0 L 711.0,339.0 L 709.0,338.0 Z M 711.0,321.0 L 714.0,322.0 L 712.0,331.0 L 709.0,329.0 Z M 846.0,319.0 L 848.0,320.0 L 847.0,325.0 L 845.0,323.0 Z M 711.0,312.0 L 713.0,313.0 L 712.0,318.0 L 710.0,317.0 Z M 704.0,296.0 L 706.0,295.0 L 707.0,298.0 L 705.0,299.0 Z M 820.0,271.0 L 822.0,272.0 L 821.0,286.0 L 818.0,277.0 Z M 850.0,244.0 L 853.0,245.0 L 852.0,258.0 L 849.0,257.0 Z M 849.0,238.0 L 851.0,237.0 L 853.0,240.0 L 851.0,241.0 Z M 700.0,233.0 L 702.0,232.0 L 703.0,235.0 L 701.0,236.0 Z M 852.0,225.0 L 854.0,228.0 L 850.0,231.0 L 849.0,227.0 Z M 700.0,223.0 L 703.0,228.0 L 702.0,231.0 L 699.0,228.0 Z M 853.0,207.0 L 854.0,217.0 L 850.0,220.0 L 849.0,216.0 Z"/>
+    </svg></h2>
+    <p>lo que yo creo de m&iacute;</p>
+  </div>
+</section>
+
+<section class="order">
+  <p class="kicker">Las 7 puertas</p>
+  <p class="hint-line">Tocá una para abrir esa etapa &mdash; cada una es una parada m&aacute;s abajo en esta misma p&aacute;gina.</p>
+  <div class="order-track">
+    <a class="order-step" href="#k"><b>1 · K</b>Nacimiento</a>
+    <a class="order-step" href="#r"><b>2 · R</b>Destrucción</a>
+    <a class="order-step" href="#i"><b>3 · I</b>Soledad</a>
+    <a class="order-step" href="#m"><b>4 · M</b>Memoria</a>
+    <a class="order-step" href="#e"><b>5 · E</b>Transformación</a>
+    <a class="order-step" href="#l"><b>6 · L</b>Despertar</a>
+    <a class="order-step" href="#h"><b>7 · H</b>Existencia</a>
+  </div>
+  <p class="order-note">Las 7 puertas, en este orden, van armando a <b>KRIMELH</b>. Despu&eacute;s de la s&eacute;ptima, el nombre se invierte: <b>7 → 6 → 5 → 4 → 3 → 2 → 1</b> &mdash; ese es <b>HLEMIRK</b>, el mismo camino de vuelta.</p>
+</section>
+
+<!-- ============ THE SEVEN DOORS (draft — pending final direction) ============ -->
+
+<article class="door" id="k">
+  <div class="door-inner">
+    <p class="door-num">Puerta 01 / VII</p>
+    <h2>Khaos</h2>
+    <p class="es">Nacimiento · antes del nombre</p>
+
+    <p class="copy">Otro lado, misma esencia. La primera puerta que se abre completa: dos versiones de la misma ruptura, una hacia adentro y otra hacia afuera.</p>
+    <a class="song-tags-wrap" href="puerta-r.html" aria-label="Leer las letras de Krick (Krimelh) y Dividirse duele más (Hlemirk)">
+      <div class="song-tags">
+        <div class="song-chip krimelh">
+          <span class="title">Krick</span>
+          <span class="artist">Krimelh</span>
+        </div>
+        <div class="song-chip hlemirk">
+          <span class="title">Dividirse duele m&aacute;s</span>
+          <span class="artist">Hlemirk</span>
+        </div>
+      </div>
+      <p class="song-tags-hint">Sencillo 1 &middot; leer letras &rarr;</p>
+    </a>
+  </div>
+</article>
+
+<article class="door" id="r">
+  <div class="door-inner">
+    <p class="door-num">Puerta 02 / VII</p>
+    <h2>Ruin</h2>
+    <p class="es">Destrucción · aquello que se rompe</p>
+    <div class="release-status" data-release-status data-release-iso="" data-tiktok="" data-youtube="">
+      <p class="release-msg">Próximamente...</p>
+    </div>
+    <span class="track-tag">Sencillo 2 de 7</span>
+  </div>
+</article>
+
+<article class="door" id="i">
+  <div class="door-inner">
+    <p class="door-num">Puerta 03 / VII</p>
+    <h2>Isolation</h2>
+    <p class="es">Soledad · quedar solo frente al mundo</p>
+    <div class="release-status" data-release-status data-release-iso="" data-tiktok="" data-youtube="">
+      <p class="release-msg">Próximamente...</p>
+    </div>
+    <span class="track-tag">Sencillo 3 de 7</span>
+  </div>
+</article>
+
+<article class="door" id="m">
+  <div class="door-inner">
+    <p class="door-num">Puerta 04 / VII</p>
+    <h2>Memory</h2>
+    <p class="es">Memoria · lo que permanece aunque todo cambie</p>
+    <div class="release-status" data-release-status data-release-iso="" data-tiktok="" data-youtube="">
+      <p class="release-msg">Próximamente...</p>
+    </div>
+    <span class="track-tag">Sencillo 4 de 7</span>
+  </div>
+</article>
+
+<article class="door" id="e">
+  <div class="door-inner">
+    <p class="door-num">Puerta 05 / VII</p>
+    <h2>Eclipse</h2>
+    <p class="es">Transformación · ocultar la luz</p>
+    <div class="release-status" data-release-status data-release-iso="" data-tiktok="" data-youtube="">
+      <p class="release-msg">Próximamente...</p>
+    </div>
+    <span class="track-tag">Sencillo 5 de 7</span>
+  </div>
+</article>
+
+<article class="door" id="l">
+  <div class="door-inner">
+    <p class="door-num">Puerta 06 / VII</p>
+    <h2>Lucid</h2>
+    <p class="es">Despertar · ver lo que realmente hay</p>
+    <div class="release-status" data-release-status data-release-iso="" data-tiktok="" data-youtube="">
+      <p class="release-msg">Próximamente...</p>
+    </div>
+    <span class="track-tag">Sencillo 6 de 7</span>
+  </div>
+</article>
+
+<article class="door" id="h">
+  <div class="door-inner">
+    <p class="door-num">Puerta 07 / VII</p>
+    <h2>Hope</h2>
+    <p class="es">Existencia · no necesariamente felicidad — sobrevivir</p>
+    <div class="release-status" data-release-status data-release-iso="" data-tiktok="" data-youtube="">
+      <p class="release-msg">Próximamente...</p>
+    </div>
+    <span class="track-tag">Sencillo 7 de 7</span>
+  </div>
+</article>
+
+<!-- ============ BIO ============ -->
+<section class="bio">
+  <p class="kicker">Quién es Krimelh</p>
+  <h2>Sound beyond human</h2>
+  <p>Antes de Krimelh había algo que yo arrastraba sin poder nombrarlo. Sentía que me faltaba algo, que tenía que hacerlo. Armaba canciones enteras en mi cabeza, escribía letras sobre lo que estaba viviendo, y me preguntaba si habría alguien más ahí afuera viviendo lo mismo.</p>
+  <p>Creo en la magia. Creo en los milagros, porque todo lo que hoy existe fue, antes, el sueño de alguien más. Lo que estás viendo acá es el resultado de meses armando esto de a poco, una pieza a la vez. Es cierto: las cosas pasan cuando te movés — te levantás, y empezás.</p>
+  <a class="cta" href="biografia.html">Leer la biografía completa &rarr;</a>
+
+  <div class="hetairoi" id="hetairoi">
+    <p class="h-kicker">Los Hetairoi de Krimelh</p>
+    <p class="h-cap">Fase 1 &middot; los primeros 100</p>
+    <p>No es un club de fans más — es el círculo cercano, los que estuvieron ahí desde antes de que hubiera algo que mostrar. Sin costo, sin compra: el lugar se gana con estar ahí, no con pagar por él. Y una vez que es tuyo, es tuyo para siempre.</p>
+    <p>A l@s primeros 100 les mando algo real: una carta escrita a mano, con perfume sellado para que no se pierda el aroma, y un pin para el que llegue. A cualquier país. Cuando el círculo crezca, se abre una fase 2 — y ustedes ya van a estar adentro.</p>
+
+    <form class="hetairoi-form" id="hetairoiForm">
+      <input type="text" id="hetairoiName" placeholder="Tu nombre" required maxlength="80">
+      <input type="email" id="hetairoiEmail" placeholder="Tu email" required maxlength="120">
+      <input type="text" id="hetairoiAddress" placeholder="Dirección postal completa (calle, ciudad, código postal, país)" required maxlength="240">
+      <button type="submit">Sumarme como fundador&#64;</button>
+    </form>
+    <p class="hetairoi-error" id="hetairoiError"></p>
+    <p class="hetairoi-note">Tus datos solo se usan para mandarte la carta. No se comparten con nadie. Un cupo por persona.</p>
+    <p class="hetairoi-ok" id="hetairoiOk">Listo &mdash; ya quedaste anotad@. En algún momento te va a llegar un sobre. 🖤</p>
+    <p class="hetairoi-full" id="hetairoiFull">Los 100 cupos de Fundadores ya se completaron. Gracias por las ganas &mdash; cuando se abra la fase 2, te vas a enterar acá.</p>
+  </div>
+</section>
+
+<script>
+  (function(){
+    var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxL4jiYOKeuIqA4J8zWAV1ytJPvlwpzZE-4P4BevG0I-oDYes2YDsTpnbEKVUCb35Y/exec';
+    var form = document.getElementById('hetairoiForm');
+    var okMsg = document.getElementById('hetairoiOk');
+    var fullMsg = document.getElementById('hetairoiFull');
+    var errMsg = document.getElementById('hetairoiError');
+    if(!form) return;
+
+    var DISPOSABLE_DOMAINS = [
+      'mailinator.com','tempmail.com','temp-mail.org','guerrillamail.com','guerrillamail.info',
+      '10minutemail.com','10minutemail.net','yopmail.com','yopmail.net','trashmail.com',
+      'fakeinbox.com','sharklasers.com','dispostable.com','throwawaymail.com','getnada.com',
+      'mohmal.com','moakt.com','discard.email','maildrop.cc','mintemail.com','mailnesia.com',
+      'tempmailo.com','emailondeck.com','tempinbox.com','spamgourmet.com','mailcatch.com',
+      'burnermail.io','fakemailgenerator.com','crazymailing.com','tempr.email','inboxkitten.com',
+      'mailnull.com','anonbox.net','spam4.me','armyspy.com','cuvox.de','einrot.com'
+    ];
+
+    function isDisposable(email){
+      var m = /@([^@]+)$/.exec(email.toLowerCase());
+      if(!m) return false;
+      return DISPOSABLE_DOMAINS.indexOf(m[1]) !== -1;
+    }
+
+    function showError(text){
+      if(!errMsg) return;
+      errMsg.textContent = text;
+      errMsg.style.display = 'block';
+    }
+
+    function showFull(){
+      form.style.display = 'none';
+      if(okMsg) okMsg.style.display = 'none';
+      if(errMsg) errMsg.style.display = 'none';
+      if(fullMsg) fullMsg.style.display = 'block';
+    }
+
+    function showAlreadyIn(){
+      form.style.display = 'none';
+      if(fullMsg) fullMsg.style.display = 'none';
+      if(errMsg) errMsg.style.display = 'none';
+      if(okMsg) okMsg.style.display = 'block';
+    }
+
+    // si este navegador ya mandó el formulario, no lo mostramos de nuevo
+    if(localStorage.getItem('hetairoiSubmitted') === '1'){
+      showAlreadyIn();
+    } else {
+      // consultar si ya se completó el cupo general de 100
+      fetch(SHEET_URL, {method:'GET'})
+        .then(function(r){ return r.json(); })
+        .then(function(data){ if(data && data.full) showFull(); })
+        .catch(function(){ /* si no se puede chequear, dejamos el formulario visible */ });
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(errMsg) errMsg.style.display = 'none';
+
+      var name = document.getElementById('hetairoiName').value.trim();
+      var email = document.getElementById('hetairoiEmail').value.trim();
+      var address = document.getElementById('hetairoiAddress').value.trim();
+      if(!name || !email || !address) return;
+
+      if(isDisposable(email)){
+        showError('Ese correo es temporal — usá uno real para poder mandarte la carta.');
+        return;
+      }
+
+      var btn = form.querySelector('button');
+      if(btn){ btn.disabled = true; btn.textContent = 'Enviando...'; }
+
+      fetch(SHEET_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({type:'fundadores', name:name, email:email, address:address})
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(data && data.ok){
+          localStorage.setItem('hetairoiSubmitted', '1');
+          showAlreadyIn();
+        } else if(data && data.error === 'duplicate'){
+          if(btn){ btn.disabled = false; btn.textContent = 'Sumarme como fundador@'; }
+          showError('Ese correo ya está anotado — un cupo es por persona.');
+        } else if(data && data.error === 'quota_full'){
+          showFull();
+        } else {
+          if(btn){ btn.disabled = false; btn.textContent = 'Sumarme como fundador@'; }
+          showError('Algo falló al enviar — probá de nuevo en un momento.');
+        }
+      })
+      .catch(function(){
+        // no se pudo leer la respuesta (bloqueo de red, extensión, etc.):
+        // igual marcamos este navegador para no dejar reenviar en loop.
+        localStorage.setItem('hetairoiSubmitted', '1');
+        showAlreadyIn();
+      });
+    });
+  })();
+</script>
+
+<script>
+  /* ---- cuenta regresiva / links de lanzamiento por puerta ----
+     Para activar una puerta cuando llegue el momento, solo hay que
+     completar sus atributos data- en el HTML, ej.:
+       data-release-iso="2026-11-06T21:00:00-03:00"
+       data-tiktok="https://www.tiktok.com/@krimelh7/video/..."
+       data-youtube="https://youtu.be/..."
+     Sin fecha, la puerta se queda en "Próximamente...".
+     Con fecha futura, muestra cuenta regresiva.
+     Cuando la fecha ya pasó, muestra los links de video (los que haya). */
+  (function(){
+    var nodes = document.querySelectorAll('[data-release-status]');
+    if(!nodes.length) return;
+
+    function two(n){ return n < 10 ? '0' + n : '' + n; }
+
+    function buildLinks(tiktok, youtube){
+      var wrap = document.createElement('div');
+      wrap.className = 'release-links';
+      if(tiktok){
+        var a = document.createElement('a');
+        a.className = 'tiktok'; a.href = tiktok; a.target = '_blank'; a.rel = 'noopener';
+        a.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg> Ver en TikTok';
+        wrap.appendChild(a);
+      }
+      if(youtube){
+        var b = document.createElement('a');
+        b.className = 'youtube'; b.href = youtube; b.target = '_blank'; b.rel = 'noopener';
+        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg> Ver en YouTube';
+        wrap.appendChild(b);
+      }
+      return wrap;
+    }
+
+    nodes.forEach(function(el){
+      var iso = el.getAttribute('data-release-iso');
+      var tiktok = el.getAttribute('data-tiktok');
+      var youtube = el.getAttribute('data-youtube');
+      if(!iso) return; // sin fecha: se queda en "Próximamente..."
+
+      var target = new Date(iso).getTime();
+      if(isNaN(target)) return;
+
+      var timer;
+      function render(){
+        var diff = target - Date.now();
+        if(diff <= 0){
+          clearInterval(timer);
+          el.innerHTML = '';
+          var p = document.createElement('p');
+          p.className = 'release-msg';
+          p.textContent = 'Ya está disponible.';
+          el.appendChild(p);
+          if(tiktok || youtube) el.appendChild(buildLinks(tiktok, youtube));
+          return;
+        }
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+
+        var msg = el.querySelector('.release-msg');
+        if(msg) msg.style.display = 'none';
+
+        var cd = el.querySelector('.countdown');
+        if(!cd){
+          cd = document.createElement('div');
+          cd.className = 'countdown';
+          cd.innerHTML =
+            '<div class="unit"><span class="n" data-u="d"></span><span class="u">días</span></div>' +
+            '<div class="unit"><span class="n" data-u="h"></span><span class="u">hs</span></div>' +
+            '<div class="unit"><span class="n" data-u="m"></span><span class="u">min</span></div>' +
+            '<div class="unit"><span class="n" data-u="s"></span><span class="u">seg</span></div>';
+          el.appendChild(cd);
+          var note = document.createElement('p');
+          note.className = 'countdown-note';
+          note.textContent = 'Cuenta regresiva para el próximo lanzamiento.';
+          el.appendChild(note);
+        }
+        cd.querySelector('[data-u="d"]').textContent = d;
+        cd.querySelector('[data-u="h"]').textContent = two(h);
+        cd.querySelector('[data-u="m"]').textContent = two(m);
+        cd.querySelector('[data-u="s"]').textContent = two(s);
+      }
+
+      render();
+      timer = setInterval(render, 1000);
+    });
+  })();
+</script>
+
+<!-- ============ ALBUM ROLLOUT ============ -->
+<section class="album">
+  <p class="kicker">Hlemirk</p>
+  <h2>El primer álbum</h2>
+  <p class="sub">Siete sencillos, uno por etapa, hasta completar el álbum invertido.</p>
+  <div class="rollout">
+    <div class="cell"><div class="l">K</div><div class="t">pendiente</div></div>
+    <div class="cell"><div class="l">R</div><div class="t">pendiente</div></div>
+    <div class="cell"><div class="l">I</div><div class="t">pendiente</div></div>
+    <div class="cell"><div class="l">M</div><div class="t">pendiente</div></div>
+    <div class="cell"><div class="l">E</div><div class="t">pendiente</div></div>
+    <div class="cell"><div class="l">L</div><div class="t">pendiente</div></div>
+    <div class="cell"><div class="l">H</div><div class="t">pendiente</div></div>
+  </div>
+</section>
+
+<section class="connect">
+  <p class="kicker">Seguí el rastro</p>
+  <h2>Encontranos</h2>
+  <div class="connect-links">
+    <a class="tiktok" href="https://www.tiktok.com/@krimelh7?_r=1&_t=ZS-99zMkBuSPWn" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
+      TikTok · @krimelh7
+    </a>
+    <a class="mail" href="mailto:arawanafenix@gmail.com">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
+      Contacto
+    </a>
+  </div>
+</section>
+
+<footer class="credit">Septum &middot; <a href="index.html">volver al inicio</a></footer>
+
+<script>
+  (function(){
+    document.querySelectorAll('.old-photos figure').forEach(function(fig){
+      function toggle(){
+        var wasPicked = fig.classList.contains('picked');
+        fig.parentElement.querySelectorAll('figure.picked').forEach(function(f){ f.classList.remove('picked'); });
+        if(!wasPicked) fig.classList.add('picked');
+      }
+      fig.addEventListener('click', toggle);
+      fig.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+    });
+  })();
+</script>
