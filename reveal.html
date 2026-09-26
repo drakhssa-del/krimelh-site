@@ -110,14 +110,15 @@
     position:absolute;
     inset:0;
     background-image:url('assets/cover-ruin.png');
+    background-color:var(--ink);
     background-size:cover;
-    background-position:50% 22%;
+    background-position:50% 30%;
     animation: coverZoom 22s ease-in-out infinite;
     will-change:transform;
   }
-  @media (min-width:900px){
+  @media (min-width:700px){
     .cover-hero{ height:min(80vh,780px); }
-    .cover-hero .cover-img{ background-position:50% 18%; }
+    .cover-hero .cover-img{ background-position:50% 22%; }
   }
   @keyframes coverZoom{
     0%{transform:scale(1) translate(0,0);}
