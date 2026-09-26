@@ -829,6 +829,7 @@
     // aplicación web (termina en /exec). Mientras esté vacía, no se envía
     // nada afuera — todo queda solo en localStorage, como hasta ahora.
     var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxL4jiYOKeuIqA4J8zWAV1ytJPvlwpzZE-4P4BevG0I-oDYes2YDsTpnbEKVUCb35Y/exec';
+    var SITE_TOKEN = 'bRheY26CQbc4oJM90t6TOo6D1UGTi8md';
     function sendToSheet(type, payload){
       if(!SHEET_URL) return;
       try{
@@ -836,7 +837,7 @@
           method:'POST',
           mode:'no-cors',
           headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify(Object.assign({type:type}, payload))
+          body: JSON.stringify(Object.assign({token:SITE_TOKEN, type:type}, payload))
         }).catch(function(){ /* sin conexión o bloqueado, no rompe la charla */ });
       }catch(e){ /* si falla el envío, no rompe la charla */ }
     }
