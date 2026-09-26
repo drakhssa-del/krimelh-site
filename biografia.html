@@ -1120,8 +1120,8 @@
         visitor.flowVersion = ONBOARD_VERSION;
         saveVisitor(visitor);
         chatStage = 'age';
-        botSay('Gracias por visitarme ☺️ Sentite bienvenido/a, ' + name + ' — me dijiste tu nombre, ahora te cuento algo mío: adoro escuchar música mientras cocino, y mi comida favorita es la ensalada... hay tanta variedad, ñam ñam, ¡delicioso! 😋', false, null, function(){
-          botSay('¿Y qué edad tenés?');
+        botSay('Gracias por visitarme. Sentite bienvenido/a, ' + name + ' — te cuento algo mío: me gusta cocinar con música de fondo, y soy bastante selectiva con lo que dejo entrar a mi vida. Ahora contame vos.', false, null, function(){
+          botSay('¿Qué edad tenés?');
         });
         return;
       }
@@ -1140,8 +1140,8 @@
         var diff = age - FAKE_AGE;
         var ageReply;
         if(diff === 1) ageReply = 'Somos contemporáneas... quizás nos cruzamos de chicos y ni lo sabemos.';
-        else if(diff === -1) ageReply = 'Quizás tengo un poco más que vos ☺️. Eso significa que llegué a ver los Simpson originales en la tele local 😄.';
-        else if(diff === 0) ageReply = 'La misma edad... como si fuéramos del mismo lote 😄.';
+        else if(diff === -1) ageReply = 'Quizás tengo un poco más que vos. Eso significa que llegué a ver los Simpson originales en la tele local.';
+        else if(diff === 0) ageReply = 'La misma edad... como si fuéramos del mismo lote.';
         else if(diff > 1) ageReply = 'Sos un poco más grande que yo. Ojalá haya envejecido tan bien como vos.';
         else ageReply = 'Sos más joven que yo. Disfrutalo, se pasa rápido.';
         chatStage = 'gender';
@@ -1198,7 +1198,7 @@
         if(text === 'si' || text.indexOf('si') === 0){
           sugWrap.innerHTML = '';
           chatStage = 'suggestion_text';
-          botSay('Sé que el hate a veces es divertido — yo también odio a un par de personas solo porque no me gusta cómo me miran 😅. Pero en esta te pido eso: que tu sugerencia no sea puro hate. Te prometo tenerla en cuenta. Dale, escribí tranquilo.');
+          botSay('El hate sobra en todos lados, pero acá no me hace falta. Esto lo leo yo, en persona. Si algo no te cerró, decilo tal cual — lo pienso en serio, y si tenés razón, lo tengo en cuenta la próxima. Dale, escribí.');
           return;
         }
         if(text === 'no'){
@@ -1310,8 +1310,8 @@
     var noMatchStreak = 0;
     function showMilestone(){
       botSay('No me gusta salir mucho — prefiero una buena película, de comedia o de drama, mejor si es de las dos a la vez. Admiro a Marilyn Manson y a Marilyn Monroe, y en algún momento me metí de lleno en la historia de Charles Manson, más por curiosidad de entender ese lado oscuro de la cultura pop que otra cosa.', false, null, function(){
-        botSay('No puedo ser buena en todo. Pero aprendí a soltar rápido lo que no funciona: veo la luz, apago la llave, y sigo. No es que el dolor me guste — es que no le doy más lugar del que se merece.', false, null, function(){
-          botSay('Y esto se siente bien de verdad: llegaste hasta acá. Como premio, ya te dejé uno de mis recuerdos favoritos ahí abajo, abierto. El resto va a ir llegando de a uno, con cada canción nueva — y esos sí vas a tener que ganártelos con la respuesta correcta. Volvé pronto. 🤗', false, null, function(){
+        botSay('No puedo ser buena en todo. A veces me pasa lo que canto: veo la luz — y apago el switch sola, como si doler fuera lo que yo merezco. Lo sé, y aun así sigo. Eso también es parte de moverme hacia adelante.', false, null, function(){
+          botSay('Y esto se siente bien de verdad: llegaste hasta acá. Como premio, ya te dejé uno de mis recuerdos favoritos ahí abajo, abierto. El resto va a ir llegando de a uno, con cada canción nueva — y esos sí vas a tener que ganártelos con la respuesta correcta. Volvé cuando quieras. 🖤', false, null, function(){
             ensureStageUnlocked(false);
             renderSuggestions();
           });
