@@ -1028,7 +1028,9 @@
     <form class="hetairoi-form" id="hetairoiForm">
       <input type="text" id="hetairoiName" placeholder="Tu nombre" required maxlength="80">
       <input type="email" id="hetairoiEmail" placeholder="Tu email" required maxlength="120">
-      <input type="text" id="hetairoiAddress" placeholder="Dirección postal completa (calle, ciudad, código postal, país)" required maxlength="240">
+      <input type="text" id="hetairoiCountry" placeholder="País" required maxlength="80">
+      <input type="text" id="hetairoiCity" placeholder="Ciudad" required maxlength="80">
+      <input type="text" id="hetairoiAddress" placeholder="Dirección (calle, número, zona, código postal)" required maxlength="240">
       <button type="submit">Sumarme como fundador&#64;</button>
     </form>
     <p class="hetairoi-error" id="hetairoiError"></p>
@@ -1040,7 +1042,7 @@
 
 <script>
   (function(){
-    var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxL4jiYOKeuIqA4J8zWAV1ytJPvlwpzZE-4P4BevG0I-oDYes2YDsTpnbEKVUCb35Y/exec';
+    var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzHM16qAMeRcYSeZ1taTzfVCrxKKLYglrDDUXHs10YYVI1vxhv4Y-T0rQd9nDpIEojA/exec';
     var SITE_TOKEN = 'bRheY26CQbc4oJM90t6TOo6D1UGTi8md';
     var form = document.getElementById('hetairoiForm');
     var okMsg = document.getElementById('hetairoiOk');
@@ -1101,8 +1103,10 @@
 
       var name = document.getElementById('hetairoiName').value.trim();
       var email = document.getElementById('hetairoiEmail').value.trim();
+      var country = document.getElementById('hetairoiCountry').value.trim();
+      var city = document.getElementById('hetairoiCity').value.trim();
       var address = document.getElementById('hetairoiAddress').value.trim();
-      if(!name || !email || !address) return;
+      if(!name || !email || !country || !city || !address) return;
 
       if(isDisposable(email)){
         showError('Ese correo es temporal — usá uno real para poder mandarte la carta.');
@@ -1115,7 +1119,7 @@
       fetch(SHEET_URL, {
         method: 'POST',
         headers: {'Content-Type':'text/plain;charset=utf-8'},
-        body: JSON.stringify({token:SITE_TOKEN, type:'fundadores', name:name, email:email, address:address})
+        body: JSON.stringify({token:SITE_TOKEN, type:'fundadores', name:name, email:email, country:country, city:city, address:address})
       })
       .then(function(r){ return r.json(); })
       .then(function(data){
