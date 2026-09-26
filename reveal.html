@@ -703,7 +703,7 @@
     margin:2px 0 14px;
   }
   .hetairoi-form{margin-top:14px;}
-  .hetairoi-form input{
+  .hetairoi-form input, .hetairoi-form select{
     width:100%;
     background:transparent;
     border:1px solid var(--rule);
@@ -713,8 +713,10 @@
     padding:11px 12px;
     margin-bottom:9px;
   }
+  .hetairoi-form select{ color-scheme: dark; }
+  .hetairoi-form select option{ background:var(--ink); color:var(--cream); }
   .hetairoi-form input::placeholder{color:var(--cream-dim);}
-  .hetairoi-form input:focus{outline:none; border-color:var(--acid);}
+  .hetairoi-form input:focus, .hetairoi-form select:focus{outline:none; border-color:var(--acid);}
   .hetairoi-form button{
     width:100%;
     background:transparent;
@@ -874,9 +876,9 @@
     El mío es el siete: apareció tantas veces que dejé de creer en la casualidad.<br>
     La dirección de mi casa, el piso, la letra de mi departamento — siete.<br>
     La dirección de mi trabajo — siete.<br>
-    Abrí los ojos por primera vez el séptimo mes del año, bajo Cáncer.</p>
-    <p class="poem-right shimmer">Podría seguir toda la tarde con esto, pero lo que de verdad importa es que cuando pensé el nombre me salieron siete letras —<br>
-    y son justo esas siete las canciones que voy a mostrarte, una por una, hasta completarlas y armar mi primer álbum: <b>Septum</b>.<br>
+    Nací bajo la estrella de Cáncer, en el séptimo mes — el número ya estaba escrito antes de que yo aprendiera a leerlo.</p>
+    <p class="poem-right shimmer">El nombre que elegí tiene siete letras, y no fue casualidad.<br>
+    Por eso elegí 7 canciones para armar este álbum inicial: <b>Septum</b> — te las voy a mostrar una por una, hasta completarlas.<br>
     Si sentís que coincidimos en la energía, te invito a <a href="#hetairoi">inscribir tu correo</a> y ser parte de esto desde el principio.<br>
     Contame qué pensás — me importa. 😊</p>
   </div>
@@ -1028,7 +1030,18 @@
     <form class="hetairoi-form" id="hetairoiForm">
       <input type="text" id="hetairoiName" placeholder="Tu nombre" required maxlength="80">
       <input type="email" id="hetairoiEmail" placeholder="Tu email" required maxlength="120">
-      <input type="text" id="hetairoiCountry" placeholder="País" required maxlength="80">
+      <select id="hetairoiCountry" required>
+        <option value="" disabled selected>País</option>
+        <option>Argentina</option><option>Bolivia</option><option>Brasil</option><option>Canadá</option>
+        <option>Chile</option><option>Colombia</option><option>Costa Rica</option><option>Cuba</option>
+        <option>Ecuador</option><option>El Salvador</option><option>España</option><option>Estados Unidos</option>
+        <option>Francia</option><option>Alemania</option><option>Guatemala</option><option>Honduras</option>
+        <option>Italia</option><option>México</option><option>Nicaragua</option><option>Panamá</option>
+        <option>Paraguay</option><option>Perú</option><option>Portugal</option><option>Puerto Rico</option>
+        <option>Reino Unido</option><option>República Dominicana</option><option>Uruguay</option><option>Venezuela</option>
+        <option>Otro país</option>
+      </select>
+      <input type="text" id="hetairoiCountryOther" placeholder="Escribí tu país" maxlength="80" style="display:none;">
       <input type="text" id="hetairoiCity" placeholder="Ciudad" required maxlength="80">
       <input type="text" id="hetairoiAddress" placeholder="Dirección (calle, número, zona, código postal)" required maxlength="240">
       <button type="submit">Sumarme como fundador&#64;</button>
@@ -1064,6 +1077,37 @@
       var m = /@([^@]+)$/.exec(email.toLowerCase());
       if(!m) return false;
       return DISPOSABLE_DOMAINS.indexOf(m[1]) !== -1;
+    }
+
+    // Rechaza texto tipo "askjdhaksjd": exige al menos una vocal cada
+    // pocas consonantes seguidas (así se cuelan nombres/direcciones reales
+    // en cualquier idioma, pero no el teclado apretado al azar).
+    function looksRandom(text){
+      var clean = text.normalize('NFD').replace(/[̀-ͯ]/g,''); // saca acentos
+      var words = clean.split(/[^a-zA-Z]+/).filter(Boolean);
+      if(words.length === 0) return true;
+      for(var i=0;i<words.length;i++){
+        var w = words[i];
+        if(w.length < 2) continue;
+        var run = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/;
+        if(run.test(w)) return true;
+      }
+      return false;
+    }
+
+    var countrySelect = document.getElementById('hetairoiCountry');
+    var countryOther = document.getElementById('hetairoiCountryOther');
+    if(countrySelect && countryOther){
+      countrySelect.addEventListener('change', function(){
+        if(countrySelect.value === 'Otro país'){
+          countryOther.style.display = 'block';
+          countryOther.required = true;
+        } else {
+          countryOther.style.display = 'none';
+          countryOther.required = false;
+          countryOther.value = '';
+        }
+      });
     }
 
     function showError(text){
@@ -1104,12 +1148,24 @@
       var name = document.getElementById('hetairoiName').value.trim();
       var email = document.getElementById('hetairoiEmail').value.trim();
       var country = document.getElementById('hetairoiCountry').value.trim();
+      if(country === 'Otro país'){
+        country = document.getElementById('hetairoiCountryOther').value.trim();
+      }
       var city = document.getElementById('hetairoiCity').value.trim();
       var address = document.getElementById('hetairoiAddress').value.trim();
       if(!name || !email || !country || !city || !address) return;
 
       if(isDisposable(email)){
         showError('Ese correo es temporal — usá uno real para poder mandarte la carta.');
+        return;
+      }
+
+      if(looksRandom(name) || looksRandom(city) || looksRandom(country) || looksRandom(address)){
+        showError('Necesito tus datos reales para poder mandarte la carta — revisá nombre, ciudad, país y dirección.');
+        return;
+      }
+      if(address.length < 8){
+        showError('Esa dirección parece incompleta — agregá calle, número y lo que haga falta para que llegue.');
         return;
       }
 
