@@ -1041,6 +1041,7 @@
 <script>
   (function(){
     var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxL4jiYOKeuIqA4J8zWAV1ytJPvlwpzZE-4P4BevG0I-oDYes2YDsTpnbEKVUCb35Y/exec';
+    var SITE_TOKEN = 'bRheY26CQbc4oJM90t6TOo6D1UGTi8md';
     var form = document.getElementById('hetairoiForm');
     var okMsg = document.getElementById('hetairoiOk');
     var fullMsg = document.getElementById('hetairoiFull');
@@ -1114,7 +1115,7 @@
       fetch(SHEET_URL, {
         method: 'POST',
         headers: {'Content-Type':'text/plain;charset=utf-8'},
-        body: JSON.stringify({type:'fundadores', name:name, email:email, address:address})
+        body: JSON.stringify({token:SITE_TOKEN, type:'fundadores', name:name, email:email, address:address})
       })
       .then(function(r){ return r.json(); })
       .then(function(data){
