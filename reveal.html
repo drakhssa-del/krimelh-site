@@ -108,20 +108,20 @@
   }
   .cover-hero .cover-img{
     position:absolute;
-    inset:-4%;
+    inset:0;
     background-image:url('assets/cover-ruin.png');
     background-size:cover;
-    background-position:50% 4%;
+    background-position:50% 22%;
     animation: coverZoom 22s ease-in-out infinite;
     will-change:transform;
   }
   @media (min-width:900px){
     .cover-hero{ height:min(80vh,780px); }
-    .cover-hero .cover-img{ background-position:50% 0%; }
+    .cover-hero .cover-img{ background-position:50% 18%; }
   }
   @keyframes coverZoom{
     0%{transform:scale(1) translate(0,0);}
-    50%{transform:scale(1.09) translate(-1.2%,-0.8%);}
+    50%{transform:scale(1.04) translate(-0.6%,-0.4%);}
     100%{transform:scale(1) translate(0,0);}
   }
   .cover-hero .cover-scrim{
