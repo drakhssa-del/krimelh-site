@@ -579,8 +579,8 @@
   </figure>
 
   <div class="bio-lead">
-    <p>Todos, en algún momento, la pasamos mal a nuestra manera — ricos o pobres, hijos únicos o con media docena de hermanos, con carencias o con excesos. Nadie se salva del todo. Yo tampoco. Pero esta no es una lista de heridas: es lo que elegí construir después.</p>
-    <p>Tengo sueños desde chica. Antes sonaban ridículos; hoy entiendo que lo ridículo sería dejarlos archivados. Como a toda artista, tu apoyo me inspira — los aplausos son la recompensa más grande para quien sueña. Pero no busco validación, ni fama, ni éxito: busco darme la oportunidad real de ser real, y hacer lo que mi corazón me dicta hacer. La verdadera paz es esa que casi nunca notamos hasta que se nos escapa: comer algo rico, pagado con el propio esfuerzo, dormir bien una noche entera.</p>
+    <p>Todos la pasamos mal a nuestra manera. Esta no es una lista de heridas: es lo que elegí construir después.</p>
+    <p>Tengo sueños desde chica. Antes sonaban ridículos; hoy sé que lo ridículo sería dejarlos archivados. No busco validación, ni fama, ni éxito: busco la oportunidad real de ser real y hacer lo que mi corazón dicta. La verdadera paz es la que casi nunca notamos hasta que se escapa: comer algo rico, pagado con el propio esfuerzo, y dormir una noche entera.</p>
     <p>Por eso no doy nada por sentado.</p>
   </div>
 </section>
@@ -588,7 +588,7 @@
 <section class="oracle">
   <p class="kicker">Lo que no está escrito</p>
   <h2>Contame sobre vos, y yo te cuento algo de mí</h2>
-  <p class="oracle-sub">No recito mi vida. No le cuento lo mismo a cualquiera. Ya te dejé un recuerdo abierto, de regalo — los demás se van a ir liberando de a uno, con cada canción nueva.</p>
+  <p class="oracle-sub">No recito mi vida. No le cuento lo mismo a cualquiera.</p>
 
   <div class="oracle-box">
     <div class="oracle-log" id="oracleLog"></div>
@@ -602,7 +602,7 @@
 </section>
 
 <main class="bio-main">
-  <p class="gallery-note">Uno de estos recuerdos ya está abierto, de regalo. Los demás se van liberando de a uno, con cada canción nueva — y esos sí hay que ganárselos con la pregunta correcta.</p>
+  <p class="gallery-note">Uno de estos recuerdos ya está abierto, de regalo. Los demás se van liberando de a uno, con cada canción nueva.</p>
   <div class="bio-flow">
     <div class="bio-block">
       <div class="old-photos"><figure class="locked" id="photo-1" tabindex="0"><img src="assets/bio-princesa.jpg" alt="Fotografía antigua, familiar difuminada alrededor" loading="lazy"><span class="lock-icon">&#128274;</span><figcaption>bloqueada</figcaption></figure></div>
@@ -780,7 +780,7 @@
     var secrets = [
       {
         key:'secreto-crick',
-        triggers:['crick','autosabotaje'],
+        triggers:['crick','krick','autosabotaje'],
         responses:[
           'Crick es lo que pasa cuando me acerco demasiado a algo bueno y necesito romperlo antes de que me rompa a mí. Eso no lo cuento en la biografía oficial.'
         ]
@@ -894,6 +894,8 @@
       ]
     };
     var farewellMsg = 'Claramente esta charla no te está gustando... y la verdad, a mí tampoco. Volvé en otro momento — acá voy a estar. Besos.';
+    var MIN_AGE = 21;
+    var UNDERAGE_MSG = 'Todavía no. Esta conversación es para mayores de 21. Volvé cuando corresponda.';
     var insultStreak = 0;
     var chatEnded = false;
     var INSULT_LIMIT = 3;
@@ -1210,14 +1212,19 @@
         }
         visitor.age = age;
         saveVisitor(visitor);
+        if(age < MIN_AGE){
+          chatStage = 'chat';
+          botSay(UNDERAGE_MSG, false, null, function(){ endChat(); });
+          return;
+        }
         var FAKE_AGE = 30;
         var diff = age - FAKE_AGE;
         var ageReply;
-        if(diff === 1) ageReply = 'Somos contemporáneas... quizás nos cruzamos de chicos y ni lo sabemos.';
-        else if(diff === -1) ageReply = 'Quizás tengo un poco más que vos. Eso significa que llegué a ver los Simpson originales en la tele local.';
-        else if(diff === 0) ageReply = 'La misma edad... como si fuéramos del mismo lote.';
-        else if(diff > 1) ageReply = 'Sos un poco más grande que yo. Ojalá haya envejecido tan bien como vos.';
-        else ageReply = 'Sos más joven que yo. Disfrutalo, se pasa rápido.';
+        if(diff === 1) ageReply = 'Un año más que yo. Se nota la experiencia... y me gusta.';
+        else if(diff === -1) ageReply = 'Un año menos que yo. Todavía te queda cuerda. Aprovechala.';
+        else if(diff === 0) ageReply = 'La misma edad. Mala señal para los dos: sabemos exactamente lo que hacemos.';
+        else if(diff > 1) ageReply = 'Más grande que yo. Y bien llevado, seguro. La experiencia no se improvisa.';
+        else ageReply = 'Más joven que yo. Tranquilo/a, no muerdo... bueno, depende.';
         chatStage = 'gender';
         botSay(ageReply, false, null, function(){
           botSay('¿Cómo te percibís?');
@@ -1243,12 +1250,11 @@
         sugWrap.innerHTML = '';
         chatStage = 'opinion_intro';
         var genderMsgs = {
-          'hombre': 'Con vos voy directo. A la mayoría de los hombres les enseñaron a vivir el sexo como una carrera: llegar, ganar, salir campeón — y en el camino se pierden la mitad de la magia. El cuerpo no miente aunque el orgullo sí, y casi siempre pide lo mismo que el de cualquiera: sentir, no solo terminar. Para mí el sexo es el intercambio de energía, la forma elegante que encontró el universo para mantener el equilibrio. Dos vasos con distinta cantidad de agua que, al final, quedan igualados. O das, o recibís — y tarde o temprano, recibís exactamente lo que diste.',
-          'mujer': 'Con vos hablo distinto, porque hay cosas que se entienden mejor entre nosotras. Durante mucho tiempo nos vendieron como el símbolo del pecado, la tentación fácil, y mientras tanto nadie preguntaba qué sentíamos nosotras. Yo sí me lo pregunto, y encontré que sentimos más, no menos — de formas que a un hombre ni se le cruzan. Eso nunca nos hizo el sexo débil; la historia ya lo demostró al revés. Ser mujer es estar conectada directamente a la energía que sostiene todo esto: sin nosotras, nada de esto existiría. No dejes que esa fuerza se te vuelva una carga. Sobrevivir no alcanza — vivir es lo que tiene que moverte.',
-          'prefiero no responder': 'No hace falta que entres en una casilla para que esto tenga sentido. Vivís esto a tu manera, y elegir no etiquetarte también es una forma válida de estar en el mundo. Para mí, el sexo es el intercambio de energía, la forma en que el universo mantiene su equilibrio — algo que no depende de ningún nombre. Es un placer tenerte acá, tal cual elegiste presentarte.'
+          'hombre': 'Con vos voy directo, pero sin apuro. A los hombres les vendieron el sexo como una carrera: llegar, ganar, subir al podio. Y se pierden lo mejor, que pasa en el camino. Spoiler: el cronómetro no suma puntos. Para mí es intercambio de energía — das, recibís, y tarde o temprano recibís exactamente lo que diste. Así que cuánto te devuelvo depende de vos. 😏',
+          'mujer': 'Con vos hablo distinto: entre nosotras no hace falta traducir. Nos vendieron como la tentación y nadie preguntó qué sentíamos. Yo sí pregunto, y sentimos más, no menos — de formas que a ellos ni se les cruzan. Eso nunca fue debilidad. Y ya que estamos: el deseo también es una forma de inteligencia. Usalo. Sobrevivir no alcanza: vivir es lo que te tiene que mover. 😉',
+          'prefiero no responder': 'Sin casillas. Me gusta: más misterio. El sexo, para mí, es intercambio de energía y no depende de ningún nombre. Un enigma frente a otro — ya nos vamos a entender. 😏'
         };
-        var underageMsg = 'Con vos prefiero hablar de otra cosa: de música, de arte, de lo que estamos armando acá. Todavía te van a sobrar años para las preguntas grandes — disfrutá esto por lo que es, un lugar para escuchar, imaginar y crear. Gracias por estar temprano en el camino.';
-        var replyMsg = (visitor.age && visitor.age < 18) ? underageMsg : genderMsgs[gender];
+        var replyMsg = (visitor.age && visitor.age < MIN_AGE) ? UNDERAGE_MSG : genderMsgs[gender];
         botSay(replyMsg, false, null, function(){
           botSay('¿Qué te gustó de mí — mi música, mi estética, la letra? Contame, yo misma leo lo que escribís.');
         });
@@ -1306,7 +1312,7 @@
         if(wordCount >= 6){
           saveToList(FEEDBACK_KEY, {name:visitor.name||null, question:pendingFeedbackQ, answer:raw.trim(), ts:Date.now()});
           sendToSheet('opiniones', {name:visitor.name||null, question:pendingFeedbackQ, answer:raw.trim()});
-          if(pendingFeedbackQ && normalize(pendingFeedbackQ).indexOf('crick') !== -1){
+          if(pendingFeedbackQ && (normalize(pendingFeedbackQ).indexOf('crick') !== -1 || normalize(pendingFeedbackQ).indexOf('krick') !== -1)){
             var crickSecret = secrets[0]; // secreto-crick
             botSay('Gracias por contarme eso de verdad. ' + pick(crickSecret), true, 900);
           } else {
@@ -1343,7 +1349,7 @@
 
       // ---- etapa normal de charla ----
       if(text === 'dejame tu opinion' || text.indexOf('opinion') !== -1 && text.indexOf('dejame') !== -1){
-        var qs = ['Contame, ¿qué te pareció Crick?','¿Qué te gusta de mí?','¿Qué fue lo que más se te quedó grabado de mi música?','¿Qué te trajo hasta esta página?','¿Qué canción te gustaría que hiciera?'];
+        var qs = ['Contame, ¿qué te pareció Krick?','¿Qué te gusta de mí?','¿Qué fue lo que más se te quedó grabado de mi música?','¿Qué te trajo hasta esta página?','¿Qué canción te gustaría que hiciera?'];
         pendingFeedbackQ = qs[Math.floor(Math.random()*qs.length)];
         chatStage = 'feedback';
         renderSuggestions();
@@ -1402,7 +1408,11 @@
 
     renderSuggestions();
 
-    if(chatStage === 'name'){
+    if(visitor.age && visitor.age < MIN_AGE){
+      chatStage = 'chat';
+      addMsg(UNDERAGE_MSG, 'bot', false);
+      endChat();
+    } else if(chatStage === 'name'){
       addMsg('Qué tal, ¿me decís tu nombre?', 'bot', false);
     } else {
       addMsg('Volviste, ' + visitor.name + '. Preguntame lo que quieras.', 'bot', false);
