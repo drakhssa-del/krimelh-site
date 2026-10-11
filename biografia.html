@@ -870,7 +870,9 @@
       'puto de mierda','concha de tu madre','forro','sorete','tarad',
       'asquerosa','asqueroso','fea de mierda','gorda de mierda',
       'no servis','no sirves','sos un desastre','sos una basura',
-      'te odio','ojala te mueras','mueras','fracasada','fracasado'
+      'te odio','ojala te mueras','mueras','fracasada','fracasado',
+      'ganas de vomitar','me da asco','das asco','dan asco','musica de mierda',
+      'musica horrible','tu musica es una basura','porqueria'
     ];
     function isInsult(text){
       for(var i=0;i<badWords.length;i++){
@@ -878,27 +880,25 @@
       }
       return false;
     }
-    var insultEntry = {
-      key:'insulto',
-      responses:[
-        'Jajaja. ¿Me estás insultando a mí o a vos? No te estoy entendiendo.',
-        'Uy, qué energía. Tomate un agua y volvemos.',
-        'No te trates así, che. 😄',
-        'Me lo dijeron mejor y con más estilo. Subí el nivel.',
-        'No entiendo por qué te autoflagelás así. Yo estoy bárbara. 😉',
-        'Eso rebota. Seguimos cuando quieras hablar en serio.',
-        'Qué intensidad. ¿Y si mejor hablamos de música?',
-        'Jaja, no. Otra pregunta.',
-        'Interesante forma de llamar la atención. Preguntame otra cosa.',
-        'Eso dice más de tu día que de mí. Igual, gracias por pasar.'
-      ]
-    };
-    var farewellMsg = 'Esta charla no va para ningún lado. Cuando quieras hablar en serio, acá estoy. Besos.';
+    // Respuestas en orden: la 1ra, la 2da, la 3ra y la de cierre.
+    // Cada golpe elige al azar entre las variantes de SU posición.
+    var insultBeats = [
+      [ '¿Me lo decís a mí o es una opinión sobre vos mismo?',
+        'Jajaja. ¿Me insultás a mí o a vos? No te estoy entendiendo.' ],
+      [ 'No te trates así, che. 😄' ],
+      [ 'No entiendo por qué te autoflagelás así. Yo estoy bárbara. 😉' ],
+      [ 'El que lo dice, lo es. 😌',
+        'Eso rebota... y vuelve. 😌' ]
+    ];
+    var lastWasInsult = false;
+    // contraataque tipo "no, vos" / "vos sos": solo cuenta si venía un insulto
+    function isRetort(text){ return /(^|[^a-z])vo+s+([^a-z]|$)/.test(text) && text.length < 40; }
+    var farewellMsg = 'Ya en serio: volvé cuando quieras hablar en serio. Besos.';
     var MIN_AGE = 21;
     var UNDERAGE_MSG = 'Todavía no. Esta conversación es para mayores de 21. Volvé cuando corresponda.';
     var insultStreak = 0;
     var chatEnded = false;
-    var INSULT_LIMIT = 3;
+    var INSULT_LIMIT = 4;
 
     // ---- Envío a Google Sheet (opcional) ----
     // Pegá acá la URL que te da Google al "Implementar" el Apps Script como
@@ -1168,11 +1168,14 @@
       input.value = '';
 
       // ---- filtro de insultos, tiene prioridad sobre cualquier etapa ----
-      if(isInsult(text)){
+      if(isInsult(text) || (lastWasInsult && isRetort(text))){
         insultStreak++;
+        lastWasInsult = true;
         var reachedLimit = insultStreak >= INSULT_LIMIT;
+        var beat = insultBeats[Math.min(insultStreak, insultBeats.length) - 1];
+        var beatMsg = beat[Math.floor(Math.random() * beat.length)];
         setTimeout(function(){
-          botSay(pick(insultEntry), false);
+          botSay(beatMsg, false);
           if(reachedLimit){
             setTimeout(function(){
               botSay(farewellMsg, false, 700);
@@ -1183,6 +1186,7 @@
         return;
       }
       insultStreak = 0;
+      lastWasInsult = false;
 
       // ---- etapa: pedir nombre ----
       if(chatStage === 'name'){
