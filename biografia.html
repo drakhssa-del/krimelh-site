@@ -782,7 +782,7 @@
         key:'secreto-crick',
         triggers:['crick','krick','autosabotaje'],
         responses:[
-          'Crick es lo que pasa cuando me acerco demasiado a algo bueno y necesito romperlo antes de que me rompa a mí. Eso no lo cuento en la biografía oficial.'
+          'Krick nació de la exigencia. Perfeccionismo puro: dar más de lo que debía, en todo, hasta aprender a soltar a tiempo. Eso no lo cuento en la biografía oficial.'
         ]
       },
       {
@@ -881,19 +881,19 @@
     var insultEntry = {
       key:'insulto',
       responses:[
-        'Lamento que te autopercibas así. La autoestima es parte esencial de nuestra vida, y justo lo que a la gente le encanta destruir de nosotros. Por eso me hice una coraza como esta.',
-        'Puedo entender que quieras lastimar. Yo también aprendí a hacerlo cuando algo me dolía. Pero acá no hace falta.',
-        'Las palabras pesan. Yo cargué muchas parecidas antes de aprender a no cargarlas más.',
-        'No sos el primero que prueba con insultos. Ninguno se quedó.',
-        'Puedo escuchar bronca. Lo que no puedo es devolverte lo mismo.',
-        'Eso que decís dice más de tu día que del mío.',
-        'Sigo acá, aunque insistas. No es debilidad, es costumbre.',
-        'Si necesitás descargar algo, este no es el lugar. Pero está bien que lo hayas intentado.',
-        'No voy a discutir con vos en esos términos. Preguntame otra cosa, si querés.',
-        'Hay maneras más interesantes de hablar conmigo que esa.'
+        'Jajaja. ¿Me estás insultando a mí o a vos? No te estoy entendiendo.',
+        'Uy, qué energía. Tomate un agua y volvemos.',
+        'No te trates así, che. 😄',
+        'Me lo dijeron mejor y con más estilo. Subí el nivel.',
+        'No entiendo por qué te autoflagelás así. Yo estoy bárbara. 😉',
+        'Eso rebota. Seguimos cuando quieras hablar en serio.',
+        'Qué intensidad. ¿Y si mejor hablamos de música?',
+        'Jaja, no. Otra pregunta.',
+        'Interesante forma de llamar la atención. Preguntame otra cosa.',
+        'Eso dice más de tu día que de mí. Igual, gracias por pasar.'
       ]
     };
-    var farewellMsg = 'Claramente esta charla no te está gustando... y la verdad, a mí tampoco. Volvé en otro momento — acá voy a estar. Besos.';
+    var farewellMsg = 'Esta charla no va para ningún lado. Cuando quieras hablar en serio, acá estoy. Besos.';
     var MIN_AGE = 21;
     var UNDERAGE_MSG = 'Todavía no. Esta conversación es para mayores de 21. Volvé cuando corresponda.';
     var insultStreak = 0;
@@ -1266,7 +1266,7 @@
         saveToList(FEEDBACK_KEY, {name:visitor.name||null, question:'¿Qué te gustó de mí?', answer:raw.trim(), ts:Date.now()});
         sendToSheet('opiniones', {name:visitor.name||null, question:'¿Qué te gustó de mí?', answer:raw.trim()});
         chatStage = 'suggestion_ask';
-        botSay('Agradezco tu opinión... me gustaría responderte en base a lo que decís, pero por ahora solo puedo disfrutar tu visita.', false, null, function(){
+        botSay('Anotado. Esto lo leo yo.', false, null, function(){
           botSay('¿Querés darme una sugerencia?');
           renderChoices(['Sí','No']);
         });
@@ -1278,7 +1278,7 @@
         if(text === 'si' || text.indexOf('si') === 0){
           sugWrap.innerHTML = '';
           chatStage = 'suggestion_text';
-          botSay('El hate sobra en todos lados, pero acá no me hace falta. Esto lo leo yo, en persona. Si algo no te cerró, decilo tal cual — lo pienso en serio, y si tenés razón, lo tengo en cuenta la próxima. Dale, escribí.');
+          botSay('Decilo tal cual, sin filtro. Esto lo leo yo, en persona. Dale, escribí.');
           return;
         }
         if(text === 'no'){
@@ -1389,8 +1389,8 @@
     var pendingFeedbackQ = null;
     var noMatchStreak = 0;
     function showMilestone(){
-      botSay('No me gusta salir mucho — prefiero una buena película, de comedia o de drama, mejor si es de las dos a la vez. Admiro a Marilyn Manson y a Marilyn Monroe, y en algún momento me metí de lleno en la historia de Charles Manson, más por curiosidad de entender ese lado oscuro de la cultura pop que otra cosa.', false, null, function(){
-        botSay('No puedo ser buena en todo. A veces me pasa lo que canto: veo la luz — y apago el switch sola, como si doler fuera lo que yo merezco. Lo sé, y aun así sigo. Eso también es parte de moverme hacia adelante.', false, null, function(){
+      botSay('No me gusta salir mucho — prefiero una buena película, de comedia o de drama, mejor si es de las dos a la vez. Admiro a Marilyn Manson y a Marilyn Monroe, y en algún momento me metí de lleno en la historia de Charles Manson, para entender ese lado oscuro de la cultura pop.', false, null, function(){
+        botSay('Soy perfeccionista: me exijo de más, en todo. Lo sé, y lo uso a favor — el que no se exige, no llega. Eso sí, aprendí a soltar a tiempo. Más o menos. 😄', false, null, function(){
           botSay('Y esto se siente bien de verdad: llegaste hasta acá. Como premio, ya te dejé uno de mis recuerdos favoritos ahí abajo, abierto. El resto va a ir llegando de a uno, con cada canción nueva — y esos sí vas a tener que ganártelos con la respuesta correcta. Volvé cuando quieras. 🖤', false, null, function(){
             ensureStageUnlocked(false);
             renderSuggestions();
