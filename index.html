@@ -125,6 +125,14 @@
     box-shadow:0 0 50px rgba(192,38,255,0.28), 0 0 110px rgba(192,38,255,0.12);
   }
 
+
+  /* ---------- universo: penny-farthing cósmica detrás del logo; Tierra y Luna giran lento, la cruz queda fija ---------- */
+  .cosmos{position:absolute; left:50%; top:50%; width:min(100%,1300px); transform:translate(-50%,-47%); z-index:0; pointer-events:none; opacity:.55;
+    -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 55%,transparent 100%); mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 55%,transparent 100%);}
+  .cosmos svg{width:100%; height:auto; display:block}
+  .logo-wrap{position:relative; z-index:2}
+  .hint{position:relative; z-index:3}
+
   /* ---------- wordmark: the real Krimelh logo (original image, untouched) with a per-letter glow layer ---------- */
   .logo-wrap{
     width:100%;
@@ -346,6 +354,33 @@
 
 <main class="stage">
   <div class="content">
+    <div class="cosmos" aria-hidden="true"><svg viewBox="0 0 1536 1024" aria-hidden="true" focusable="false">
+<defs>
+<clipPath id="cscT"><circle cx="666" cy="536" r="278"/></clipPath>
+<clipPath id="cscL"><circle cx="1172" cy="747" r="132"/></clipPath>
+<radialGradient id="csshT" cx="50%" cy="50%" r="50%"><stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#12001c" stop-opacity=".62"/></radialGradient>
+<radialGradient id="csshL" cx="50%" cy="50%" r="50%"><stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#12001c" stop-opacity=".6"/></radialGradient>
+<style>
+.gT{animation:scrollT 140s linear infinite}
+.gL{animation:scrollL 55s linear infinite}
+@keyframes scrollT{to{transform:translateX(-1112px)}}
+@keyframes scrollL{to{transform:translateX(-528px)}}
+@media (prefers-reduced-motion:reduce){.gT,.gL{animation:none}}
+</style>
+</defs>
+<image href="assets/entrada/cosmos/base.webp" width="1536" height="1024"/>
+<g clip-path="url(#cscT)"><g class="gT" >
+<image href="assets/entrada/cosmos/tex_tierra.webp" x="388" y="258" width="1112" height="556"/>
+<image href="assets/entrada/cosmos/tex_tierra.webp" x="1500" y="258" width="1112" height="556"/></g>
+<circle cx="666" cy="536" r="278" fill="url(#csshT)"/></g>
+<image href="assets/entrada/cosmos/ov_tierra.webp" x="355" y="225" width="622" height="622"/>
+<g clip-path="url(#cscL)"><g class="gL">
+<image href="assets/entrada/cosmos/tex_luna.webp" x="1040" y="615" width="528" height="264"/>
+<image href="assets/entrada/cosmos/tex_luna.webp" x="1568" y="615" width="528" height="264"/></g>
+<circle cx="1172" cy="747" r="132" fill="url(#csshL)"/></g>
+<image href="assets/entrada/cosmos/ov_luna.webp" x="1025" y="600" width="294" height="294"/>
+</svg>
+</div>
     <div class="logo-wrap">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1698 926" role="img" aria-label="KRIMELH">
   <title>KRIMELH</title>
