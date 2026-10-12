@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Cargando">
+<title>Cargando</title>
+<style>.rueda{transform-origin:50px 50px;animation:g 2.6s linear infinite}@keyframes g{to{transform:rotate(-360deg)}}@media(prefers-reduced-motion:reduce){.rueda{animation:none}}</style>
+<g class="rueda-glow" fill="none" stroke="#c61cf2" stroke-opacity=".35" stroke-width="7"><circle cx="50" cy="50" r="44"/></g>
+<g class="rueda" fill="none" stroke-linecap="round">
+<circle cx="50" cy="50" r="44" stroke="#ff6bff" stroke-width="3"/>
+<circle cx="50" cy="50" r="40.5" stroke="#c61cf2" stroke-width="1" stroke-opacity=".8"/>
+<g stroke="#d63cff" stroke-width="1.1" stroke-opacity=".9"><line x1="57.00" y1="50.00" x2="93.00" y2="50.00"/><line x1="56.76" y1="51.81" x2="91.53" y2="61.13"/><line x1="56.06" y1="53.50" x2="87.24" y2="71.50"/><line x1="54.95" y1="54.95" x2="80.41" y2="80.41"/><line x1="53.50" y1="56.06" x2="71.50" y2="87.24"/><line x1="51.81" y1="56.76" x2="61.13" y2="91.53"/><line x1="50.00" y1="57.00" x2="50.00" y2="93.00"/><line x1="48.19" y1="56.76" x2="38.87" y2="91.53"/><line x1="46.50" y1="56.06" x2="28.50" y2="87.24"/><line x1="45.05" y1="54.95" x2="19.59" y2="80.41"/><line x1="43.94" y1="53.50" x2="12.76" y2="71.50"/><line x1="43.24" y1="51.81" x2="8.47" y2="61.13"/><line x1="43.00" y1="50.00" x2="7.00" y2="50.00"/><line x1="43.24" y1="48.19" x2="8.47" y2="38.87"/><line x1="43.94" y1="46.50" x2="12.76" y2="28.50"/><line x1="45.05" y1="45.05" x2="19.59" y2="19.59"/><line x1="46.50" y1="43.94" x2="28.50" y2="12.76"/><line x1="48.19" y1="43.24" x2="38.87" y2="8.47"/><line x1="50.00" y1="43.00" x2="50.00" y2="7.00"/><line x1="51.81" y1="43.24" x2="61.13" y2="8.47"/><line x1="53.50" y1="43.94" x2="71.50" y2="12.76"/><line x1="54.95" y1="45.05" x2="80.41" y2="19.59"/><line x1="56.06" y1="46.50" x2="87.24" y2="28.50"/><line x1="56.76" y1="48.19" x2="91.53" y2="38.87"/></g>
+<circle cx="50" cy="50" r="5.5" stroke="#fff0ff" stroke-width="2.2"/>
+<circle cx="50" cy="6" r="2.6" fill="#fff" stroke="none"/>
+</g>
+</svg>
