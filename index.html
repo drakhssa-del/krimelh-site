@@ -348,6 +348,10 @@
   #portal .enter-word:hover,#portal .enter-word:focus-visible{color:#b21fff; border-bottom-color:rgba(178,31,255,.6);}
   .portal-credit{position:absolute; left:0; right:0; bottom:calc(18px + env(safe-area-inset-bottom,0px)); margin:0; z-index:3;
     text-align:center; font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:#8a7ea0; transition:opacity .4s ease;}
+  #portalSkip{position:absolute; left:0; right:0; bottom:calc(22px + env(safe-area-inset-bottom,0px)); margin:0; z-index:4;
+    text-align:center; font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:rgba(255,255,255,.88);
+    text-shadow:0 0 8px rgba(0,0,0,.7); opacity:0; transition:opacity 1.2s ease; pointer-events:none;}
+  #portal.showskip #portalSkip{opacity:1;}
   #portalFade{position:absolute; inset:0; background:#050506; opacity:0; z-index:5; pointer-events:none;}
 
   /* ---- animación: se activa con .go ---- */
@@ -356,7 +360,7 @@
   #portal.go #portalVeil{transform:scale(var(--end-scale,.1)); opacity:0;
     transition:transform 1.9s cubic-bezier(.62,0,.28,1), opacity .9s ease .75s;}
   #portal.go #portalLetters{opacity:0; transition:opacity .6s ease .55s;}
-  #portal.go #portalPhoto.breathe{transform:scale(1.035); transition:transform 3s linear;}
+  #portal.go #portalPhoto.breathe{transform:scale(1.045); transition:transform 6.5s linear;}
   #portal.go #portalLetters, #portal.go #portalVeil{pointer-events:none;}
   #portal.go{cursor:pointer;}
   @media (prefers-reduced-motion: reduce){
@@ -423,6 +427,7 @@
   </div>
   <p class="hint" id="portalHint"><span class="handwrite">Toca una letra, o</span><a class="enter-word" href="reveal.html">ENTER</a></p>
   <p class="portal-credit" id="portalCredit">Septum &middot; Krimelh</p>
+  <p id="portalSkip">tocá para entrar</p>
   <div id="portalFade"></div>
 </div>
 
@@ -509,7 +514,8 @@
       void img.offsetWidth;                     // fija el estado inicial
       portal.classList.add('go');
       timers.push(setTimeout(function(){ img.classList.add('breathe'); }, 2250));
-      timers.push(setTimeout(function(){ finish(url, 0.6); }, 4600));
+      timers.push(setTimeout(function(){ portal.classList.add('showskip'); }, 3200));
+      timers.push(setTimeout(function(){ finish(url, 0.7); }, 8200));
       setTimeout(function(){
         document.addEventListener('pointerdown', skip, {once:true});
         document.addEventListener('keydown', skip, {once:true});
