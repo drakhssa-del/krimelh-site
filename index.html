@@ -359,6 +359,36 @@
   #portal.showskip #portalSkip{opacity:1;}
   #portalFade{position:absolute; inset:0; background:#050506; opacity:0; z-index:5; pointer-events:none;}
 
+  /* ---- blanco "de realidad alterada": grano + vetas + líneas que fallan ---- */
+  #portalVeil{background:radial-gradient(circle closest-side, #fdfcff 0, #fdfcff 66%, rgba(253,252,255,0) 100%);}
+  #portalNoise{position:absolute; inset:0; overflow:hidden; border-radius:50%; pointer-events:none;
+    -webkit-mask-image:radial-gradient(circle closest-side,#000 0,#000 66%,transparent 100%);
+    mask-image:radial-gradient(circle closest-side,#000 0,#000 66%,transparent 100%);}
+  #portalNoise i{position:absolute; display:block;}
+  .pn-grain{inset:-10%; opacity:.16; background-size:300px 300px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .22 0 0 0 0 .10 0 0 0 0 .40 1.6 0 0 0 -.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:pnGrain .9s steps(1) infinite;}
+  .pn-streaks{inset:-10%; opacity:.26; background-size:2200px 520px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2200' height='520'%3E%3Cfilter id='s' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.003636 .4212' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .30 0 0 0 0 .16 0 0 0 0 .50 7 0 0 0 -4.35'/%3E%3C/filter%3E%3Cg id='h'%3E%3Crect width='1100' height='520' filter='url(%23s)'/%3E%3C/g%3E%3Cuse href='%23h' transform='translate(2200 0) scale(-1 1)'/%3E%3C/svg%3E");
+    animation:pnStreaks 5.5s steps(1) infinite;}
+  .pn-line{left:0; right:0; height:1px; background:rgba(120,50,210,.30);}
+  .pn-line.l1{top:23%; animation:pnLine1 3.7s steps(1) infinite;}
+  .pn-line.l2{top:61%; height:2px; background:rgba(40,160,200,.22); animation:pnLine2 5.3s steps(1) infinite;}
+  .pn-line.l3{top:82%; animation:pnLine3 4.1s steps(1) infinite;}
+  .pn-tear{left:0; right:0; top:44%; height:16px; background:rgba(95,60,150,.07);
+    box-shadow:0 1px 0 rgba(120,50,210,.18), 0 -1px 0 rgba(40,160,200,.14);
+    animation:pnTear 6.2s steps(1) infinite;}
+  @keyframes pnGrain{0%{background-position:0 0}25%{background-position:-70px 40px}50%{background-position:50px -90px}75%{background-position:-120px -30px}}
+  @keyframes pnStreaks{0%{background-position:0 0}20%{background-position:-310px 60px}40%{background-position:140px -80px}60%{background-position:-520px 20px}80%{background-position:260px 120px}}
+  @keyframes pnLine1{0%{opacity:0}8%{opacity:1;top:23%}12%{opacity:0}46%{opacity:0}48%{opacity:.8;top:31%}50%{opacity:0}80%{opacity:0}82%{opacity:1;top:17%}86%{opacity:0}}
+  @keyframes pnLine2{0%{opacity:0}30%{opacity:0}31%{opacity:1;top:61%}35%{opacity:.6;top:63%}37%{opacity:0}70%{opacity:0}71%{opacity:1;top:55%}73%{opacity:0}}
+  @keyframes pnLine3{0%{opacity:.9}6%{opacity:0}55%{opacity:0}56%{opacity:1;top:90%}60%{opacity:0;top:82%}}
+  @keyframes pnTear{0%{opacity:0}20%{opacity:0}21%{opacity:1;top:44%;transform:translateX(0)}23%{opacity:1;top:46%;transform:translateX(14px)}25%{opacity:0}66%{opacity:0}67%{opacity:1;top:72%;transform:translateX(-18px)}69%{opacity:0}}
+  @media (prefers-reduced-motion: reduce){
+    #portalNoise i{animation:none !important;}
+    .pn-line,.pn-tear{display:none;}
+  }
+
   /* ---- animación: se activa con .go ---- */
   #portal.go .hint, #portal.go .portal-credit{opacity:0;}
   #portal.go #portalPhoto{transform:scale(1); transition:transform 2.2s cubic-bezier(.22,.7,.2,1);}
@@ -419,6 +449,7 @@
   <div id="portalBg" aria-hidden="true"></div>
   <img id="portalPhoto" src="assets/krimelh-portrait-5.jpg" alt="Krimelh en su penny-farthing" decoding="async">
   <div id="portalVeil" aria-hidden="false">
+      <div id="portalNoise" aria-hidden="true"><i class="pn-grain"></i><i class="pn-streaks"></i><i class="pn-line l1"></i><i class="pn-line l2"></i><i class="pn-line l3"></i><i class="pn-tear"></i></div>
     <div class="logo-wrap" id="portalLetters">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2172 724" role="img" aria-label="KRIMELH">
   <title>KRIMELH</title>
