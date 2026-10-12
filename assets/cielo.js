@@ -2,6 +2,7 @@
    Sin dependencias. Se inserta solo; respeta "reducir movimiento". */
 (function(){
   if(window.__cielo) return; window.__cielo=true;
+  var tema=(document.currentScript&&document.currentScript.dataset.tema)||'purpura';
   var css=
   '.cielo{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1}'+
   '.cielo .st{position:absolute;border-radius:50%;opacity:.12;animation:cieloTit var(--d,8s) ease-in-out var(--l,0s) infinite alternate}'+
@@ -19,15 +20,31 @@
   '.cielo .fz .cab{position:absolute;right:-3px;top:-3px;width:7px;height:7px;border-radius:50%;background:#fff;'+
     'box-shadow:0 0 8px 3px #ff6bff,0 0 22px 9px rgba(198,28,242,.8)}'+
   '.cielo .fz .asc{position:absolute;width:2px;height:2px;border-radius:50%;background:#ff9bff;box-shadow:0 0 4px #ff6bff}'+
+  '.cielo.gris .fz .cola{background:linear-gradient(90deg,rgba(190,190,205,0),rgba(190,190,205,.28) 45%,rgba(225,225,235,.8) 88%,#fff 100%)}'+
+  '.cielo.gris .fz .llama{background:linear-gradient(90deg,rgba(200,200,215,0),rgba(190,190,205,.25) 60%,rgba(225,225,235,.45));opacity:.6}'+
+  '.cielo.gris .fz .cab{box-shadow:0 0 8px 3px rgba(235,235,245,.85),0 0 20px 8px rgba(160,160,180,.45)}'+
+  '.cielo.gris .fz .asc{background:#dcdce6;box-shadow:0 0 4px #c8c8d4}'+
+  '.cielo .gal{position:absolute;inset:-6%;opacity:1;animation:cieloGal 110s ease-in-out infinite alternate;'+
+    'background:radial-gradient(ellipse 62% 16% at 28% 38%,rgba(200,200,218,.07),transparent 72%),radial-gradient(ellipse 48% 13% at 72% 66%,rgba(170,170,192,.06),transparent 72%),'+
+    'linear-gradient(118deg,transparent 36%,rgba(190,190,210,.03) 45%,rgba(220,220,235,.07) 50%,rgba(190,190,210,.03) 55%,transparent 64%)}'+
+  '@keyframes cieloGal{0%{transform:translate(-3%,2%) rotate(-1.2deg) scale(1.02)}100%{transform:translate(3%,-2%) rotate(1.2deg) scale(1.08)}}'+
+  '.cielo .polvo{position:absolute;left:0;top:0;width:1px;height:1px;border-radius:50%;animation:cieloPolvo 11s ease-in-out infinite alternate}'+
+  '@keyframes cieloPolvo{0%{opacity:.3}100%{opacity:.75}}'+
   '@media (prefers-reduced-motion:reduce){.cielo .st,.cielo .cr{animation:none;opacity:.35}}';
   var s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
 
-  var box=document.createElement('div'); box.className='cielo'; box.setAttribute('aria-hidden','true');
+  var box=document.createElement('div'); box.className='cielo'+(tema==='gris'?' gris':''); box.setAttribute('aria-hidden','true');
   document.body.insertBefore(box,document.body.firstChild);
   var rnd=function(a,b){return a+Math.random()*(b-a)};
-  var cols=['#f3e6ff','#d9a8ff','#c61cf2','#ff6bff','#ffffff'];
+  var cols=tema==='gris'?['#d8d8e0','#bcbcc8','#a4a4b2','#eeeef4','#8f8f9c']:['#f3e6ff','#d9a8ff','#c61cf2','#ff6bff','#ffffff'];
   var small=Math.min(innerWidth,innerHeight)<600;
-  var n=small?26:46, i, el;
+  var n=tema==='gris'?(small?40:84):(small?26:46), i, el;
+  if(tema==='gris'){
+    var g=document.createElement('div'); g.className='gal'; box.appendChild(g);
+    var sh=[],pc=['rgba(220,220,232,.9)','rgba(180,180,196,.8)','rgba(150,150,165,.7)'],m=small?70:150;
+    for(var q0=0;q0<m;q0++) sh.push((Math.random()*innerWidth|0)+'px '+(Math.random()*innerHeight|0)+'px 0 0 '+pc[q0%3]);
+    var pv=document.createElement('i'); pv.className='polvo'; pv.style.boxShadow=sh.join(','); box.appendChild(pv);
+  }
   for(i=0;i<n;i++){
     el=document.createElement('i'); el.className='st';
     var z=rnd(1,2.6), c=cols[(Math.random()*cols.length)|0];
@@ -36,7 +53,7 @@
   }
   for(i=0;i<(small?4:7);i++){
     el=document.createElement('i'); el.className='cr';
-    var q=rnd(9,15), c2=cols[1+((Math.random()*3)|0)];
+    var q=rnd(9,15), c2=cols[(tema==='gris'?0:1)+((Math.random()*3)|0)];
     el.style.cssText='left:'+rnd(3,97)+'%;top:'+rnd(3,97)+'%;width:'+q+'px;height:'+q+'px;--c:'+c2+';--d:'+rnd(9,17)+'s;--l:-'+rnd(0,15)+'s';
     box.appendChild(el);
   }
