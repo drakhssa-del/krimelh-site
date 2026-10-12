@@ -320,6 +320,11 @@
   .grain,.scratches,.flicker-veil,.bg-glyphs{display:none !important;}
 
   #portal{position:fixed; inset:0; overflow:hidden; background:#fff; z-index:10;}
+  #portalBg{position:absolute; inset:0; z-index:0; display:none;
+    background:linear-gradient(to bottom,#1d0627 0%,#250831 38%,#3c1148 62%,#581f64 82%,#4d1859 100%);}
+  #portal.fit #portalBg{display:block;}
+  #portal.fit #portalPhoto{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%);
+    mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%);}
   #portalPhoto{position:absolute; display:block; max-width:none; z-index:1; transform:scale(2.4); will-change:transform;}
   #portalVeil{position:absolute; z-index:2; border-radius:50%; pointer-events:none;
     background:radial-gradient(circle closest-side, #fff 0, #fff 66%, rgba(255,255,255,0) 100%);}
@@ -361,6 +366,7 @@
     transition:transform 1.9s cubic-bezier(.62,0,.28,1), opacity .9s ease .75s;}
   #portal.go #portalLetters{opacity:0; transition:opacity .6s ease .55s;}
   #portal.go #portalPhoto.breathe{transform:scale(1.045); transition:transform 6.5s linear;}
+  #portal.fit.go #portalPhoto.breathe{transform:scale(1.22); transition:transform 6.5s ease-in-out;}
   #portal.go #portalLetters, #portal.go #portalVeil{pointer-events:none;}
   #portal.go{cursor:pointer;}
   @media (prefers-reduced-motion: reduce){
@@ -410,6 +416,7 @@
 <div class="flicker-veil"></div>
 
 <div id="portal">
+  <div id="portalBg" aria-hidden="true"></div>
   <img id="portalPhoto" src="assets/krimelh-portrait-5.jpg" alt="Krimelh en su penny-farthing" decoding="async">
   <div id="portalVeil" aria-hidden="false">
     <div class="logo-wrap" id="portalLetters">
@@ -473,9 +480,17 @@
   function layout(){
     if(started) return;
     var vw=document.documentElement.clientWidth, vh=window.innerHeight;
-    var s=Math.max(vw/IW, vh/IH), w=IW*s, h=IH*s;
-    var left=Math.min(0, Math.max(vw-w, vw/2-FX*s));
-    var top =Math.min(0, Math.max(vh-h, vh/2-FY*s));
+    var fit = vw/vh < 0.85;                 // pantalla vertical: mostrar a ella y la bici completas
+    portal.classList.toggle('fit', fit);
+    var s, w, h, left, top;
+    if(fit){
+      s=vw/640; w=IW*s; h=IH*s;           // ventana de 640 px de la foto: ella y la rueda grande
+      left=vw/2-870*s; top=vh*0.45-h/2;
+    } else {
+      s=Math.max(vw/IW, vh/IH); w=IW*s; h=IH*s;
+      left=Math.min(0, Math.max(vw-w, vw/2-FX*s));
+      top =Math.min(0, Math.max(vh-h, vh/2-FY*s));
+    }
     img.style.width=w+'px'; img.style.height=h+'px';
     img.style.left=left+'px'; img.style.top=top+'px';
     img.style.transformOrigin=(PX*s)+'px '+(PY*s)+'px';

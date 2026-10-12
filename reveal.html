@@ -144,7 +144,12 @@
     .cover-hero .cover-img{ animation:none; }
   }
   @media (max-width:560px){
-    .cover-hero{ height:min(72vh,620px); }
+    .cover-hero{ height:min(58vh,520px); }
+    .cover-hero .cover-img{ background-position:16% 30%; }
+  }
+  /* tablets en vertical: que no se corte la cara (ella está a la izquierda) */
+  @media (min-width:561px) and (max-aspect-ratio:1/1){
+    .cover-hero .cover-img{ background-position:24% 22%; }
   }
 
   /* ---- intro ---- */
